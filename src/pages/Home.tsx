@@ -99,7 +99,7 @@ export default function Home({ targetSection }: HomeProps) {
         <div className="mx-auto max-w-6xl px-5">
           <div
             className={cn(
-              "mt-4 flex items-center justify-between",
+              "mt-2 flex items-center justify-between",
               "rounded-full border border-border/70",
               "bg-background/55 backdrop-blur-md",
               "shadow-[0_10px_40px_-20px_oklch(0.78_0.12_75_/35%)]"
@@ -175,7 +175,7 @@ export default function Home({ targetSection }: HomeProps) {
         </div>
       </header>
 
-      <main className="pt-24">
+      <main className="pt-20 md:pt-[5.25rem]">
         <section className="relative overflow-hidden">
           <div className="absolute inset-0">
             <img src={heroBg} alt="" className="h-full w-full object-cover opacity-80" />
@@ -184,7 +184,7 @@ export default function Home({ targetSection }: HomeProps) {
           </div>
 
           <div className="relative mx-auto max-w-6xl px-5">
-            <div className="grid min-h-[min(72vh,640px)] grid-cols-1 items-center gap-10 py-10 md:min-h-[min(80vh,720px)] md:grid-cols-12 md:py-14">
+            <div className="grid min-h-0 grid-cols-1 items-center gap-6 py-6 md:min-h-[min(52vh,520px)] md:grid-cols-12 md:gap-8 md:py-8">
               <div className="md:col-span-7">
                 <motion.h1
                   {...fadeUp}
@@ -255,8 +255,8 @@ export default function Home({ targetSection }: HomeProps) {
           </div>
         </section>
 
-        <section id="products" className="relative scroll-mt-28">
-          <div className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <section id="products" className="relative scroll-mt-24">
+          <div className="mx-auto max-w-6xl px-5 pb-14 pt-4 md:pb-20 md:pt-6">
             <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
               {productList.map((p, i) => {
                 const vis = PRODUCT_CARD_VISUAL[i] ?? PRODUCT_CARD_VISUAL[0];
@@ -304,7 +304,7 @@ export default function Home({ targetSection }: HomeProps) {
           </div>
         </section>
 
-        <section id="vision" className="mx-auto max-w-6xl scroll-mt-28 px-5 py-24 md:py-28">
+        <section id="vision" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12 md:py-16">
           <motion.div {...fadeUp} className="grid grid-cols-1 gap-10 md:grid-cols-12">
             <div className="md:col-span-4">
               <p className="text-xs tracking-[0.34em] text-foreground/60">愿景</p>
@@ -328,7 +328,7 @@ export default function Home({ targetSection }: HomeProps) {
         </section>
 
         <section className="relative overflow-hidden">
-          <div className="mx-auto max-w-6xl px-5 py-20 md:py-24">
+          <div className="mx-auto max-w-6xl px-5 py-12 md:py-16">
             <div className="rounded-[2.25rem] border border-border/60 bg-[linear-gradient(135deg,oklch(0.18_0.03_262/0.85),oklch(0.22_0.03_262/0.65))] p-10 text-center md:p-14">
               <motion.div {...fadeUp} className="mx-auto max-w-2xl">
                 <div className="text-xs tracking-[0.34em] text-foreground/60">下一步</div>
