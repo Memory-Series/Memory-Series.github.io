@@ -27,7 +27,6 @@ interface HomeProps {
 
 const navItems = [
   { id: "products", label: "产品" },
-  { id: "principles", label: "原则" },
   { id: "vision", label: "愿景" },
 ] as const;
 
@@ -71,8 +70,13 @@ export default function Home({ targetSection }: HomeProps) {
   // Scroll to target section when URL changes (e.g., /#/products → scroll to #products)
   useEffect(() => {
     if (!targetSection) return;
-    // Former "品牌" section removed; old links /#/intro land on products
-    const id = targetSection === "intro" ? "products" : targetSection;
+    // Legacy: intro → products; principles section removed → vision
+    const id =
+      targetSection === "intro"
+        ? "products"
+        : targetSection === "principles"
+          ? "vision"
+          : targetSection;
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [targetSection]);
 
@@ -217,9 +221,9 @@ export default function Home({ targetSection }: HomeProps) {
                   <Button
                     variant="outline"
                     className="h-11 rounded-full border-border/70 bg-background/20 px-6 text-foreground hover:bg-background/30"
-                    onClick={() => document.getElementById("principles")?.scrollIntoView({ behavior: "smooth" })}
+                    onClick={() => document.getElementById("vision")?.scrollIntoView({ behavior: "smooth" })}
                   >
-                    查看原则
+                    查看愿景
                   </Button>
                 </motion.div>
 
@@ -421,37 +425,6 @@ export default function Home({ targetSection }: HomeProps) {
           </div>
         </section>
 
-        {/* PRINCIPLES */}
-        <section id="principles" className="mx-auto max-w-6xl scroll-mt-28 px-5 py-24 md:py-28">
-          <motion.div {...fadeUp} className="grid grid-cols-1 gap-10 md:grid-cols-12">
-            <div className="md:col-span-5">
-              <p className="text-xs tracking-[0.34em] text-foreground/60">原则</p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] md:text-4xl">克制、真实、可控</h2>
-              <p className="mt-6 text-sm leading-7 text-foreground/70 md:text-base">
-                不夸张替代，只做可被尊重的留存与触达。
-              </p>
-            </div>
-
-            <div className="md:col-span-7">
-              <div className="grid grid-cols-1 gap-6">
-                {[
-                  { t: "真实优先", d: "提取稳定特征，而非表面相似。" },
-                  { t: "边界清晰", d: "默认私有、最小授权、可撤销。" },
-                  { t: "体验安静", d: "低噪排版与明确层级，减少情绪消耗。" },
-                ].map((it) => (
-                  <div key={it.t} className="rounded-3xl border border-border/60 bg-card/35 p-7 backdrop-blur">
-                    <div className="flex items-center gap-3">
-                      <div className="h-2 w-2 rounded-full bg-[oklch(0.78_0.12_75)]" />
-                      <div className="text-base font-medium tracking-wide">{it.t}</div>
-                    </div>
-                    <p className="mt-3 text-sm leading-7 text-foreground/70">{it.d}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
         {/* VISION */}
         <section id="vision" className="mx-auto max-w-6xl scroll-mt-28 px-5 py-24 md:py-28">
           <motion.div {...fadeUp} className="grid grid-cols-1 gap-10 md:grid-cols-12">
@@ -476,42 +449,19 @@ export default function Home({ targetSection }: HomeProps) {
           </motion.div>
         </section>
 
-        {/* CTA */}
+        {/* Closing note (no CTA buttons) */}
         <section className="relative overflow-hidden">
           <div className="mx-auto max-w-6xl px-5 py-20 md:py-24">
-            <div className="rounded-[2.25rem] border border-border/60 bg-[linear-gradient(135deg,oklch(0.18_0.03_262/0.85),oklch(0.22_0.03_262/0.65))] p-10 md:p-14">
-              <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-12">
-                <div className="md:col-span-8">
-                  <div className="text-xs tracking-[0.34em] text-foreground/60">下一步</div>
-                  <h3 className="mt-4 text-3xl font-semibold tracking-[-0.02em] md:text-4xl">
-                    选择一个入口，让记忆开始继续。
-                  </h3>
-                  <p className="mt-5 max-w-2xl text-sm leading-7 text-foreground/70 md:text-base">
-                    从对话、空间、角色、实体或日常记录开始。
-                  </p>
-                </div>
-                <div className="md:col-span-4 md:flex md:justify-end">
-                  <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-                    <Button
-                      className={cn(
-                        "h-12 rounded-full px-8",
-                        "bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)]",
-                        "hover:bg-[oklch(0.82_0.12_75)]"
-                      )}
-                      onClick={() => document.getElementById("products")?.scrollIntoView({ behavior: "smooth" })}
-                    >
-                      查看产品矩阵
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="h-12 rounded-full border-border/60 bg-background/20 px-8"
-                      onClick={() => toast.message("联系团队占位", { description: "后续可接入联系表单/邮箱。" })}
-                    >
-                      联系团队
-                    </Button>
-                  </div>
-                </div>
-              </div>
+            <div className="rounded-[2.25rem] border border-border/60 bg-[linear-gradient(135deg,oklch(0.18_0.03_262/0.85),oklch(0.22_0.03_262/0.65))] p-10 text-center md:p-14">
+              <motion.div {...fadeUp} className="mx-auto max-w-2xl">
+                <div className="text-xs tracking-[0.34em] text-foreground/60">下一步</div>
+                <h3 className="mt-4 text-balance text-3xl font-semibold tracking-[-0.02em] md:text-4xl">
+                  选择一个入口，让记忆开始继续。
+                </h3>
+                <p className="mt-5 text-pretty text-sm leading-7 text-foreground/70 md:text-base">
+                  从对话、空间、角色、实体或日常记录开始。
+                </p>
+              </motion.div>
             </div>
           </div>
         </section>
