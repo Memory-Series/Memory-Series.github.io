@@ -1,32 +1,33 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowRight, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { toast } from "sonner";
 
-import heroBg from "@/assets/hero-bg.jpeg";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { PRODUCTS } from "@/lib/products";
+import { PRODUCTS, type ProductKey } from "@/lib/products";
 import { cn } from "@/lib/utils";
 
 /*
-Memory Series — Home
-- Hero: headline + CTAs + SIGNAL only (no tagline strip, no subtitle, no stat tiles)
-- Products: five visual cards, no copy on cards (links to detail pages)
+Memory Series — Home (minimal)
+- Nav + five product cards (English labels) linking to detail pages
 */
 
 interface HomeProps {
   targetSection?: string;
 }
 
-const navItems = [
-  { id: "products", label: "产品" },
-  { id: "vision", label: "愿景" },
-] as const;
+const navItems = [{ id: "products", label: "产品" }] as const;
 
-/** Visual-only product tiles: gradients and decor, no text. */
+const PRODUCT_EN_LABEL: Record<ProductKey, string> = {
+  soulpod: "SoulPod",
+  verse: "Verse",
+  trace: "Trace / Inhabit",
+  sculpt: "Sculpt",
+  fluffydiary: "FluffyDiary",
+};
+
 const PRODUCT_CARD_VISUAL = [
   {
     gradient: "from-oklch(0.22_0.08_280) via-oklch(0.18_0.06_260) to-oklch(0.14_0.04_262)",
@@ -52,13 +53,6 @@ const PRODUCT_CARD_VISUAL = [
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
-const fadeUp = {
-  initial: { opacity: 0, y: 18 },
-  whileInView: { opacity: 1, y: 0 },
-  transition: { duration: 0.75, ease },
-  viewport: { once: true, margin: "-80px" },
-} as const;
-
 function AnchorLink({ id, children }: { id: string; children: React.ReactNode }) {
   return (
     <Link
@@ -81,20 +75,17 @@ export default function Home({ targetSection }: HomeProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const productList = useMemo(() => PRODUCTS, []);
 
-  // Scroll to target section when URL changes (e.g., /#/products → scroll to #products)
   useEffect(() => {
     if (!targetSection) return;
     const id =
-      targetSection === "intro"
+      targetSection === "intro" || targetSection === "principles" || targetSection === "vision"
         ? "products"
-        : targetSection === "principles"
-          ? "vision"
-          : targetSection;
+        : targetSection;
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [targetSection]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <header className="fixed left-0 right-0 top-0 z-50">
         <div className="mx-auto max-w-6xl px-5">
           <div
@@ -175,91 +166,16 @@ export default function Home({ targetSection }: HomeProps) {
         </div>
       </header>
 
-      <main className="pt-20 md:pt-[5.25rem]">
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0">
-            <img src={heroBg} alt="" className="h-full w-full object-cover opacity-80" />
-            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,oklch(0.145_0.03_262/0.65),oklch(0.145_0.03_262/0.88)_55%,oklch(0.145_0.03_262/1))]" />
-            <div className="absolute inset-0 grain" />
-          </div>
-
-          <div className="relative mx-auto max-w-6xl px-5">
-            <div className="grid min-h-0 grid-cols-1 items-center gap-6 py-6 md:min-h-[min(52vh,520px)] md:grid-cols-12 md:gap-8 md:py-8">
-              <div className="md:col-span-7">
-                <motion.h1
-                  {...fadeUp}
-                  transition={{ duration: 0.85, ease }}
-                  className={cn(
-                    "text-balance font-[Manrope] text-4xl font-semibold leading-[1.08] tracking-[-0.02em]",
-                    "md:text-6xl"
-                  )}
-                >
-                  从数字记忆，走向可继续的存在。
-                </motion.h1>
-
-                <motion.div
-                  {...fadeUp}
-                  transition={{ duration: 0.85, ease, delay: 0.1 }}
-                  className="mt-8 flex flex-wrap items-center gap-3"
-                >
-                  <Button
-                    className={cn(
-                      "h-11 rounded-full px-6",
-                      "bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)]",
-                      "hover:bg-[oklch(0.82_0.12_75)]"
-                    )}
-                    onClick={() => document.getElementById("products")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    查看产品
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="h-11 rounded-full border-border/70 bg-background/20 px-6 text-foreground hover:bg-background/30"
-                    onClick={() => document.getElementById("vision")?.scrollIntoView({ behavior: "smooth" })}
-                  >
-                    查看愿景
-                  </Button>
-                </motion.div>
-              </div>
-
-              <div className="relative md:col-span-5">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 1.0, ease }}
-                  className="mx-auto max-w-sm"
-                >
-                  <div className="rounded-3xl border border-border/60 bg-background/10 p-6 backdrop-blur">
-                    <div className="flex items-center justify-between">
-                      <div className="text-xs tracking-[0.32em] text-foreground/65">SIGNAL</div>
-                      <div className="h-2 w-2 rounded-full bg-[oklch(0.78_0.12_75)] shadow-[0_0_20px_oklch(0.78_0.12_75_/60%)]" />
-                    </div>
-                    <Separator className="my-5 bg-border/60" />
-                    <div className="space-y-3">
-                      {["对话", "空间", "角色", "实体", "日常"].map((t, idx) => (
-                        <div key={t} className="flex items-center gap-3">
-                          <div className="h-1.5 w-1.5 rounded-full bg-foreground/60" />
-                          <div className="flex-1 text-sm text-foreground/75">{t}</div>
-                          <div
-                            className="h-px flex-1 bg-[linear-gradient(to_right,oklch(0.92_0.02_265/0.35),transparent)]"
-                            style={{ opacity: 0.92 - idx * 0.12 }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="products" className="relative scroll-mt-24">
-          <div className="mx-auto max-w-6xl px-5 pb-14 pt-4 md:pb-20 md:pt-6">
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
+      <main className="flex flex-1 flex-col pt-20 md:pt-[5.25rem]">
+        <section
+          id="products"
+          className="relative flex flex-1 scroll-mt-24 flex-col justify-center px-5 py-8 md:py-10"
+        >
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 sm:gap-2.5 md:grid-cols-5 md:gap-3">
               {productList.map((p, i) => {
                 const vis = PRODUCT_CARD_VISUAL[i] ?? PRODUCT_CARD_VISUAL[0];
+                const label = PRODUCT_EN_LABEL[p.key];
                 return (
                   <motion.div
                     key={p.key}
@@ -271,74 +187,31 @@ export default function Home({ targetSection }: HomeProps) {
                   >
                     <Link
                       href={`/product/${p.key}`}
-                      aria-label={p.key}
+                      aria-label={label}
                       className={cn(
-                        "group relative block overflow-hidden rounded-3xl border border-border/50",
-                        "aspect-[3/4] min-h-[200px] w-full",
-                        "bg-gradient-to-br shadow-[0_24px_60px_-40px_oklch(0.15_0.04_262/0.9)]",
+                        "relative block overflow-hidden rounded-2xl border border-border/50 md:rounded-3xl",
+                        "aspect-[3/4] min-h-[180px] w-full",
+                        "bg-gradient-to-br shadow-[0_20px_50px_-36px_oklch(0.15_0.04_262/0.9)]",
                         "transition-transform duration-300 hover:-translate-y-0.5 hover:border-border/80",
                         vis.gradient
                       )}
                     >
                       <div
                         className={cn(
-                          "pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full blur-2xl",
+                          "pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl md:h-32 md:w-32",
                           vis.orb
                         )}
                       />
-                      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-1/2 bg-[linear-gradient(to_top,oklch(0.1_0.02_262/0.5),transparent)]" />
-                      <div className="pointer-events-none absolute left-6 top-1/3 h-px w-12 bg-foreground/15" />
-                      <div className="pointer-events-none absolute left-6 top-1/3 mt-3 flex gap-1.5">
-                        <span className="h-1 w-1 rounded-full bg-foreground/25" />
-                        <span className="h-1 w-1 rounded-full bg-foreground/15" />
-                        <span className="h-1 w-1 rounded-full bg-foreground/10" />
-                      </div>
-                      <div className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full border border-foreground/15 bg-foreground/5 text-foreground/70 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(to_top,oklch(0.1_0.02_262/0.55),transparent)]" />
+                      <div className="relative z-10 p-4 pt-5 md:p-5 md:pt-6">
+                        <p className="text-pretty font-[Manrope] text-[0.8125rem] font-semibold leading-snug tracking-tight text-foreground/95 md:text-sm">
+                          {label}
+                        </p>
                       </div>
                     </Link>
                   </motion.div>
                 );
               })}
-            </div>
-          </div>
-        </section>
-
-        <section id="vision" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-12 md:py-16">
-          <motion.div {...fadeUp} className="grid grid-cols-1 gap-10 md:grid-cols-12">
-            <div className="md:col-span-4">
-              <p className="text-xs tracking-[0.34em] text-foreground/60">愿景</p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] md:text-4xl">让记忆走向延续</h2>
-            </div>
-            <div className="md:col-span-8">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {[
-                  { t: "留存", d: "把重要的保存下来" },
-                  { t: "触达", d: "以更自然方式进入" },
-                  { t: "延续", d: "让关系继续发生" },
-                ].map((it) => (
-                  <div key={it.t} className="rounded-3xl border border-border/60 bg-background/10 p-7 backdrop-blur">
-                    <div className="text-base font-medium tracking-wide">{it.t}</div>
-                    <p className="mt-3 text-sm leading-7 text-foreground/70">{it.d}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
-        <section className="relative overflow-hidden">
-          <div className="mx-auto max-w-6xl px-5 py-12 md:py-16">
-            <div className="rounded-[2.25rem] border border-border/60 bg-[linear-gradient(135deg,oklch(0.18_0.03_262/0.85),oklch(0.22_0.03_262/0.65))] p-10 text-center md:p-14">
-              <motion.div {...fadeUp} className="mx-auto max-w-2xl">
-                <div className="text-xs tracking-[0.34em] text-foreground/60">下一步</div>
-                <h3 className="mt-4 text-balance text-3xl font-semibold tracking-[-0.02em] md:text-4xl">
-                  选择一个入口，让记忆开始继续。
-                </h3>
-                <p className="mt-5 text-pretty text-sm leading-7 text-foreground/70 md:text-base">
-                  从对话、空间、角色、实体或日常记录开始。
-                </p>
-              </motion.div>
             </div>
           </div>
         </section>
