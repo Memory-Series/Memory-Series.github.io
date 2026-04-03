@@ -26,7 +26,6 @@ interface HomeProps {
 }
 
 const navItems = [
-  { id: "intro", label: "品牌" },
   { id: "products", label: "产品" },
   { id: "principles", label: "原则" },
   { id: "vision", label: "愿景" },
@@ -71,9 +70,10 @@ export default function Home({ targetSection }: HomeProps) {
 
   // Scroll to target section when URL changes (e.g., /#/products → scroll to #products)
   useEffect(() => {
-    if (targetSection) {
-      document.getElementById(targetSection)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    if (!targetSection) return;
+    // Former "品牌" section removed; old links /#/intro land on products
+    const id = targetSection === "intro" ? "products" : targetSection;
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [targetSection]);
 
   return (
@@ -217,9 +217,9 @@ export default function Home({ targetSection }: HomeProps) {
                   <Button
                     variant="outline"
                     className="h-11 rounded-full border-border/70 bg-background/20 px-6 text-foreground hover:bg-background/30"
-                    onClick={() => document.getElementById("intro")?.scrollIntoView({ behavior: "smooth" })}
+                    onClick={() => document.getElementById("principles")?.scrollIntoView({ behavior: "smooth" })}
                   >
-                    了解品牌
+                    查看原则
                   </Button>
                 </motion.div>
 
@@ -276,36 +276,6 @@ export default function Home({ targetSection }: HomeProps) {
               </div>
             </div>
           </div>
-        </section>
-
-        {/* INTRO */}
-        <section id="intro" className="mx-auto max-w-6xl scroll-mt-28 px-5 py-24 md:py-28">
-          <motion.div {...fadeUp} className="grid grid-cols-1 gap-10 md:grid-cols-12">
-            <div className="md:col-span-4">
-              <p className="text-xs tracking-[0.34em] text-foreground/60">品牌</p>
-              <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] md:text-4xl">
-                少一些喧哗，
-                <span className="text-foreground/75">多一些可被抵达。</span>
-              </h2>
-            </div>
-            <div className="md:col-span-8">
-              <p className="max-w-2xl text-sm leading-7 text-foreground/70 md:text-base">
-                Memory Series 专注“私人记忆”的长期留存与体面触达：不夸张模拟，只保留真正重要的语气、场景与关系线索。
-              </p>
-              <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
-                {[
-                  { t: "真实", d: "提取稳定特征" },
-                  { t: "多维", d: "1D→3D→实体" },
-                  { t: "私有", d: "边界可控" },
-                ].map((it) => (
-                  <div key={it.t} className="rounded-2xl border border-border/60 bg-card/35 p-6 backdrop-blur">
-                    <div className="font-medium tracking-wide">{it.t}</div>
-                    <p className="mt-2 text-sm leading-6 text-foreground/70">{it.d}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
         </section>
 
         {/* PRODUCTS (card switch) */}
