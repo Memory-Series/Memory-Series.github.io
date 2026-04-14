@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
@@ -30,25 +30,22 @@ const anchors = [
   { id: "scenarios", t: "场景" },
 ] as const;
 
-const HERO_HUB_BLOCKS = [
-  {
-    label: "clawhub",
-    urls: [
-      "https://clawhub.ai/evangeliona/memory-trace",
-      "https://clawhub.ai/evangeliona/memory-inhabit",
-    ],
-  },
-  {
-    label: "skillhub",
-    urls: ["https://skillhub.cn/skills/memory-trace", "https://skillhub.cn/skills/memory-inhabit"],
-  },
-] as const;
+type HeroHubId = "clawhub" | "skillhub";
+
+const HERO_HUB_URLS: Record<HeroHubId, readonly [string, string]> = {
+  clawhub: [
+    "https://clawhub.ai/evangeliona/memory-trace",
+    "https://clawhub.ai/evangeliona/memory-inhabit",
+  ],
+  skillhub: ["https://skillhub.cn/skills/memory-trace", "https://skillhub.cn/skills/memory-inhabit"],
+};
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return <p className="text-xs tracking-[0.34em] text-foreground/60">{children}</p>;
 }
 
 export default function Product({ keyParam }: ProductProps) {
+  const [heroHub, setHeroHub] = useState<HeroHubId>("clawhub");
   const raw = keyParam as ProductKey | undefined;
   const key: ProductKey = raw && raw in PRODUCT_BY_KEY ? raw : "trace";
   const product = PRODUCT_BY_KEY[key];
@@ -135,36 +132,52 @@ export default function Product({ keyParam }: ProductProps) {
 
             <div className="mx-auto mt-10 w-full max-w-2xl text-left md:max-w-3xl">
               <div className="rounded-2xl border border-border/50 bg-background/15 p-4 backdrop-blur md:rounded-3xl md:p-5">
-                {HERO_HUB_BLOCKS.map((block, blockIdx) => (
-                  <div key={block.label} className={cn(blockIdx > 0 && "mt-6 border-t border-border/40 pt-6")}>
-                    <span
-                      className={cn(
-                        "inline-flex rounded-full border border-border/60 bg-background/25 px-3 py-1",
-                        "text-xs font-medium tracking-wide text-foreground/80"
-                      )}
-                    >
-                      {block.label}
-                    </span>
-                    <div className="mt-3 grid gap-2">
-                      {block.urls.map((href) => (
-                        <a
-                          key={href}
-                          href={href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={cn(
-                            "block break-all rounded-xl border border-border/50 bg-background/20 px-3 py-2.5",
-                            "font-mono text-[0.6875rem] leading-snug text-foreground/80 backdrop-blur",
-                            "transition-colors hover:border-border/70 hover:bg-background/30 hover:text-foreground",
-                            "sm:text-xs"
-                          )}
-                        >
-                          {href}
-                        </a>
-                      ))}
-                    </div>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                  <p className="text-sm text-foreground/65">选择来源后查看链接：</p>
+                  <div
+                    className="inline-flex shrink-0 rounded-full border border-border/60 bg-background/25 p-0.5 backdrop-blur"
+                    role="tablist"
+                    aria-label="链接来源"
+                  >
+                    {(["clawhub", "skillhub"] as const).map((id) => (
+                      <button
+                        key={id}
+                        type="button"
+                        role="tab"
+                        aria-selected={heroHub === id}
+                        onClick={() => setHeroHub(id)}
+                        className={cn(
+                          "rounded-full px-3.5 py-1.5 text-xs font-medium tracking-wide transition-colors",
+                          heroHub === id
+                            ? "bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)]"
+                            : "text-foreground/70 hover:text-foreground"
+                        )}
+                      >
+                        {id}
+                      </button>
+                    ))}
                   </div>
-                ))}
+                </div>
+                <div className="mt-4 rounded-xl border border-border/40 bg-background/35 p-3 md:p-4">
+                  <div className="grid gap-2">
+                    {HERO_HUB_URLS[heroHub].map((href) => (
+                      <a
+                        key={href}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                          "block break-all rounded-lg border border-border/35 bg-background/25 px-3 py-2.5",
+                          "font-mono text-[0.6875rem] leading-snug text-foreground/85",
+                          "transition-colors hover:border-border/60 hover:bg-background/40",
+                          "sm:text-xs"
+                        )}
+                      >
+                        {href}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
