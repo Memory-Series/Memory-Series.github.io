@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpeg";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,8 @@ interface ProductProps {
 const ease = [0.16, 1, 0.3, 1] as const;
 
 export default function Product({ keyParam }: ProductProps) {
-  const key = (keyParam as ProductKey) || "soulpod";
+  const raw = keyParam as ProductKey | undefined;
+  const key: ProductKey = raw && raw in PRODUCT_BY_KEY ? raw : "trace";
   const product = PRODUCT_BY_KEY[key];
 
   useEffect(() => {
@@ -28,35 +28,29 @@ export default function Product({ keyParam }: ProductProps) {
     return (
       <div className="min-h-screen bg-background text-foreground p-10">
         <p className="text-foreground/70">未找到该产品。</p>
-        <Link href="/products" className="mt-6 inline-flex text-sm underline underline-offset-4">
-          返回产品矩阵
-        </Link>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* Top */}
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/60 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" /> 返回首页
-          </Link>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <ArrowUp className="h-4 w-4" /> 返回顶部
+          </button>
           <div className="text-sm tracking-wide text-foreground/75">
             <span className="font-[Manrope]">{product.name}</span>
             <span className="text-foreground/55">（{product.cnName}）</span>
           </div>
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 text-sm text-foreground/80 hover:text-foreground"
-          >
-            产品矩阵 <ArrowRight className="h-4 w-4" />
-          </Link>
+          <span className="inline-block w-[5.5rem] shrink-0 md:w-24" aria-hidden />
         </div>
       </header>
 
-      {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
           <img src={heroBg} alt="抽象科技氛围背景" className="h-full w-full object-cover opacity-70" />
@@ -105,7 +99,6 @@ export default function Product({ keyParam }: ProductProps) {
         </div>
       </section>
 
-      {/* Content */}
       <main className="mx-auto max-w-6xl px-5 py-20 md:py-24">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
           <div className="md:col-span-4">
@@ -194,25 +187,6 @@ export default function Product({ keyParam }: ProductProps) {
                 </Card>
               </section>
             </div>
-          </div>
-        </div>
-
-        <div className="mt-14 rounded-3xl border border-border/60 bg-background/10 p-8 backdrop-blur">
-          <div className="text-xs tracking-[0.34em] text-foreground/60">下一步</div>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm leading-7 text-foreground/70">
-              想了解其它入口？回到产品矩阵，选择另一条产品线继续探索。
-            </p>
-            <Link
-              href="/products"
-              className={cn(
-                "inline-flex h-11 items-center gap-2 rounded-full px-6",
-                "bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)]",
-                "hover:bg-[oklch(0.82_0.12_75)]"
-              )}
-            >
-              查看产品矩阵 <ArrowRight className="h-4 w-4" />
-            </Link>
           </div>
         </div>
       </main>
