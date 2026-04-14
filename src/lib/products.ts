@@ -133,7 +133,7 @@ export const PRODUCTS: ProductInfo[] = [
   {
     key: "trace",
     name: "Memory · Trace / Inhabit",
-    cnName: "溯源 / 栖居",
+    cnName: "寻迹/入心",
     shortLine: "以行为逻辑与角色能力为核心，延展数字生命的表达边界。",
     heroTitle: "让存在感，不止停留在记忆里。",
     heroSubtitle:
