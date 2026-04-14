@@ -1,21 +1,40 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Router, Route, Switch } from "wouter";
+import { Router, Route, Switch, Redirect } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import Home from "@/pages/Home";
 import Product from "@/pages/Product";
 
-// Use hash-based routing (/#/) to support opening index.html directly via file:// protocol
-// Tolerant routing: unmatched paths are treated as anchor sections (e.g., /#/services → scroll to #services)
-// For in-page anchors, use <Link href="/section"> instead of <a href="#section">
+// Hash routing: only Trace/Inhabit product page is exposed; all other paths redirect here.
 function AppRouter() {
   return (
     <Router hook={useHashLocation}>
       <Switch>
-        <Route path="/product/:key">{(params) => <Product keyParam={params.key} />}</Route>
-        <Route path="/:section?">{(params) => <Home targetSection={params.section} />}</Route>
+        <Route path="/product/trace">
+          <Product keyParam="trace" />
+        </Route>
+        <Route path="/product/:key">
+          <Redirect to="/product/trace" replace />
+        </Route>
+        <Route path="/">
+          <Redirect to="/product/trace" replace />
+        </Route>
+        <Route path="/products">
+          <Redirect to="/product/trace" replace />
+        </Route>
+        <Route path="/vision">
+          <Redirect to="/product/trace" replace />
+        </Route>
+        <Route path="/intro">
+          <Redirect to="/product/trace" replace />
+        </Route>
+        <Route path="/principles">
+          <Redirect to="/product/trace" replace />
+        </Route>
+        <Route path="/:rest*">
+          <Redirect to="/product/trace" replace />
+        </Route>
       </Switch>
     </Router>
   );
