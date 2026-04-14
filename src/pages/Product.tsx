@@ -235,7 +235,7 @@ export default function Product({ keyParam }: ProductProps) {
               <div className="font-semibold">
                 <span className="font-[Manrope]">Memory</span> Series
               </div>
-              <p className="mt-2 text-sm leading-7 text-foreground/60">Trace / Inhabit · Memory Series</p>
+              <p className="mt-2 text-sm leading-7 text-foreground/60">Memory Series · Trace / Inhabit</p>
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-foreground/55">
               {["隐私政策", "服务条款", "社交媒体"].map((t) => (
