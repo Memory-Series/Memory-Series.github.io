@@ -30,6 +30,20 @@ const anchors = [
   { id: "scenarios", t: "场景" },
 ] as const;
 
+const HERO_HUB_BLOCKS = [
+  {
+    label: "clawhub",
+    urls: [
+      "https://clawhub.ai/evangeliona/memory-trace",
+      "https://clawhub.ai/evangeliona/memory-inhabit",
+    ],
+  },
+  {
+    label: "skillhub",
+    urls: ["https://skillhub.cn/skills/memory-trace", "https://skillhub.cn/skills/memory-inhabit"],
+  },
+] as const;
+
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return <p className="text-xs tracking-[0.34em] text-foreground/60">{children}</p>;
 }
@@ -117,6 +131,41 @@ export default function Product({ keyParam }: ProductProps) {
               >
                 {product.ctaSecondary}
               </Button>
+            </div>
+
+            <div className="mx-auto mt-10 w-full max-w-2xl text-left md:max-w-3xl">
+              <div className="rounded-2xl border border-border/50 bg-background/15 p-4 backdrop-blur md:rounded-3xl md:p-5">
+                {HERO_HUB_BLOCKS.map((block, blockIdx) => (
+                  <div key={block.label} className={cn(blockIdx > 0 && "mt-6 border-t border-border/40 pt-6")}>
+                    <span
+                      className={cn(
+                        "inline-flex rounded-full border border-border/60 bg-background/25 px-3 py-1",
+                        "text-xs font-medium tracking-wide text-foreground/80"
+                      )}
+                    >
+                      {block.label}
+                    </span>
+                    <div className="mt-3 grid gap-2">
+                      {block.urls.map((href) => (
+                        <a
+                          key={href}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            "block break-all rounded-xl border border-border/50 bg-background/20 px-3 py-2.5",
+                            "font-mono text-[0.6875rem] leading-snug text-foreground/80 backdrop-blur",
+                            "transition-colors hover:border-border/70 hover:bg-background/30 hover:text-foreground",
+                            "sm:text-xs"
+                          )}
+                        >
+                          {href}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </motion.div>
 
