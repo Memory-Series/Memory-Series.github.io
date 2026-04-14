@@ -17,7 +17,7 @@
 
 - 展示 `Memory · Soulpod`
 - 展示 `Memory · Verse`
-- 展示 `Memory · Trace / Inhabit`
+- 展示 `Memory · Trace / Inhabit`（中文名：寻迹/入心）
 - 展示 `Memory · Sculpt`
 - 展示 `Memory · FluffyDiary`
 

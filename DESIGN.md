@@ -50,6 +50,8 @@ Do not introduce extra saturated hues for marketing blocks; variation comes from
 
 ## 7. Product page pattern (Trace / Inhabit and future products)
 
+Trace / Inhabit Chinese product label in data: **寻迹/入心** (`products.ts` `cnName` for `trace`).
+
 1. **Sticky header**: Minimal bar — primary action is contextual (e.g. back to top), product name centered, no dead links to removed site areas.
 2. **Hero**: Full-bleed background, one eyebrow line, one H1, one subtitle, optional primary/secondary CTAs (outline secondary).
 3. **Anchor strip** (optional): Compact horizontal list of in-page anchors; on large screens may align with content start. Not a heavy sidebar TOC.

@@ -31,7 +31,7 @@ Memory 希望建立一种更完整的记忆表达方式。
 
 以空间重建为基础，将图像、片段与环境线索转化为可进入的数字场域，让记忆中的场景可以被重新进入。
 
-### Memory · Trace / Inhabit
+### Memory · Trace / Inhabit（寻迹/入心）
 
 以行为逻辑、角色能力与知识结构为核心，探索数字角色与数字生命更长期、更持续的存在方式。
 
@@ -52,7 +52,7 @@ Memory 希望建立一种更完整的记忆表达方式。
 - [`core/Homepage-Copy-Draft.md`](G:\Memory-Series\Memory-Series.github.io\core\Homepage-Copy-Draft.md)：官网首页文案草稿
 - [`core/Soulpod-Product-Page.md`](G:\Memory-Series\Memory-Series.github.io\core\Soulpod-Product-Page.md)：Soulpod 产品页文案
 - [`core/Verse-Product-Page.md`](G:\Memory-Series\Memory-Series.github.io\core\Verse-Product-Page.md)：Verse 产品页文案
-- [`core/Trace-Inhabit-Product-Page.md`](G:\Memory-Series\Memory-Series.github.io\core\Trace-Inhabit-Product-Page.md)：Trace / Inhabit 产品页文案
+- [`core/Trace-Inhabit-Product-Page.md`](G:\Memory-Series\Memory-Series.github.io\core\Trace-Inhabit-Product-Page.md)：Trace / Inhabit（寻迹/入心）产品页文案
 - [`core/Sculpt-Product-Page.md`](G:\Memory-Series\Memory-Series.github.io\core\Sculpt-Product-Page.md)：Sculpt 产品页文案
 - [`core/FluffyDiary-Product-Page.md`](G:\Memory-Series\Memory-Series.github.io\core\FluffyDiary-Product-Page.md)：FluffyDiary 产品页文案
 - [`core/Memory-Series.md`](G:\Memory-Series\Memory-Series.github.io\core\Memory-Series.md)：文档索引

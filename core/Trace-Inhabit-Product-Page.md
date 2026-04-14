@@ -1,8 +1,10 @@
 # Memory · Trace / Inhabit 产品页文案
 
+中文名：**寻迹/入心**（与站点 `cnName` 一致）。
+
 ## 页面定位
 
-这一页用于介绍 `Memory · Trace / Inhabit` 作为 Memory 产品矩阵中的角色与行为型产品。  
+这一页用于介绍 `Memory · Trace / Inhabit`（寻迹/入心）作为 Memory 产品矩阵中的角色与行为型产品。  
 文案重点是说明它如何从人物形象进一步走向行为逻辑、角色能力与更持续的数字存在。
 
 ---
