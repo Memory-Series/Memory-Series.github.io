@@ -187,16 +187,19 @@ export default function Product({ keyParam }: ProductProps) {
             aria-label="页面内导航"
           >
             {anchors.map((a) => (
-              <a
+              <button
                 key={a.id}
-                href={`#${a.id}`}
+                type="button"
+                onClick={() =>
+                  document.getElementById(a.id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
                 className={cn(
                   "rounded-full border border-border/50 bg-background/20 px-4 py-2 text-xs tracking-[0.2em] text-foreground/70 backdrop-blur",
                   "transition-colors hover:border-border/70 hover:bg-background/30 hover:text-foreground"
                 )}
               >
                 {a.t}
-              </a>
+              </button>
             ))}
           </nav>
         </div>
