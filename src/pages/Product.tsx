@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpeg";
+import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼.jpg";
+import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修.jpg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -50,7 +52,16 @@ const FEATURE_ITEMS = [
   "结构清晰可扩展：模块拆分便于后续接入更多能力。",
 ] as const;
 
-const DEMO_PLACEHOLDERS = ["Demo 准备中（占位）", "GIF / Live Demo 占位"] as const;
+const DEMO_CARDS = [
+  {
+    title: "夏以昼",
+    image: traceDemoXiaYizhou,
+  },
+  {
+    title: "叶修",
+    image: traceDemoYeXiu,
+  },
+] as const;
 
 const IMPLEMENTATION_TEXT =
   "当前实现采用“角色配置层 + 能力执行层 + 交互编排层”的结构。页面用于承载该能力的说明入口，后续可继续补充 API、数据流与部署细节。";
@@ -265,13 +276,19 @@ export default function Product({ keyParam }: ProductProps) {
             演示与预览
           </h2>
           <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {DEMO_PLACEHOLDERS.map((text) => (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+              {DEMO_CARDS.map((item) => (
                 <div
-                  key={text}
-                  className="rounded-2xl border border-dashed border-border/55 bg-background/15 px-5 py-7 text-sm text-foreground/70"
+                  key={item.title}
+                  className="group relative overflow-hidden rounded-2xl border border-border/50 bg-background/15 md:rounded-3xl"
                 >
-                  {text}
+                  <div className="aspect-[4/5]">
+                    <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+                  </div>
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,oklch(0.145_0.03_262/0.92),oklch(0.145_0.03_262/0.2),transparent)] p-4 md:p-5">
+                    <p className="text-sm font-medium tracking-wide text-foreground md:text-base">{item.title}</p>
+                    <p className="mt-1 text-xs text-foreground/70">Trace / Inhabit 角色卡</p>
+                  </div>
                 </div>
               ))}
             </div>
