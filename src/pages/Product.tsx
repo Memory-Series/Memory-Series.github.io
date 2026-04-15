@@ -23,11 +23,11 @@ const fadeUp = {
 } as const;
 
 const anchors = [
-  { id: "definition", t: "定义" },
-  { id: "value", t: "价值" },
-  { id: "experience", t: "体验" },
-  { id: "tech", t: "技术" },
-  { id: "scenarios", t: "场景" },
+  { id: "intro", t: "简介" },
+  { id: "features", t: "特性" },
+  { id: "demo", t: "演示" },
+  { id: "implementation", t: "实现" },
+  { id: "cases", t: "案例" },
 ] as const;
 
 type HeroHubId = "clawhub" | "skillhub";
@@ -39,6 +39,32 @@ const HERO_HUB_URLS: Record<HeroHubId, readonly [string, string]> = {
   ],
   skillhub: ["https://skillhub.cn/skills/memory-trace", "https://skillhub.cn/skills/memory-inhabit"],
 };
+
+const INTRO_TEXT =
+  "Trace / Inhabit 是一个面向数字角色持续化的开源方向页面，目标是把“角色设定 + 能力调用 + 长期交互”组织成可复用能力。";
+
+const FEATURE_ITEMS = [
+  "角色设定可配置：支持基础身份、行为边界与语气偏好。",
+  "知识能力可挂载：可接入外部知识与任务流程。",
+  "交互状态可延续：保留关键上下文，减少重复输入。",
+  "结构清晰可扩展：模块拆分便于后续接入更多能力。",
+] as const;
+
+const DEMO_PLACEHOLDERS = ["Demo 准备中（占位）", "GIF / Live Demo 占位"] as const;
+
+const IMPLEMENTATION_TEXT =
+  "当前实现采用“角色配置层 + 能力执行层 + 交互编排层”的结构。页面用于承载该能力的说明入口，后续可继续补充 API、数据流与部署细节。";
+
+const CASE_ITEMS = [
+  {
+    title: "案例 A（占位）",
+    body: "角色助手在长期项目中的任务协同示例（素材待补充）。",
+  },
+  {
+    title: "案例 B（占位）",
+    body: "面向知识问答与流程执行的角色化应用示例（素材待补充）。",
+  },
+] as const;
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return <p className="text-xs tracking-[0.34em] text-foreground/60">{children}</p>;
@@ -182,17 +208,12 @@ export default function Product({ keyParam }: ProductProps) {
             </div>
           </motion.div>
 
-          <nav
-            className="mx-auto mt-14 flex max-w-3xl flex-wrap justify-center gap-2 md:mt-16"
-            aria-label="页面内导航"
-          >
+          <nav className="mx-auto mt-14 flex max-w-3xl flex-wrap justify-center gap-2 md:mt-16" aria-label="页面内导航">
             {anchors.map((a) => (
               <button
                 key={a.id}
                 type="button"
-                onClick={() =>
-                  document.getElementById(a.id)?.scrollIntoView({ behavior: "smooth", block: "start" })
-                }
+                onClick={() => document.getElementById(a.id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
                 className={cn(
                   "rounded-full border border-border/50 bg-background/20 px-4 py-2 text-xs tracking-[0.2em] text-foreground/70 backdrop-blur",
                   "transition-colors hover:border-border/70 hover:bg-background/30 hover:text-foreground"
@@ -208,88 +229,83 @@ export default function Product({ keyParam }: ProductProps) {
       <div className="h-px max-w-6xl bg-[linear-gradient(to_right,transparent,oklch(0.78_0.12_75/0.35),transparent)]" />
 
       <main className="mx-auto max-w-3xl space-y-20 px-5 py-16 md:space-y-28 md:py-24">
-        <motion.section id="definition" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>产品定义</SectionEyebrow>
+        <motion.section id="intro" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>简介</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            {product.definitionTitle}
+            项目简介
           </h2>
           <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <p className="whitespace-pre-line text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">
-              {product.definitionBody}
-            </p>
+            <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">{INTRO_TEXT}</p>
           </Card>
         </motion.section>
 
-        <motion.section id="value" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>核心价值</SectionEyebrow>
+        <motion.section id="features" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>特性 (Features)</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            {product.valueTitle}
+            核心特性
           </h2>
-          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
-            {product.valueBullets.map((b) => (
+          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+            {FEATURE_ITEMS.map((line) => (
               <Card
-                key={b.title}
+                key={line}
                 className="rounded-2xl border-border/50 bg-background/15 p-6 backdrop-blur md:rounded-3xl md:p-7"
               >
                 <div className="flex items-start gap-3">
                   <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[oklch(0.78_0.12_75)]" aria-hidden />
-                  <div>
-                    <h3 className="font-medium leading-snug tracking-wide text-foreground">{b.title}</h3>
-                    <p className="mt-3 text-sm leading-7 text-foreground/70">{b.body}</p>
-                  </div>
+                  <p className="text-sm leading-7 text-foreground/75">{line}</p>
                 </div>
               </Card>
             ))}
           </div>
         </motion.section>
 
-        <motion.section id="experience" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>产品体验</SectionEyebrow>
+        <motion.section id="demo" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>演示 (Demo)</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            {product.experienceTitle}
+            演示与预览
           </h2>
           <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <p className="whitespace-pre-line text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">
-              {product.experienceBody}
-            </p>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {DEMO_PLACEHOLDERS.map((text) => (
+                <div
+                  key={text}
+                  className="rounded-2xl border border-dashed border-border/55 bg-background/15 px-5 py-7 text-sm text-foreground/70"
+                >
+                  {text}
+                </div>
+              ))}
+            </div>
           </Card>
         </motion.section>
 
-        <motion.section id="tech" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>技术表达</SectionEyebrow>
+        <motion.section id="implementation" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>实现</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            {product.techTitle}
+            实现说明
           </h2>
           <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <p className="whitespace-pre-line text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">
-              {product.techBody}
-            </p>
+            <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">{IMPLEMENTATION_TEXT}</p>
           </Card>
         </motion.section>
 
-        <motion.section id="scenarios" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>适用场景</SectionEyebrow>
+        <motion.section id="cases" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>案例</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            {product.scenariosTitle}
+            应用案例
           </h2>
-          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
-            {product.scenarios.map((s) => (
+          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+            {CASE_ITEMS.map((item) => (
               <Card
-                key={s.title}
+                key={item.title}
                 className="rounded-2xl border-border/50 bg-background/15 p-6 backdrop-blur md:rounded-3xl md:p-7"
               >
-                <h3 className="font-medium tracking-wide text-foreground">{s.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-foreground/70">{s.body}</p>
+                <h3 className="font-medium tracking-wide text-foreground">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-foreground/70">{item.body}</p>
               </Card>
             ))}
           </div>
           <Separator className="my-12 bg-border/50" />
-          <p className="text-pretty text-sm leading-8 text-foreground/72 md:text-base">{product.closing}</p>
-        </motion.section>
-
-        <motion.section {...fadeUp} className="rounded-3xl border border-border/50 bg-background/10 p-8 backdrop-blur md:p-10">
-          <SectionEyebrow>一句话</SectionEyebrow>
-          <p className="mt-4 text-base leading-8 text-foreground/80 md:text-lg">{product.oneLiner}</p>
+          <p className="text-pretty text-sm leading-8 text-foreground/72 md:text-base">{product.oneLiner}</p>
         </motion.section>
       </main>
 
