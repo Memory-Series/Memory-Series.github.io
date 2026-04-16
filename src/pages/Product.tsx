@@ -54,11 +54,17 @@ const FEATURE_ITEMS = [
 const DEMO_CARDS = [
   {
     title: "夏以昼",
+    enName: "Caleb",
     image: traceDemoXiaYizhou,
+    summary: "执舰官与战斗机飞行员，温柔外表下藏着冷峻守护与强烈独占。",
+    tags: ["引力控制 Evol", "海棠 · 晨昏线"],
   },
   {
     title: "叶修",
+    enName: "Ye Xiu",
     image: traceDemoYeXiu,
+    summary: "“荣耀教科书”，以冷幽默与极致战术把团队打造成胜利机器。",
+    tags: ["君莫笑 · 千机伞", "战术大师"],
   },
 ] as const;
 
@@ -297,7 +303,22 @@ export default function Product({ keyParam }: ProductProps) {
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,oklch(0.145_0.03_262/0.92),oklch(0.145_0.03_262/0.2),transparent)] p-4 md:p-5">
                     <p className="text-sm font-medium tracking-wide text-foreground md:text-base">{item.title}</p>
-                    <p className="mt-1 text-xs text-foreground/70">Trace / Inhabit 角色卡</p>
+                    <p className="mt-1 text-xs text-foreground/70">Trace / Inhabit 角色卡 · {item.enName}</p>
+                    {focusedDemoCard === item.title && (
+                      <div className="mt-3 space-y-2">
+                        <p className="text-xs leading-6 text-foreground/80">{item.summary}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {item.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full border border-border/60 bg-background/35 px-2.5 py-1 text-[10px] text-foreground/80"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
