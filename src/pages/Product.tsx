@@ -73,6 +73,7 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 
 export default function Product({ keyParam }: ProductProps) {
   const [heroHub, setHeroHub] = useState<HeroHubId>("clawhub");
+  const [focusedDemoCard, setFocusedDemoCard] = useState<string | null>(null);
   const raw = keyParam as ProductKey | undefined;
   const key: ProductKey = raw && raw in PRODUCT_BY_KEY ? raw : "trace";
   const product = PRODUCT_BY_KEY[key];
@@ -266,14 +267,33 @@ export default function Product({ keyParam }: ProductProps) {
             演示与预览
           </h2>
           <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+            <div
+              className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6"
+              onMouseLeave={() => setFocusedDemoCard(null)}
+            >
               {DEMO_CARDS.map((item) => (
                 <div
                   key={item.title}
-                  className="group relative overflow-hidden rounded-2xl border border-border/50 bg-background/15 md:rounded-3xl"
+                  className={cn(
+                    "group relative overflow-hidden rounded-2xl border border-border/50 bg-background/15 md:rounded-3xl",
+                    "transition-all duration-300",
+                    focusedDemoCard && focusedDemoCard !== item.title && "opacity-75 blur-[1.5px] saturate-75",
+                    focusedDemoCard === item.title && "scale-[1.03] border-border/70 shadow-[0_22px_48px_-30px_oklch(0.78_0.12_75/0.45)]"
+                  )}
+                  onMouseEnter={() => setFocusedDemoCard(item.title)}
+                  onFocus={() => setFocusedDemoCard(item.title)}
+                  onClick={() => setFocusedDemoCard(item.title)}
+                  tabIndex={0}
                 >
-                  <div className="aspect-[4/5]">
-                    <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+                  <div className="aspect-[4/5] overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className={cn(
+                        "h-full w-full object-cover transition-transform duration-300",
+                        focusedDemoCard === item.title ? "scale-[1.04]" : "scale-100"
+                      )}
+                    />
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,oklch(0.145_0.03_262/0.92),oklch(0.145_0.03_262/0.2),transparent)] p-4 md:p-5">
                     <p className="text-sm font-medium tracking-wide text-foreground md:text-base">{item.title}</p>
