@@ -47,7 +47,7 @@ export const PRODUCTS: ProductInfo[] = [
     name: "Memory · Trace / Inhabit",
     cnName: "寻迹/入心",
     shortLine: "以行为逻辑与角色能力为核心，延展数字生命的表达边界。",
-    heroTitle: "让存在感，不止停留在记忆里。",
+    heroTitle: "让存在，不止停留在记忆里。",
     heroSubtitle:
       "Memory · Trace / Inhabit 以行为逻辑、角色能力与知识结构为核心，探索数字生命更长期、更持续的存在方式。",
     ctaPrimary: "了解 Trace / Inhabit",
