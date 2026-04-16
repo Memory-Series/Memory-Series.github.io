@@ -336,12 +336,22 @@ export default function Product({ keyParam }: ProductProps) {
               <p className="mt-2 text-sm leading-7 text-foreground/60">Memory Series · Trace / Inhabit</p>
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-foreground/55">
-              {["隐私政策", "服务条款", "社交媒体"].map((t) => (
+              {["隐私政策", "服务条款", "联系地址"].map((t) => (
                 <span key={t} className="underline-offset-4 hover:text-foreground/70">
                   {t}
                 </span>
               ))}
             </div>
+          </div>
+
+          <div className="mt-6 flex flex-col items-start gap-4 border-t border-border/40 pt-6 md:flex-row md:items-center md:justify-between">
+            <div className="h-24 w-24 rounded-xl border border-border/50 bg-background/15 backdrop-blur" aria-label="二维码占位" />
+            <a
+              href="mailto:mlx979692038@gmail.com"
+              className="text-sm leading-7 text-foreground/65 underline-offset-4 hover:text-foreground/80 hover:underline"
+            >
+              mlx979692038@gmail.com
+            </a>
           </div>
         </div>
       </footer>
