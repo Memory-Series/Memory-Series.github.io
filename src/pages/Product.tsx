@@ -7,7 +7,6 @@ import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼.jpg";
 import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修.jpg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { PRODUCT_BY_KEY, type ProductKey } from "@/lib/products";
 
@@ -29,7 +28,7 @@ const anchors = [
   { id: "features", t: "特性" },
   { id: "demo", t: "演示" },
   { id: "implementation", t: "实现" },
-  { id: "cases", t: "案例" },
+  { id: "contact", t: "通讯" },
 ] as const;
 
 type HeroHubId = "clawhub" | "skillhub";
@@ -66,16 +65,7 @@ const DEMO_CARDS = [
 const IMPLEMENTATION_TEXT =
   "当前实现采用“角色配置层 + 能力执行层 + 交互编排层”的结构。页面用于承载该能力的说明入口，后续可继续补充 API、数据流与部署细节。";
 
-const CASE_ITEMS = [
-  {
-    title: "案例 A（占位）",
-    body: "角色助手在长期项目中的任务协同示例（素材待补充）。",
-  },
-  {
-    title: "案例 B（占位）",
-    body: "面向知识问答与流程执行的角色化应用示例（素材待补充）。",
-  },
-] as const;
+
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return <p className="text-xs tracking-[0.34em] text-foreground/60">{children}</p>;
@@ -305,24 +295,22 @@ export default function Product({ keyParam }: ProductProps) {
           </Card>
         </motion.section>
 
-        <motion.section id="cases" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>案例</SectionEyebrow>
+        <motion.section id="contact" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>通讯</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            应用案例
+            通讯方式
           </h2>
-          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-            {CASE_ITEMS.map((item) => (
-              <Card
-                key={item.title}
-                className="rounded-2xl border-border/50 bg-background/15 p-6 backdrop-blur md:rounded-3xl md:p-7"
+          <Card className="mt-10 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
+            <div className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">
+              <div className="h-24 w-24 rounded-xl border border-border/50 bg-background/15 backdrop-blur" aria-label="二维码占位" />
+              <a
+                href="mailto:mlx979692038@gmail.com"
+                className="text-sm leading-7 text-foreground/65 underline-offset-4 hover:text-foreground/80 hover:underline"
               >
-                <h3 className="font-medium tracking-wide text-foreground">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-foreground/70">{item.body}</p>
-              </Card>
-            ))}
-          </div>
-          <Separator className="my-12 bg-border/50" />
-          <p className="text-pretty text-sm leading-8 text-foreground/72 md:text-base">{product.oneLiner}</p>
+                mlx979692038@gmail.com
+              </a>
+            </div>
+          </Card>
         </motion.section>
       </main>
 
@@ -344,15 +332,6 @@ export default function Product({ keyParam }: ProductProps) {
             </div>
           </div>
 
-          <div className="mt-6 flex flex-col items-start gap-4 border-t border-border/40 pt-6 md:flex-row md:items-center md:justify-between">
-            <div className="h-24 w-24 rounded-xl border border-border/50 bg-background/15 backdrop-blur" aria-label="二维码占位" />
-            <a
-              href="mailto:mlx979692038@gmail.com"
-              className="text-sm leading-7 text-foreground/65 underline-offset-4 hover:text-foreground/80 hover:underline"
-            >
-              mlx979692038@gmail.com
-            </a>
-          </div>
         </div>
       </footer>
     </div>
