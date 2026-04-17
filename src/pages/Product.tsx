@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Pause, Volume2 } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼.jpg";
@@ -69,6 +69,11 @@ const DEMO_CARDS = [
   },
 ] as const;
 
+const DEMO_AUDIO_URLS: Record<string, string> = {
+  夏以昼: "/audio/trace-inhabit-xiayizhou-placeholder.mp3",
+  叶修: "/audio/trace-inhabit-yexiu-placeholder.mp3",
+};
+
 const IMPLEMENTATION_TEXT =
   "当前实现采用“角色配置层 + 能力执行层 + 交互编排层”的结构。页面用于承载该能力的说明入口，后续可继续补充 API、数据流与部署细节。";
 
@@ -81,9 +86,72 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 export default function Product({ keyParam }: ProductProps) {
   const [heroHub, setHeroHub] = useState<HeroHubId>("clawhub");
   const [focusedDemoCard, setFocusedDemoCard] = useState<string | null>(null);
+  const [playingDemoCard, setPlayingDemoCard] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCardRef = useRef<string | null>(null);
   const raw = keyParam as ProductKey | undefined;
   const key: ProductKey = raw && raw in PRODUCT_BY_KEY ? raw : "trace";
   const product = PRODUCT_BY_KEY[key];
+
+  const stopCurrentAudio = (resetState = true) => {
+    if (!audioRef.current) return;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    audioRef.current = null;
+    audioCardRef.current = null;
+    if (resetState) {
+      setPlayingDemoCard(null);
+    }
+  };
+
+  const setFocusedCard = (title: string) => {
+    if (audioCardRef.current && audioCardRef.current !== title) {
+      stopCurrentAudio();
+    }
+    setFocusedDemoCard(title);
+  };
+
+  const toggleDemoAudio = async (title: string) => {
+    const currentAudio = audioRef.current;
+    if (audioCardRef.current === title && currentAudio) {
+      if (!currentAudio.paused) {
+        currentAudio.pause();
+        setPlayingDemoCard(null);
+      } else {
+        try {
+          await currentAudio.play();
+          setPlayingDemoCard(title);
+        } catch {
+          setPlayingDemoCard(null);
+        }
+      }
+      return;
+    }
+
+    stopCurrentAudio();
+    const src = DEMO_AUDIO_URLS[title];
+    if (!src) return;
+
+    const nextAudio = new Audio(src);
+    audioRef.current = nextAudio;
+    audioCardRef.current = title;
+    nextAudio.onended = () => {
+      if (audioCardRef.current === title) {
+        audioRef.current = null;
+        audioCardRef.current = null;
+        setPlayingDemoCard(null);
+      }
+    };
+
+    try {
+      await nextAudio.play();
+      setPlayingDemoCard(title);
+    } catch {
+      audioRef.current = null;
+      audioCardRef.current = null;
+      setPlayingDemoCard(null);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -276,7 +344,10 @@ export default function Product({ keyParam }: ProductProps) {
           <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div
               className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6"
-              onMouseLeave={() => setFocusedDemoCard(null)}
+              onMouseLeave={() => {
+                setFocusedDemoCard(null);
+                stopCurrentAudio();
+              }}
             >
               {DEMO_CARDS.map((item) => (
                 <div
@@ -287,9 +358,9 @@ export default function Product({ keyParam }: ProductProps) {
                     focusedDemoCard && focusedDemoCard !== item.title && "opacity-75 blur-[1.5px] saturate-75",
                     focusedDemoCard === item.title && "scale-[1.03] border-border/70 shadow-[0_22px_48px_-30px_oklch(0.78_0.12_75/0.45)]"
                   )}
-                  onMouseEnter={() => setFocusedDemoCard(item.title)}
-                  onFocus={() => setFocusedDemoCard(item.title)}
-                  onClick={() => setFocusedDemoCard(item.title)}
+                  onMouseEnter={() => setFocusedCard(item.title)}
+                  onFocus={() => setFocusedCard(item.title)}
+                  onClick={() => setFocusedCard(item.title)}
                   tabIndex={0}
                 >
                   <div className="aspect-[4/5] overflow-hidden">
@@ -303,7 +374,26 @@ export default function Product({ keyParam }: ProductProps) {
                     />
                   </div>
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,oklch(0.145_0.03_262/0.92),oklch(0.145_0.03_262/0.2),transparent)] p-4 md:p-5">
-                    <p className="text-sm font-medium tracking-wide text-foreground md:text-base">{item.title}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium tracking-wide text-foreground md:text-base">{item.title}</p>
+                      {focusedDemoCard === item.title && (
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleDemoAudio(item.title);
+                          }}
+                          className={cn(
+                            "pointer-events-auto inline-flex h-6 w-6 items-center justify-center rounded-full border border-border/60 bg-background/25",
+                            "transition-colors hover:bg-background/40",
+                            playingDemoCard === item.title ? "text-[oklch(0.78_0.12_75)]" : "text-foreground/75"
+                          )}
+                          aria-label={playingDemoCard === item.title ? `暂停${item.title}音频` : `播放${item.title}音频`}
+                        >
+                          {playingDemoCard === item.title ? <Pause className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                        </button>
+                      )}
+                    </div>
                     <p className="mt-1 text-xs text-foreground/70">Trace / Inhabit 角色卡 · {item.enName}</p>
                     {focusedDemoCard === item.title && (
                       <div className="mt-3 space-y-2">
