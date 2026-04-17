@@ -439,12 +439,14 @@ export default function Product({ keyParam }: ProductProps) {
                 alt="微信公众号二维码"
                 className="h-24 w-24 rounded-xl border border-border/50 object-cover"
               />
-              <a
-                href="mailto:mlx979692038@gmail.com"
-                className="text-sm leading-7 text-foreground/65 underline-offset-4 hover:text-foreground/80 hover:underline"
-              >
-                mlx979692038@gmail.com
-              </a>
+              <div className="space-y-1 text-sm leading-7 text-foreground/65">
+                <a href="mailto:mlx979692038@gmail.com" className="underline-offset-4 hover:text-foreground/80 hover:underline">
+                  GMAIL邮箱：mlx979692038@gmail.com
+                </a>
+                <a href="mailto:evange563@foxmail.com" className="block underline-offset-4 hover:text-foreground/80 hover:underline">
+                  FOXMAIL邮箱：evange563@foxmail.com
+                </a>
+              </div>
             </div>
           </Card>
         </motion.section>
