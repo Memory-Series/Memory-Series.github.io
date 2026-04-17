@@ -384,7 +384,7 @@ export default function Product({ keyParam }: ProductProps) {
                             toggleDemoAudio(item.title);
                           }}
                           className={cn(
-                            "pointer-events-auto inline-flex h-6 w-6 translate-y-[2px] items-center justify-center rounded-full border border-border/60 bg-background/25",
+                            "pointer-events-auto inline-flex h-6 w-6 translate-x-[-5px] translate-y-[4px] items-center justify-center rounded-full border border-border/60 bg-background/25",
                             "transition-colors hover:bg-background/40",
                             playingDemoCard === item.title ? "text-[oklch(0.78_0.12_75)]" : "text-foreground/75"
                           )}
