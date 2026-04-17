@@ -75,7 +75,7 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
 };
 
 const IMPLEMENTATION_TEXT =
-  "当前实现采用“角色配置层 + 能力执行层 + 交互编排层”的结构。页面用于承载该能力的说明入口，后续可继续补充 API、数据流与部署细节。";
+  "当前实现由 Memory-Trace 与 Memory-Inhabit 组成：Trace 负责解析素材并生成 SoulPod，Inhabit 负责加载 SoulPod 并以角色身份对话；两者通过统一的 SoulPod 包结构完成衔接与部署。";
 
 
 
