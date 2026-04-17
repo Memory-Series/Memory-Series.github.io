@@ -3,8 +3,10 @@ import { motion } from "framer-motion";
 import { ArrowUp, Pause, Volume2 } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpeg";
-import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼.jpg";
-import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修.jpg";
+import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼/夏以昼.jpg";
+import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修/叶修.jpg";
+import traceDemoXiaYizhouAudio from "@/assets/demo/trace-inhabit/夏以昼/夏以昼_没错你如果偷偷做了坏事.mp3";
+import traceDemoYeXiuAudio from "@/assets/demo/trace-inhabit/叶修/叶修_路还很长.mp3";
 import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -70,8 +72,8 @@ const DEMO_CARDS = [
 ] as const;
 
 const DEMO_AUDIO_URLS: Record<string, string> = {
-  夏以昼: "/audio/trace-inhabit-xiayizhou-placeholder.mp3",
-  叶修: "/audio/trace-inhabit-yexiu-placeholder.mp3",
+  夏以昼: traceDemoXiaYizhouAudio,
+  叶修: traceDemoYeXiuAudio,
 };
 
 const IMPLEMENTATION_TEXT =
