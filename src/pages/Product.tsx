@@ -5,6 +5,7 @@ import { ArrowUp } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼.jpg";
 import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修.jpg";
+import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -343,7 +344,11 @@ export default function Product({ keyParam }: ProductProps) {
           </h2>
           <Card className="mt-10 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">
-              <div className="h-24 w-24 rounded-xl border border-border/50 bg-background/15 backdrop-blur" aria-label="二维码占位" />
+              <img
+                src={wechatOfficialQr}
+                alt="微信公众号二维码"
+                className="h-24 w-24 rounded-xl border border-border/50 object-cover"
+              />
               <a
                 href="mailto:mlx979692038@gmail.com"
                 className="text-sm leading-7 text-foreground/65 underline-offset-4 hover:text-foreground/80 hover:underline"
