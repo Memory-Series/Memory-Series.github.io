@@ -34,6 +34,10 @@ const anchors = [
   { id: "contact", t: "通讯" },
 ] as const;
 
+function scrollToAnchor(sectionId: string) {
+  document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 type HeroHubId = "clawhub" | "skillhub";
 
 const HERO_HUB_URLS: Record<HeroHubId, readonly [string, string]> = {
@@ -43,9 +47,6 @@ const HERO_HUB_URLS: Record<HeroHubId, readonly [string, string]> = {
   ],
   skillhub: ["https://skillhub.cn/skills/memory-trace", "https://skillhub.cn/skills/memory-inhabit"],
 };
-
-const INTRO_TEXT =
-  "Trace / Inhabit 是一个面向数字角色持续化的开源方向页面，目标是把“角色设定 + 能力调用 + 长期交互”组织成可复用能力。";
 
 const FEATURE_ITEMS = [
   "角色设定可配置：支持基础身份、行为边界与语气偏好。",
@@ -219,6 +220,8 @@ export default function Product({ keyParam }: ProductProps) {
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
               <Button
+                type="button"
+                onClick={() => scrollToAnchor("intro")}
                 className={cn(
                   "h-11 rounded-full px-7",
                   "bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)]",
@@ -228,10 +231,12 @@ export default function Product({ keyParam }: ProductProps) {
                 {product.ctaPrimary}
               </Button>
               <Button
+                type="button"
+                onClick={() => scrollToAnchor("contact")}
                 variant="outline"
                 className="h-11 rounded-full border-border/60 bg-background/25 px-7 text-foreground backdrop-blur hover:bg-background/35"
               >
-                {product.ctaSecondary}
+                联系方式
               </Button>
             </div>
 
@@ -292,7 +297,7 @@ export default function Product({ keyParam }: ProductProps) {
               <button
                 key={a.id}
                 type="button"
-                onClick={() => document.getElementById(a.id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                onClick={() => scrollToAnchor(a.id)}
                 className={cn(
                   "rounded-full border border-border/50 bg-background/20 px-4 py-2 text-xs tracking-[0.2em] text-foreground/70 backdrop-blur",
                   "transition-colors hover:border-border/70 hover:bg-background/30 hover:text-foreground"
@@ -311,11 +316,34 @@ export default function Product({ keyParam }: ProductProps) {
         <motion.section id="intro" className="scroll-mt-32" {...fadeUp}>
           <SectionEyebrow>简介</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            项目简介
+            寻迹 / 入心 
           </h2>
-          <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">{INTRO_TEXT}</p>
-          </Card>
+          <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-5 backdrop-blur md:p-7">
+            <div className="space-y-8 text-pretty text-sm leading-7 text-foreground/75 md:text-[0.975rem] md:leading-8">
+              <div className="grid grid-cols-1 gap-6 md:gap-8">
+                <div className="space-y-3">
+                  <h3 className="font-[Manrope] text-base font-semibold tracking-[-0.02em] text-foreground md:text-lg">
+                    Trace · 寻迹
+                  </h3>
+                  <ul className="list-disc space-y-1.5 pl-9 marker:text-[oklch(0.78_0.12_75)]">
+                    <li className="italic">从小说、剧本、动漫素材提取角色人格</li>
+                    <li className="italic">分析语言风格、性格特征、行为模式</li>
+                    <li className="italic">输出 SoulPod（profile.json / system_prompts.txt / memories）</li>
+                  </ul>                  
+                </div>
+                <div className="space-y-3">
+                  <h3 className="font-[Manrope] text-base font-semibold tracking-[-0.02em] text-foreground md:text-lg">
+                    Inhabit · 入心
+                  </h3>
+                  <ul className="list-disc space-y-1.5 pl-9 marker:text-[oklch(0.78_0.12_75)]">
+                    <li className="italic">加载 SoulPod，以角色身份对话</li>
+                    <li className="italic">模式：复刻模式 / 伴侣模式 / 故事模式</li>
+                    <li className="italic">能力：角色场景对话，角色图像生成，角色语音生成</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </Card>         
         </motion.section>
 
         <motion.section id="features" className="scroll-mt-32" {...fadeUp}>
@@ -323,7 +351,7 @@ export default function Product({ keyParam }: ProductProps) {
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
             核心特性
           </h2>
-          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+          <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
             {FEATURE_ITEMS.map((line) => (
               <Card
                 key={line}
@@ -343,7 +371,7 @@ export default function Product({ keyParam }: ProductProps) {
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
             演示与预览
           </h2>
-          <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
+          <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div
               className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6"
               onMouseLeave={() => {
@@ -424,7 +452,7 @@ export default function Product({ keyParam }: ProductProps) {
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
             实现说明
           </h2>
-          <Card className="mt-8 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
+          <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">{IMPLEMENTATION_TEXT}</p>
           </Card>
         </motion.section>
@@ -434,7 +462,7 @@ export default function Product({ keyParam }: ProductProps) {
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
             通讯方式
           </h2>
-          <Card className="mt-10 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
+          <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">
               <img
                 src={wechatOfficialQr}
