@@ -28,8 +28,7 @@ const fadeUp = {
 
 const anchors = [
   { id: "intro", t: "简介" },
-  { id: "features", t: "特性" },
-  { id: "demo", t: "演示" },
+  { id: "demo", t: "角色" },
   { id: "implementation", t: "情景" },
   { id: "contact", t: "通讯" },
 ] as const;
@@ -47,13 +46,6 @@ const HERO_HUB_URLS: Record<HeroHubId, readonly [string, string]> = {
   ],
   skillhub: ["https://skillhub.cn/skills/memory-trace", "https://skillhub.cn/skills/memory-inhabit"],
 };
-
-const FEATURE_ITEMS = [
-  "角色设定可配置：支持基础身份、行为边界与语气偏好。",
-  "知识能力可挂载：可接入外部知识与任务流程。",
-  "交互状态可延续：保留关键上下文，减少重复输入。",
-  "结构清晰可扩展：模块拆分便于后续接入更多能力。",
-] as const;
 
 const DEMO_CARDS = [
   {
@@ -355,30 +347,10 @@ export default function Product({ keyParam }: ProductProps) {
           </Card>         
         </motion.section>
 
-        <motion.section id="features" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>特性 (Features)</SectionEyebrow>
-          <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            核心特性
-          </h2>
-          <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-            {FEATURE_ITEMS.map((line) => (
-              <Card
-                key={line}
-                className="rounded-2xl border-border/50 bg-background/15 p-6 backdrop-blur md:rounded-3xl md:p-7"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[oklch(0.78_0.12_75)]" aria-hidden />
-                  <p className="text-sm leading-7 text-foreground/75">{line}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </motion.section>
-
         <motion.section id="demo" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>演示 (Demo)</SectionEyebrow>
+          <SectionEyebrow>角色</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            演示与预览
+            角色卡
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div
