@@ -1,31 +1,25 @@
-# Memory Trace/Inhabit Landing
+# Memory Series（寻迹 / 入心）
 
-该仓库当前仅用于维护单页站点：`/#/product/trace`。
+## 主页地址
 
-## 项目说明
+- [https://memory-series.github.io/](https://memory-series.github.io/)
 
-- 页面定位：Trace / Inhabit（寻迹/入心）产品展示页
-- 路由策略：站点根路径和旧路径会重定向到 `/#/product/trace`
-- 部署方式：GitHub Pages（GitHub Actions 自动构建并发布）
+## 项目简介
 
-## 本地开发
+### Trace · 寻迹
 
-```bash
-pnpm install
-pnpm dev
-```
+- 从小说、剧本、动漫素材提取角色人格
+- 分析语言风格、性格特征、行为模式
+- 输出 SoulPod（`profile.json` / `system_prompts.txt` / `memories`）
 
-## 构建
+### Inhabit · 入心
 
-```bash
-pnpm build
-```
+- 加载 SoulPod，以角色身份对话
+- 模式：复刻模式 / 伴侣模式 / 故事模式
+- 能力：角色场景对话，角色图像生成，角色语音生成
 
-## 目录（精简后）
+## 联系方式
 
-- `src/pages/Product.tsx`：Trace/Inhabit 页面
-- `src/lib/products.ts`：产品文案数据（当前仅保留 trace）
-- `src/App.tsx`：trace-only 路由与重定向
-- `core/Trace-Inhabit-Product-Page.md`：Trace/Inhabit 文档稿
-- `.github/workflows/deploy-pages.yml`：Pages 自动部署
+- GMAIL邮箱：`mlx979692038@gmail.com`
+- FOXMAIL邮箱：`evange563@foxmail.com`
 
