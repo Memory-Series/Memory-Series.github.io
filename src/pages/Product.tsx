@@ -77,8 +77,8 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
   叶修: traceDemoYeXiuAudio,
 };
 
-const IMPLEMENTATION_TEXT =
-  "本区域用于展示 Memory-Trace / Memory-Inhabit 的使用情景：包含角色样例、对话体验与素材参考。公众号文章（标题待补充）：https://mp.weixin.qq.com/s/VHvBEiq1LZPGc22XlOII2g";
+const IMPLEMENTATION_ARTICLE_TEXT = "哥哥的飞行训练日常，也是看到了。。";
+const IMPLEMENTATION_ARTICLE_URL = "https://mp.weixin.qq.com/s/VHvBEiq1LZPGc22XlOII2g";
 
 
 
@@ -453,7 +453,16 @@ export default function Product({ keyParam }: ProductProps) {
             使用情景
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">{IMPLEMENTATION_TEXT}</p>
+            <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">
+              <a
+                href={IMPLEMENTATION_ARTICLE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="underline-offset-4 hover:text-foreground/90 hover:underline"
+              >
+                {IMPLEMENTATION_ARTICLE_TEXT}
+              </a>
+            </p>
           </Card>
         </motion.section>
 
