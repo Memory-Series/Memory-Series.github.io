@@ -78,7 +78,7 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
 };
 
 const IMPLEMENTATION_TEXT =
-  "本区域用于展示 Memory-Trace / Memory-Inhabit 的使用情景：包含角色样例、对话体验与素材参考。公众号文章链接将在此补充（占位符：微信公众号文章链接待提供）。";
+  "本区域用于展示 Memory-Trace / Memory-Inhabit 的使用情景：包含角色样例、对话体验与素材参考。公众号文章（标题待补充）：https://mp.weixin.qq.com/s/VHvBEiq1LZPGc22XlOII2g";
 
 
 
