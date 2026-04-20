@@ -30,7 +30,7 @@ const anchors = [
   { id: "intro", t: "简介" },
   { id: "features", t: "特性" },
   { id: "demo", t: "演示" },
-  { id: "implementation", t: "实现" },
+  { id: "implementation", t: "情景" },
   { id: "contact", t: "通讯" },
 ] as const;
 
@@ -78,7 +78,7 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
 };
 
 const IMPLEMENTATION_TEXT =
-  "当前实现由 Memory-Trace 与 Memory-Inhabit 组成：Trace 负责解析素材并生成 SoulPod，Inhabit 负责加载 SoulPod 并以角色身份对话；两者通过统一的 SoulPod 包结构完成衔接与部署。";
+  "本区域用于展示 Memory-Trace / Memory-Inhabit 的使用情景：包含角色样例、对话体验与素材参考。公众号文章链接将在此补充（占位符：微信公众号文章链接待提供）。";
 
 
 
@@ -448,9 +448,9 @@ export default function Product({ keyParam }: ProductProps) {
         </motion.section>
 
         <motion.section id="implementation" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>实现</SectionEyebrow>
+          <SectionEyebrow>情景</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            实现说明
+            使用情景
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">{IMPLEMENTATION_TEXT}</p>
