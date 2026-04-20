@@ -79,12 +79,18 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
 
 const IMPLEMENTATION_ARTICLE_TEXT = "《哥哥的飞行训练日常，也是看到了。。》";
 const IMPLEMENTATION_ARTICLE_URL = "https://mp.weixin.qq.com/s/VHvBEiq1LZPGc22XlOII2g";
+const IMPLEMENTATION_BARRAGE_COUNT = 8;
+const IMPLEMENTATION_BARRAGE_SPEED_SECONDS = 22;
 
 
 
 function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return <p className="text-xs tracking-[0.34em] text-foreground/60">{children}</p>;
 }
+
+const implementationBarrageTrackStyle = {
+  animation: `implementation-barrage ${IMPLEMENTATION_BARRAGE_SPEED_SECONDS}s linear infinite`,
+} as const;
 
 export default function Product({ keyParam }: ProductProps) {
   const [heroHub, setHeroHub] = useState<HeroHubId>("clawhub");
@@ -453,17 +459,22 @@ export default function Product({ keyParam }: ProductProps) {
             使用情景
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-            <p className="text-pretty text-sm leading-8 text-foreground/75 md:text-base md:leading-8">
-              <a
-                href={IMPLEMENTATION_ARTICLE_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 underline-offset-4 hover:text-foreground/90 hover:underline"
-              >
-                <Link2 className="h-4 w-4" aria-hidden />
-                <span>{IMPLEMENTATION_ARTICLE_TEXT}</span>
-              </a>
-            </p>
+            <div className="group/barrage relative overflow-hidden">
+              <div className="flex w-max items-center gap-10 pr-10 [animation-play-state:running] group-hover/barrage:[animation-play-state:paused]" style={implementationBarrageTrackStyle}>
+                {Array.from({ length: IMPLEMENTATION_BARRAGE_COUNT }).map((_, idx) => (
+                  <a
+                    key={`implementation-barrage-${idx}`}
+                    href={IMPLEMENTATION_ARTICLE_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap text-sm leading-8 text-foreground/75 underline-offset-4 hover:text-foreground/90 hover:underline md:text-base md:leading-8"
+                  >
+                    <Link2 className="h-4 w-4" aria-hidden />
+                    <span>{IMPLEMENTATION_ARTICLE_TEXT}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
           </Card>
         </motion.section>
 
@@ -491,6 +502,17 @@ export default function Product({ keyParam }: ProductProps) {
           </Card>
         </motion.section>
       </main>
+
+      <style>{`
+        @keyframes implementation-barrage {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
 
       <footer className="border-t border-border/60">
         <div className="mx-auto max-w-6xl px-5 py-10">
