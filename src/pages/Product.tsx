@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUp, Pause, Volume2 } from "lucide-react";
+import { ArrowUp, Link2, Pause, Volume2 } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼/夏以昼.jpg";
@@ -77,7 +77,7 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
   叶修: traceDemoYeXiuAudio,
 };
 
-const IMPLEMENTATION_ARTICLE_TEXT = "哥哥的飞行训练日常，也是看到了。。";
+const IMPLEMENTATION_ARTICLE_TEXT = "《哥哥的飞行训练日常，也是看到了。。》";
 const IMPLEMENTATION_ARTICLE_URL = "https://mp.weixin.qq.com/s/VHvBEiq1LZPGc22XlOII2g";
 
 
@@ -458,9 +458,10 @@ export default function Product({ keyParam }: ProductProps) {
                 href={IMPLEMENTATION_ARTICLE_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="underline-offset-4 hover:text-foreground/90 hover:underline"
+                className="inline-flex items-center gap-2 underline-offset-4 hover:text-foreground/90 hover:underline"
               >
-                {IMPLEMENTATION_ARTICLE_TEXT}
+                <Link2 className="h-4 w-4" aria-hidden />
+                <span>{IMPLEMENTATION_ARTICLE_TEXT}</span>
               </a>
             </p>
           </Card>
