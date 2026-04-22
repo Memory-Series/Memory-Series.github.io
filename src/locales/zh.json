@@ -1,17 +1,22 @@
 {
-  "common": {
-    "toTop": "返回顶部",
-    "contact": "联系方式",
-    "sourceHint": "选择来源后查看链接："
+  "header": {
+    "backToTop": "返回顶部"
   },
   "hero": {
-    "series": "Memory Series"
+    "series": "Memory Series",
+    "title": "让存在，不止停留在记忆里。",
+    "subtitle": "把喜欢的人，带到你身边。",
+    "primaryCta": "进入简介",
+    "contactCta": "联系方式",
+    "hubHint": "选择来源后查看链接："
   },
   "nav": {
-    "intro": "简介",
-    "demo": "角色",
-    "implementation": "情景",
-    "contact": "通讯"
+    "anchors": {
+      "intro": "简介",
+      "demo": "角色",
+      "implementation": "情景",
+      "contact": "通讯"
+    }
   },
   "sections": {
     "intro": {

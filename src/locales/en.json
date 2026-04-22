@@ -1,14 +1,17 @@
 {
-  "common": {
-    "backToTop": "Back to Top",
-    "contact": "Contact"
+  "header": {
+    "backToTop": "Back to Top"
   },
   "hero": {
-    "seriesLabel": "Memory Series",
-    "sourceHint": "Select source to view links:"
+    "series": "Memory Series",
+    "title": "Existence, Beyond Memory.",
+    "subtitle": "Memory-Trace / Memory-Inhabit, from character reconstruction to immersive companionship.",
+    "primaryCta": "Get Started",
+    "contactCta": "Contact",
+    "hubHint": "Select source to view links:"
   },
   "nav": {
-    "inPage": {
+    "anchors": {
       "intro": "Overview",
       "demo": "Characters",
       "implementation": "Scenarios",
