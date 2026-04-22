@@ -338,9 +338,9 @@ export default function Product({ keyParam }: ProductProps) {
                     Trace · 寻迹
                   </h3>
                   <ul className="list-disc space-y-1.5 pl-9 marker:text-[oklch(0.78_0.12_75)]">
-                    <li className="italic">从小说、剧本、动漫素材提取角色人格</li>
-                    <li className="italic">分析语言风格、性格特征、行为模式</li>
-                    <li className="italic">输出 SoulPod（profile.json / system_prompts.txt / memories）</li>
+                    <li className="italic">{t("sections.intro.traceBullets.0")}</li>
+                    <li className="italic">{t("sections.intro.traceBullets.1")}</li>
+                    <li className="italic">{t("sections.intro.traceBullets.2")}</li>
                   </ul>                  
                 </div>
                 <div className="space-y-3">
@@ -348,9 +348,9 @@ export default function Product({ keyParam }: ProductProps) {
                     Inhabit · 入心
                   </h3>
                   <ul className="list-disc space-y-1.5 pl-9 marker:text-[oklch(0.78_0.12_75)]">
-                    <li className="italic">加载 SoulPod，以角色身份对话</li>
-                    <li className="italic">模式：复刻模式 / 伴侣模式 / 故事模式</li>
-                    <li className="italic">能力：角色场景对话，角色图像生成，角色语音生成</li>
+                    <li className="italic">{t("sections.intro.inhabitBullets.0")}</li>
+                    <li className="italic">{t("sections.intro.inhabitBullets.1")}</li>
+                    <li className="italic">{t("sections.intro.inhabitBullets.2")}</li>
                   </ul>
                 </div>
               </div>
