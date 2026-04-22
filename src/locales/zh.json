@@ -1,0 +1,34 @@
+{
+  "common": {
+    "toTop": "返回顶部",
+    "contact": "联系方式",
+    "sourceHint": "选择来源后查看链接："
+  },
+  "hero": {
+    "series": "Memory Series"
+  },
+  "nav": {
+    "intro": "简介",
+    "demo": "角色",
+    "implementation": "情景",
+    "contact": "通讯"
+  },
+  "sections": {
+    "intro": {
+      "eyebrow": "简介",
+      "title": "寻迹 / 入心"
+    },
+    "demo": {
+      "eyebrow": "角色",
+      "title": "角色卡"
+    },
+    "implementation": {
+      "eyebrow": "情景",
+      "title": "使用情景"
+    },
+    "contact": {
+      "eyebrow": "通讯",
+      "title": "通讯方式"
+    }
+  }
+}
