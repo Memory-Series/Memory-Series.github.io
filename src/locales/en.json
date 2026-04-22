@@ -21,7 +21,17 @@
   "sections": {
     "intro": {
       "eyebrow": "Overview",
-      "title": "Trace / Inhabit"
+      "title": "Trace / Inhabit",
+      "traceBullets": [
+        "Extract role persona from novels, scripts, and animation materials",
+        "Analyze language style, personality traits, and behavior patterns",
+        "Output SoulPod (profile.json / system_prompts.txt / memories)"
+      ],
+      "inhabitBullets": [
+        "Load SoulPod and converse in character identity",
+        "Modes: Replica Mode / Companion Mode / Story Mode",
+        "Capabilities: role-scene dialogue, role image generation, role voice generation"
+      ]
     },
     "demo": {
       "eyebrow": "Characters",
