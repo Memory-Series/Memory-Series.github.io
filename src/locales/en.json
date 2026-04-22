@@ -6,7 +6,7 @@
     "series": "Memory Series",
     "title": "Existence, Beyond Memory.",
     "subtitle": "Memory-Trace / Memory-Inhabit, from character reconstruction to immersive companionship.",
-    "primaryCta": "Get Started",
+    "primaryCta": "Trace/Inhabit",
     "contactCta": "Contact",
     "hubHint": "Select source to view links:"
   },
@@ -17,6 +17,11 @@
       "implementation": "Scenarios",
       "contact": "Contact"
     }
+  },
+  "footer": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "contact": "Contact Address"
   },
   "sections": {
     "intro": {

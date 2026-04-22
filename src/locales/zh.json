@@ -35,5 +35,10 @@
       "eyebrow": "通讯",
       "title": "通讯方式"
     }
+  },
+  "footer": {
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "contactAddress": "联系地址"
   }
 }
