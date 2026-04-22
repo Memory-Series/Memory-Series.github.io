@@ -84,6 +84,7 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 
 export default function Product({ keyParam }: ProductProps) {
   const [heroHub, setHeroHub] = useState<HeroHubId>("clawhub");
+  const [isEnglishView, setIsEnglishView] = useState(false);
   const [focusedDemoCard, setFocusedDemoCard] = useState<string | null>(null);
   const [playingDemoCard, setPlayingDemoCard] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -185,7 +186,14 @@ export default function Product({ keyParam }: ProductProps) {
             <span className="font-[Manrope] font-medium">{product.name}</span>
             <span className="text-foreground/50"> · {product.cnName}</span>
           </div>
-          <span className="inline-block w-[5.5rem] shrink-0 md:w-24" aria-hidden />
+          <button
+            type="button"
+            className="inline-flex h-9 min-w-12 items-center justify-center rounded-md border border-border/70 bg-background/65 px-3 text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:bg-background/80 hover:text-foreground"
+            onClick={() => setIsEnglishView((prev) => !prev)}
+            aria-label="语言切换按钮（占位）"
+          >
+            {isEnglishView ? "中" : "EN"}
+          </button>
         </div>
       </header>
 
