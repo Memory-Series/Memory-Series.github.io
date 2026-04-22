@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUp, Link2, Pause, Volume2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼/夏以昼.jpg";
@@ -25,13 +26,6 @@ const fadeUp = {
   transition: { duration: 0.75, ease },
   viewport: { once: true, margin: "-60px" },
 } as const;
-
-const anchors = [
-  { id: "intro", t: "简介" },
-  { id: "demo", t: "角色" },
-  { id: "implementation", t: "情景" },
-  { id: "contact", t: "通讯" },
-] as const;
 
 function scrollToAnchor(sectionId: string) {
   document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -84,9 +78,9 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 
 export default function Product({ keyParam }: ProductProps) {
   const [heroHub, setHeroHub] = useState<HeroHubId>("clawhub");
-  const [isEnglishView, setIsEnglishView] = useState(false);
   const [focusedDemoCard, setFocusedDemoCard] = useState<string | null>(null);
   const [playingDemoCard, setPlayingDemoCard] = useState<string | null>(null);
+  const { t, i18n } = useTranslation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCardRef = useRef<string | null>(null);
   const raw = keyParam as ProductKey | undefined;
@@ -169,6 +163,13 @@ export default function Product({ keyParam }: ProductProps) {
     animation: `implementation-barrage ${IMPLEMENTATION_BARRAGE_BASE_SPEED_SECONDS + rowIdx * 3}s linear infinite`,
     animationDelay: `${IMPLEMENTATION_BARRAGE_ROW_DELAYS[rowIdx] ?? 0}s`,
   });
+  const isChineseLanguage = (i18n.resolvedLanguage ?? i18n.language).startsWith("zh");
+  const anchors = [
+    { id: "intro", t: t("nav.anchors.intro") },
+    { id: "demo", t: t("nav.anchors.demo") },
+    { id: "implementation", t: t("nav.anchors.implementation") },
+    { id: "contact", t: t("nav.anchors.contact") },
+  ] as const;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -180,7 +181,7 @@ export default function Product({ keyParam }: ProductProps) {
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           >
             <ArrowUp className="h-4 w-4" aria-hidden />
-            返回顶部
+            {t("header.backToTop")}
           </button>
           <div className="text-center text-sm tracking-wide text-foreground/80">
             <span className="font-[Manrope] font-medium">{product.name}</span>
@@ -189,10 +190,12 @@ export default function Product({ keyParam }: ProductProps) {
           <button
             type="button"
             className="inline-flex h-9 min-w-12 items-center justify-center rounded-md border border-border/70 bg-background/65 px-3 text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:bg-background/80 hover:text-foreground"
-            onClick={() => setIsEnglishView((prev) => !prev)}
-            aria-label="语言切换按钮（占位）"
+            onClick={() => {
+              void i18n.changeLanguage(isChineseLanguage ? "en" : "zh");
+            }}
+            aria-label="语言切换按钮"
           >
-            {isEnglishView ? "中" : "EN"}
+            {isChineseLanguage ? "EN" : "中"}
           </button>
         </div>
       </header>
@@ -212,7 +215,7 @@ export default function Product({ keyParam }: ProductProps) {
             className="mx-auto max-w-3xl text-center"
           >
             <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/30 px-4 py-2 text-xs tracking-[0.32em] text-foreground/70 backdrop-blur">
-              Memory Series
+              {t("hero.series")}
               <span className="h-1 w-1 rounded-full bg-[oklch(0.78_0.12_75)]" aria-hidden />
               Trace / Inhabit
             </p>
@@ -222,10 +225,10 @@ export default function Product({ keyParam }: ProductProps) {
                 "md:text-5xl lg:text-6xl"
               )}
             >
-              {product.heroTitle}
+              {t("hero.title")}
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-8 text-foreground/72 md:text-lg md:leading-8">
-              {product.heroSubtitle}
+              {t("hero.subtitle")}
             </p>
             <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
               <Button
@@ -237,7 +240,7 @@ export default function Product({ keyParam }: ProductProps) {
                   "hover:bg-[oklch(0.82_0.12_75)]"
                 )}
               >
-                {product.ctaPrimary}
+                {t("hero.primaryCta")}
               </Button>
               <Button
                 type="button"
@@ -245,14 +248,14 @@ export default function Product({ keyParam }: ProductProps) {
                 variant="outline"
                 className="h-11 rounded-full border-border/60 bg-background/25 px-7 text-foreground backdrop-blur hover:bg-background/35"
               >
-                联系方式
+                {t("hero.contactCta")}
               </Button>
             </div>
 
             <div className="mx-auto mt-10 w-full max-w-2xl text-left md:max-w-3xl">
               <div className="rounded-2xl border border-border/50 bg-background/15 p-4 backdrop-blur md:rounded-3xl md:p-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-                  <p className="text-sm text-foreground/65">选择来源后查看链接：</p>
+                  <p className="text-sm text-foreground/65">{t("hero.hubHint")}</p>
                   <div
                     className="inline-flex shrink-0 rounded-full border border-border/60 bg-background/25 p-0.5 backdrop-blur"
                     role="tablist"
@@ -323,9 +326,9 @@ export default function Product({ keyParam }: ProductProps) {
 
       <main className="mx-auto max-w-3xl space-y-20 px-5 py-16 md:space-y-28 md:py-24">
         <motion.section id="intro" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>简介</SectionEyebrow>
+          <SectionEyebrow>{t("sections.intro.eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            寻迹 / 入心 
+            {t("sections.intro.title")}
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-5 backdrop-blur md:p-7">
             <div className="space-y-8 text-pretty text-sm leading-7 text-foreground/75 md:text-[0.975rem] md:leading-8">
@@ -356,9 +359,9 @@ export default function Product({ keyParam }: ProductProps) {
         </motion.section>
 
         <motion.section id="demo" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>角色</SectionEyebrow>
+          <SectionEyebrow>{t("sections.demo.eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            角色卡
+            {t("sections.demo.title")}
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div
@@ -437,9 +440,9 @@ export default function Product({ keyParam }: ProductProps) {
         </motion.section>
 
         <motion.section id="implementation" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>情景</SectionEyebrow>
+          <SectionEyebrow>{t("sections.implementation.eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            使用情景
+            {t("sections.implementation.title")}
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div className="group/barrage relative space-y-3 overflow-hidden py-1">
@@ -469,9 +472,9 @@ export default function Product({ keyParam }: ProductProps) {
         </motion.section>
 
         <motion.section id="contact" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>通讯</SectionEyebrow>
+          <SectionEyebrow>{t("sections.contact.eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            通讯方式
+            {t("sections.contact.title")}
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">

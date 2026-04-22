@@ -1,0 +1,36 @@
+{
+  "common": {
+    "backToTop": "Back to Top",
+    "contact": "Contact"
+  },
+  "hero": {
+    "seriesLabel": "Memory Series",
+    "sourceHint": "Select source to view links:"
+  },
+  "nav": {
+    "inPage": {
+      "intro": "Overview",
+      "demo": "Characters",
+      "implementation": "Scenarios",
+      "contact": "Contact"
+    }
+  },
+  "sections": {
+    "intro": {
+      "eyebrow": "Overview",
+      "title": "Trace / Inhabit"
+    },
+    "demo": {
+      "eyebrow": "Characters",
+      "title": "Character Cards"
+    },
+    "implementation": {
+      "eyebrow": "Scenarios",
+      "title": "Usage Scenarios"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Contact Information"
+    }
+  }
+}
