@@ -47,8 +47,10 @@
     }
   },
   "footer": {
-    "privacy": "隐私政策",
-    "terms": "服务条款",
-    "contactAddress": "联系地址"
+    "links": {
+      "privacy": "隐私政策",
+      "terms": "服务条款",
+      "contact": "联系地址"
+    }
   }
 }
