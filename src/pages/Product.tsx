@@ -394,7 +394,7 @@ export default function Product({ keyParam }: ProductProps) {
           </h2>
           <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
             <div
-              className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6"
+              className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-5"
               onMouseLeave={() => {
                 setFocusedDemoCard(null);
                 stopCurrentAudio();
