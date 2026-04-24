@@ -517,7 +517,7 @@ export default function Product({ keyParam }: ProductProps) {
               <p className="mt-2 text-sm leading-7 text-foreground/60">Memory Series · Trace / Inhabit</p>
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-foreground/55">
-              {(["footer.privacy", "footer.terms", "footer.contactAddress"] as const).map((item) => (
+              {(["footer.links.privacy", "footer.links.terms", "footer.links.contact"] as const).map((item) => (
                 <span key={item} className="underline-offset-4 hover:text-foreground/70">
                   {t(item)}
                 </span>
