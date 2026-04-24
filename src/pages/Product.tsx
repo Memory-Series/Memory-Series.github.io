@@ -61,8 +61,8 @@ const DEMO_CARDS = [
     title: "庄方宜",
     enName: "Zhuang Fangyi",
     image: traceDemoZhuangFangyi,
-    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
-    tags: ["信息待补充", "设定占位"],
+    summary: "宏山科学院学者“庄天师”，以温和关怀与雷霆决断并行，守望裂隙研究与姐姐遗志。",
+    tags: ["青霆剑 · 导电状态", "常态/剑形态/玉人形态"],
   },
 ] as const;
 
