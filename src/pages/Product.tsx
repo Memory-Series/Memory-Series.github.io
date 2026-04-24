@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼/夏以昼.jpg";
 import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修/叶修.jpg";
+import traceDemoZhuangFangyi from "@/assets/demo/trace-inhabit/庄方宜/庄方宜.jpeg";
 import traceDemoXiaYizhouAudio from "@/assets/demo/trace-inhabit/夏以昼/夏以昼_没错你如果偷偷做了坏事.mp3";
 import traceDemoYeXiuAudio from "@/assets/demo/trace-inhabit/叶修/叶修_路还很长.mp3";
 import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
@@ -56,11 +57,19 @@ const DEMO_CARDS = [
     summary: "“荣耀教科书”，以冷幽默与极致战术把团队打造成胜利机器。",
     tags: ["君莫笑 · 千机伞", "战术大师"],
   },
+  {
+    title: "庄方宜",
+    enName: "Zhuang Fangyi",
+    image: traceDemoZhuangFangyi,
+    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
+    tags: ["信息待补充", "设定占位"],
+  },
 ] as const;
 
 const DEMO_AUDIO_URLS: Record<string, string> = {
   夏以昼: traceDemoXiaYizhouAudio,
   叶修: traceDemoYeXiuAudio,
+  庄方宜: "/audio/trace-inhabit-zhuangfangyi-placeholder.mp3",
 };
 
 const IMPLEMENTATION_ARTICLES = [
