@@ -19,9 +19,11 @@
     }
   },
   "footer": {
-    "privacy": "Privacy Policy",
-    "terms": "Terms of Service",
-    "contact": "Contact Address"
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "contact": "Contact Address"
+    }
   },
   "sections": {
     "intro": {
