@@ -386,90 +386,92 @@ export default function Product({ keyParam }: ProductProps) {
             </div>
           </Card>         
         </motion.section>
+      </main>
 
-        <motion.section id="demo" className="scroll-mt-32" {...fadeUp}>
-          <div className="mx-auto max-w-6xl">
-            <SectionEyebrow>{t("sections.demo.eyebrow")}</SectionEyebrow>
-            <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-              {t("sections.demo.title")}
-            </h2>
-            <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
-              <div
-                className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-5"
-                onMouseLeave={() => {
-                  setFocusedDemoCard(null);
-                  stopCurrentAudio();
-                }}
-              >
-                {DEMO_CARDS.map((item) => (
-                  <div
-                    key={item.title}
-                    className={cn(
-                      "group relative overflow-hidden rounded-2xl border border-border/50 bg-background/15 md:rounded-3xl",
-                      "transition-all duration-300",
-                      focusedDemoCard && focusedDemoCard !== item.title && "opacity-75 blur-[1.5px] saturate-75",
-                      focusedDemoCard === item.title && "scale-[1.03] border-border/70 shadow-[0_22px_48px_-30px_oklch(0.78_0.12_75/0.45)]"
-                    )}
-                    onMouseEnter={() => setFocusedCard(item.title)}
-                    onFocus={() => setFocusedCard(item.title)}
-                    onClick={() => setFocusedCard(item.title)}
-                    tabIndex={0}
-                  >
-                    <div className="aspect-[4/5] overflow-hidden">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className={cn(
-                          "h-full w-full object-cover transition-transform duration-300",
-                          focusedDemoCard === item.title ? "scale-[1.04]" : "scale-100"
-                        )}
-                      />
-                    </div>
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,oklch(0.145_0.03_262/0.92),oklch(0.145_0.03_262/0.2),transparent)] p-4 md:p-5">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium tracking-wide text-foreground md:text-base">{item.title}</p>
-                        {focusedDemoCard === item.title && (
-                          <button
-                            type="button"
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              toggleDemoAudio(item.title);
-                            }}
-                            className={cn(
-                              "pointer-events-auto inline-flex h-6 w-6 translate-x-[-5px] translate-y-[3px] items-center justify-center rounded-full border border-border/60 bg-background/25",
-                              "transition-colors hover:bg-background/40",
-                              playingDemoCard === item.title ? "text-[oklch(0.78_0.12_75)]" : "text-foreground/75"
-                            )}
-                            aria-label={playingDemoCard === item.title ? `暂停${item.title}音频` : `播放${item.title}音频`}
-                          >
-                            {playingDemoCard === item.title ? <Pause className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-                          </button>
-                        )}
-                      </div>
-                      <p className="mt-1 text-xs text-foreground/70">Trace / Inhabit 角色卡 · {item.enName}</p>
+      <section className="px-5">
+        <motion.section id="demo" className="mx-auto max-w-6xl scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>{t("sections.demo.eyebrow")}</SectionEyebrow>
+          <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
+            {t("sections.demo.title")}
+          </h2>
+          <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-8 backdrop-blur md:p-10">
+            <div
+              className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-5"
+              onMouseLeave={() => {
+                setFocusedDemoCard(null);
+                stopCurrentAudio();
+              }}
+            >
+              {DEMO_CARDS.map((item) => (
+                <div
+                  key={item.title}
+                  className={cn(
+                    "group relative overflow-hidden rounded-2xl border border-border/50 bg-background/15 md:rounded-3xl",
+                    "transition-all duration-300",
+                    focusedDemoCard && focusedDemoCard !== item.title && "opacity-75 blur-[1.5px] saturate-75",
+                    focusedDemoCard === item.title && "scale-[1.03] border-border/70 shadow-[0_22px_48px_-30px_oklch(0.78_0.12_75/0.45)]"
+                  )}
+                  onMouseEnter={() => setFocusedCard(item.title)}
+                  onFocus={() => setFocusedCard(item.title)}
+                  onClick={() => setFocusedCard(item.title)}
+                  tabIndex={0}
+                >
+                  <div className="aspect-[4/5] overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className={cn(
+                        "h-full w-full object-cover transition-transform duration-300",
+                        focusedDemoCard === item.title ? "scale-[1.04]" : "scale-100"
+                      )}
+                    />
+                  </div>
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(to_top,oklch(0.145_0.03_262/0.92),oklch(0.145_0.03_262/0.2),transparent)] p-4 md:p-5">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium tracking-wide text-foreground md:text-base">{item.title}</p>
                       {focusedDemoCard === item.title && (
-                        <div className="mt-3 space-y-2">
-                          <p className="text-xs leading-6 text-foreground/80">{item.summary}</p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {item.tags.map((tag) => (
-                              <span
-                                key={tag}
-                                className="rounded-full border border-border/60 bg-background/35 px-2.5 py-1 text-[10px] text-foreground/80"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleDemoAudio(item.title);
+                          }}
+                          className={cn(
+                            "pointer-events-auto inline-flex h-6 w-6 translate-x-[-5px] translate-y-[3px] items-center justify-center rounded-full border border-border/60 bg-background/25",
+                            "transition-colors hover:bg-background/40",
+                            playingDemoCard === item.title ? "text-[oklch(0.78_0.12_75)]" : "text-foreground/75"
+                          )}
+                          aria-label={playingDemoCard === item.title ? `暂停${item.title}音频` : `播放${item.title}音频`}
+                        >
+                          {playingDemoCard === item.title ? <Pause className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                        </button>
                       )}
                     </div>
+                    <p className="mt-1 text-xs text-foreground/70">Trace / Inhabit 角色卡 · {item.enName}</p>
+                    {focusedDemoCard === item.title && (
+                      <div className="mt-3 space-y-2">
+                        <p className="text-xs leading-6 text-foreground/80">{item.summary}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {item.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-full border border-border/60 bg-background/35 px-2.5 py-1 text-[10px] text-foreground/80"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
-            </Card>
-          </div>
+                </div>
+              ))}
+            </div>
+          </Card>
         </motion.section>
+      </section>
 
+      <main className="mx-auto max-w-3xl space-y-20 px-5 py-16 md:space-y-28 md:py-24">
         <motion.section id="implementation" className="scroll-mt-32" {...fadeUp}>
           <SectionEyebrow>{t("sections.implementation.eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
