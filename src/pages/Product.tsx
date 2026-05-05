@@ -9,6 +9,7 @@ import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修/叶修.jpg";
 import traceDemoZhuangFangyi from "@/assets/demo/trace-inhabit/庄方宜/庄方宜.jpeg";
 import traceDemoXiaYizhouAudio from "@/assets/demo/trace-inhabit/夏以昼/夏以昼_没错你如果偷偷做了坏事.mp3";
 import traceDemoYeXiuAudio from "@/assets/demo/trace-inhabit/叶修/叶修_路还很长.mp3";
+import traceDemoZhuangFangyiAudio from "@/assets/demo/trace-inhabit/庄方宜/庄方宜_迎敌或是迎客都得整装后再出发.wav";
 import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -69,7 +70,7 @@ const DEMO_CARDS = [
 const DEMO_AUDIO_URLS: Record<string, string> = {
   夏以昼: traceDemoXiaYizhouAudio,
   叶修: traceDemoYeXiuAudio,
-  庄方宜: "/audio/trace-inhabit-zhuangfangyi-placeholder.mp3",
+  庄方宜: traceDemoZhuangFangyiAudio,
 };
 
 const IMPLEMENTATION_ARTICLES = [
