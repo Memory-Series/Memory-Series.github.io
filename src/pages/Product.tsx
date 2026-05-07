@@ -422,7 +422,7 @@ export default function Product({ keyParam }: ProductProps) {
                 initial={{ opacity: 0, y: 14, scale: 0.99 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -14, scale: 1.01 }}
-                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
                 className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-5"
                 onMouseLeave={() => {
                   setFocusedDemoCard(null);
@@ -496,7 +496,7 @@ export default function Product({ keyParam }: ProductProps) {
               </motion.div>
             </AnimatePresence>
             {demoTotalPages > 1 && (
-              <div className="mt-5 flex items-center justify-center gap-1.5 md:mt-6 md:gap-2">
+              <div className="mt-5 flex items-center justify-center gap-1 md:mt-6 md:gap-1.5">
                 {Array.from({ length: demoTotalPages }).map((_, pageIdx) => (
                   <button
                     key={`demo-page-dot-${pageIdx}`}
