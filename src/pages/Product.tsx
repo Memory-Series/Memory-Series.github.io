@@ -79,6 +79,13 @@ const DEMO_CARDS = [
     summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
     tags: ["信息待补充", "设定占位"],
   },
+  {
+    title: "秦彻",
+    enName: "Qin Che",
+    image: traceDemoZhuangFangyi,
+    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
+    tags: ["信息待补充", "设定占位"],
+  },
 ] as const;
 
 const DEMO_AUDIO_URLS: Record<string, string> = {
@@ -87,6 +94,7 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
   庄方宜: traceDemoZhuangFangyiAudio,
   拓跋玉儿: "/audio/trace-inhabit-tuobayuer-placeholder.mp3",
   戴安娜: "/audio/trace-inhabit-diana-placeholder.mp3",
+  秦彻: "/audio/trace-inhabit-qinche-placeholder.mp3",
 };
 
 const IMPLEMENTATION_ARTICLES = [
