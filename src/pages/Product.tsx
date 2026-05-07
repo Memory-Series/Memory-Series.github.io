@@ -65,12 +65,28 @@ const DEMO_CARDS = [
     summary: "宏山科学院学者“庄天师”，以温和关怀与雷霆决断并行，守望裂隙研究与姐姐遗志。",
     tags: ["青霆剑 · 导电状态", "常态/剑形态/玉人形态"],
   },
+  {
+    title: "拓跋玉儿",
+    enName: "Tuoba Yuer",
+    image: traceDemoZhuangFangyi,
+    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
+    tags: ["信息待补充", "设定占位"],
+  },
+  {
+    title: "戴安娜",
+    enName: "Diana",
+    image: traceDemoZhuangFangyi,
+    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
+    tags: ["信息待补充", "设定占位"],
+  },
 ] as const;
 
 const DEMO_AUDIO_URLS: Record<string, string> = {
   夏以昼: traceDemoXiaYizhouAudio,
   叶修: traceDemoYeXiuAudio,
   庄方宜: traceDemoZhuangFangyiAudio,
+  拓跋玉儿: "/audio/trace-inhabit-tuobayuer-placeholder.mp3",
+  戴安娜: "/audio/trace-inhabit-diana-placeholder.mp3",
 };
 
 const IMPLEMENTATION_ARTICLES = [
@@ -110,6 +126,7 @@ export default function Product({ keyParam }: ProductProps) {
   const [heroHub, setHeroHub] = useState<HeroHubId>("clawhub");
   const [focusedDemoCard, setFocusedDemoCard] = useState<string | null>(null);
   const [playingDemoCard, setPlayingDemoCard] = useState<string | null>(null);
+  const [demoPage, setDemoPage] = useState(0);
   const { t, i18n } = useTranslation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCardRef = useRef<string | null>(null);
@@ -194,6 +211,9 @@ export default function Product({ keyParam }: ProductProps) {
     animationDelay: `${IMPLEMENTATION_BARRAGE_ROW_DELAYS[rowIdx] ?? 0}s`,
   });
   const isChineseLanguage = (i18n.resolvedLanguage ?? i18n.language).startsWith("zh");
+  const demoCardsPerPage = 3;
+  const demoTotalPages = Math.ceil(DEMO_CARDS.length / demoCardsPerPage);
+  const demoVisibleCards = DEMO_CARDS.slice(demoPage * demoCardsPerPage, (demoPage + 1) * demoCardsPerPage);
   const anchors = [
     { id: "intro", t: t("nav.anchors.intro") },
     { id: "demo", t: t("nav.anchors.demo") },
@@ -403,7 +423,7 @@ export default function Product({ keyParam }: ProductProps) {
                 stopCurrentAudio();
               }}
             >
-              {DEMO_CARDS.map((item) => (
+              {demoVisibleCards.map((item) => (
                 <div
                   key={item.title}
                   className={cn(
@@ -468,6 +488,26 @@ export default function Product({ keyParam }: ProductProps) {
                 </div>
               ))}
             </div>
+            {demoTotalPages > 1 && (
+              <div className="mt-5 flex items-center justify-center gap-3 md:mt-6">
+                {Array.from({ length: demoTotalPages }).map((_, pageIdx) => (
+                  <button
+                    key={`demo-page-dot-${pageIdx}`}
+                    type="button"
+                    onClick={() => {
+                      setDemoPage(pageIdx);
+                      setFocusedDemoCard(null);
+                      stopCurrentAudio();
+                    }}
+                    className={cn(
+                      "h-1.5 w-1.5 rounded-full transition-colors",
+                      demoPage === pageIdx ? "bg-[oklch(0.78_0.12_75)]" : "bg-foreground/30 hover:bg-foreground/50"
+                    )}
+                    aria-label={`切换到第${pageIdx + 1}组角色卡`}
+                  />
+                ))}
+              </div>
+            )}
           </Card>
         </motion.section>
       </section>
