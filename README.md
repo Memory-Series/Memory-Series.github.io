@@ -12,3 +12,8 @@
 
 - [https://github.com/Memory-Series/Trace-Inhabit](https://github.com/Memory-Series/Trace-Inhabit)
 
+## Agent Skill 说明
+
+- 本项目是一个面向 Agent 的 Skill，聚焦 Memory-Trace / Memory-Inhabit 能力展示与体验。
+- 当前网页用于承载该 Skill 的对外说明、角色卡演示与使用情景入口。
+
