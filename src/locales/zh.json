@@ -13,6 +13,7 @@
   "nav": {
     "anchors": {
       "intro": "简介",
+      "usage": "使用",
       "demo": "角色",
       "implementation": "情景",
       "contact": "通讯"
@@ -36,6 +37,11 @@
     "demo": {
       "eyebrow": "角色",
       "title": "角色卡"
+    },
+    "usage": {
+      "eyebrow": "使用",
+      "title": "使用方式",
+      "placeholder": "使用区块内容占位符，后续补充具体使用说明。"
     },
     "implementation": {
       "eyebrow": "情景",
