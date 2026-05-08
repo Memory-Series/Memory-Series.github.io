@@ -69,22 +69,22 @@ const DEMO_CARDS = [
     title: "拓跋玉儿",
     enName: "Tuoba Yuer",
     image: traceDemoZhuangFangyi,
-    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
-    tags: ["信息待补充", "设定占位"],
+    summary: "古方族遗孤，红衣劲装下是傲娇热血与嘴硬心软，炼药与剑法并行闯入天之痕之旅。",
+    tags: ["炼药术 · 符鬼操控", "红色劲装 · 药囊符咒"],
   },
   {
     title: "戴安娜",
     enName: "Diana",
     image: traceDemoZhuangFangyi,
-    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
-    tags: ["信息待补充", "设定占位"],
+    summary: "月背基地的机器人女孩，开朗好奇、轻松自然，与搭档并肩对抗 AI 追寻返地之路。",
+    tags: ["月球基地 · 机械感", "星空探索 · 搭档休"],
   },
   {
     title: "秦彻",
     enName: "Qin Che",
     image: traceDemoZhuangFangyi,
-    summary: "角色介绍占位符，后续补充人物背景、互动风格与关键设定。",
-    tags: ["信息待补充", "设定占位"],
+    summary: "N109 暗点首领与宇宙通缉犯，冷峻霸道中藏细腻守护，以低沉强势气场牵引人心。",
+    tags: ["红黑首领气场", "血红眼眸 · 管风琴"],
   },
 ] as const;
 
