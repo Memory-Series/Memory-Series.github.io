@@ -13,6 +13,7 @@
   "nav": {
     "anchors": {
       "intro": "Overview",
+      "usage": "Usage",
       "demo": "Characters",
       "implementation": "Scenarios",
       "contact": "Contact"
@@ -43,6 +44,11 @@
     "demo": {
       "eyebrow": "Characters",
       "title": "Character Cards"
+    },
+    "usage": {
+      "eyebrow": "Usage",
+      "title": "How to Use",
+      "placeholder": "Usage section placeholder. Detailed usage instructions will be added later."
     },
     "implementation": {
       "eyebrow": "Scenarios",

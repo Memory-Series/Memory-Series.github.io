@@ -224,6 +224,7 @@ export default function Product({ keyParam }: ProductProps) {
   const demoVisibleCards = DEMO_CARDS.slice(demoPage * demoCardsPerPage, (demoPage + 1) * demoCardsPerPage);
   const anchors = [
     { id: "intro", t: t("nav.anchors.intro") },
+    { id: "usage", t: t("nav.anchors.usage") },
     { id: "demo", t: t("nav.anchors.demo") },
     { id: "implementation", t: t("nav.anchors.implementation") },
     { id: "contact", t: t("nav.anchors.contact") },
@@ -414,6 +415,18 @@ export default function Product({ keyParam }: ProductProps) {
               </div>
             </div>
           </Card>         
+        </motion.section>
+
+        <motion.section id="usage" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>{t("sections.usage.eyebrow")}</SectionEyebrow>
+          <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
+            {t("sections.usage.title")}
+          </h2>
+          <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-5 backdrop-blur md:p-7">
+            <div className="space-y-3 text-pretty text-sm leading-7 text-foreground/75 md:text-[0.975rem] md:leading-8">
+              <p>{t("sections.usage.placeholder")}</p>
+            </div>
+          </Card>
         </motion.section>
       </main>
 
