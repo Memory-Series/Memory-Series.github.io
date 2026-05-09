@@ -7,9 +7,14 @@ import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼/夏以昼.jpg";
 import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修/叶修.jpg";
 import traceDemoZhuangFangyi from "@/assets/demo/trace-inhabit/庄方宜/庄方宜.jpeg";
+import traceDemoTuobaYuer from "@/assets/demo/trace-inhabit/拓跋玉儿/拓跋玉儿.png";
+import traceDemoDiana from "@/assets/demo/trace-inhabit/戴安娜/戴安娜.jpg";
+import traceDemoQinChe from "@/assets/demo/trace-inhabit/秦彻/秦彻.jpg";
 import traceDemoXiaYizhouAudio from "@/assets/demo/trace-inhabit/夏以昼/夏以昼_没错你如果偷偷做了坏事.mp3";
 import traceDemoYeXiuAudio from "@/assets/demo/trace-inhabit/叶修/叶修_路还很长.mp3";
 import traceDemoZhuangFangyiAudio from "@/assets/demo/trace-inhabit/庄方宜/庄方宜_迎敌或是迎客都得整装后再出发.wav";
+import traceDemoDianaAudio from "@/assets/demo/trace-inhabit/戴安娜/休!戴安娜.mp3";
+import traceDemoQinCheAudio from "@/assets/demo/trace-inhabit/秦彻/这不算什么，记住保持好你的风范.mp3";
 import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -68,23 +73,23 @@ const DEMO_CARDS = [
   {
     title: "拓跋玉儿",
     enName: "Tuoba Yuer",
-    image: traceDemoZhuangFangyi,
-    summary: "古方族遗孤，红衣劲装下是傲娇热血与嘴硬心软，炼药与剑法并行闯入天之痕之旅。",
-    tags: ["炼药术 · 符鬼操控", "红色劲装 · 药囊符咒"],
+    image: traceDemoTuobaYuer,
+    summary: "古方族遗孤、炼药世家出身，一身红色胡服劲装；傲娇外刚内柔、嘴硬心软，炼药术、符鬼与拓跋剑法傍身，随陈靖仇一行踏上收集天之痕之旅。",
+    tags: ["炼药术 · 符鬼与剑法", "红色劲装 · 药囊葫芦符咒"],
   },
   {
     title: "戴安娜",
     enName: "Diana",
-    image: traceDemoZhuangFangyi,
-    summary: "月背基地的机器人女孩，开朗好奇、轻松自然，与搭档并肩对抗 AI 追寻返地之路。",
-    tags: ["月球基地 · 机械感", "星空探索 · 搭档休"],
+    image: traceDemoDiana,
+    summary: "PRAGMATA 月背基地的机器人女主角，与搭档休同住基地；思想开放、热情好奇，对话轻松自然，以击败 AI、重返地球为目标。",
+    tags: ["月球基地 · 机械感", "星空 · 搭档休"],
   },
   {
     title: "秦彻",
-    enName: "Qin Che",
-    image: traceDemoZhuangFangyi,
-    summary: "N109 暗点首领与宇宙通缉犯，冷峻霸道中藏细腻守护，以低沉强势气场牵引人心。",
-    tags: ["红黑首领气场", "血红眼眸 · 管风琴"],
+    enName: "Sylus",
+    image: traceDemoQinChe,
+    summary: "恋与深空中 N109 暗点首领、菲罗斯星通缉犯；白发红瞳、红黑装束神秘酷帅，低沉霸道与细腻温柔并存，强势里藏着占有欲。",
+    tags: ["血红眼眸 · 红黑装束", "暗点首领 · 管风琴"],
   },
 ] as const;
 
@@ -92,9 +97,8 @@ const DEMO_AUDIO_URLS: Record<string, string> = {
   夏以昼: traceDemoXiaYizhouAudio,
   叶修: traceDemoYeXiuAudio,
   庄方宜: traceDemoZhuangFangyiAudio,
-  拓跋玉儿: "/audio/trace-inhabit-tuobayuer-placeholder.mp3",
-  戴安娜: "/audio/trace-inhabit-diana-placeholder.mp3",
-  秦彻: "/audio/trace-inhabit-qinche-placeholder.mp3",
+  戴安娜: traceDemoDianaAudio,
+  秦彻: traceDemoQinCheAudio,
 };
 
 const IMPLEMENTATION_ARTICLES = [
