@@ -468,7 +468,7 @@ export default function Product({ keyParam }: ProductProps) {
                     onClick={() => setFocusedCard(item.title)}
                     tabIndex={0}
                   >
-                    <div className="aspect-[4/5] overflow-hidden">
+                    <div className="aspect-[9/16] overflow-hidden">
                       <img
                         src={item.image}
                         alt={item.title}
