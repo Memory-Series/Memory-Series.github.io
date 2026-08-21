@@ -1,0 +1,157 @@
+{
+  "project": "memory-series-site (Memory Series · Trace / Inhabit 展示站)",
+  "last_updated": "2026-08-21",
+  "rules": {
+    "single_active_feature": true,
+    "passing_requires_evidence": true,
+    "do_not_skip_verification": true
+  },
+  "status_legend": {
+    "not_started": "功能还没开始做。",
+    "in_progress": "这个功能是当前唯一正在进行的任务。",
+    "blocked": "因为已记录的阻塞问题，当前无法继续推进。",
+    "passing": "要求的验证已经通过，并且证据已经记录。"
+  },
+  "features": [
+    {
+      "id": "site-001",
+      "priority": 1,
+      "area": "site",
+      "title": "产品页渲染（/product/trace）",
+      "user_visible_behavior": "打开首页后渲染 Trace/Inhabit 产品落地页，其他路由重定向到该页。",
+      "status": "passing",
+      "verification": [
+        "npm run build 通过（tsc -b && vite build 均无错误）。",
+        "本地访问 localhost:5173 能正常渲染产品页。"
+      ],
+      "evidence": [
+        "2026-08-21: npm run build 成功，2227 modules transformed，dist 产物正常输出。"
+      ],
+      "notes": "路由由 src/App.tsx 配置，使用 wouter hash location。"
+    },
+    {
+      "id": "site-002",
+      "priority": 1,
+      "area": "site",
+      "title": "中英双语切换",
+      "user_visible_behavior": "用户点击顶部语言按钮可以在 EN/中 之间切换全站文案。",
+      "status": "passing",
+      "verification": [
+        "检查 src/locales/zh.json 与 en.json 键结构一致。",
+        "页面渲染后点击语言切换按钮，文案随之切换。"
+      ],
+      "evidence": [
+        "2026-08-21: 两个 locale 文件键结构对齐，i18n 配置生效。"
+      ],
+      "notes": "默认中文；修改文案需同时更新两个 locale 文件，避免键缺失。"
+    },
+    {
+      "id": "demo-001",
+      "priority": 1,
+      "area": "demo",
+      "title": "角色卡展示（6 个演示角色）",
+      "user_visible_behavior": "Demo 区展示夏以昼、叶修、庄方宜、拓跋玉儿、戴安娜、秦彻 6 张角色卡，含图片、名字、简介与标签。",
+      "status": "passing",
+      "verification": [
+        "npm run build 通过，图片资源正确打包进 dist。",
+        "本地预览 Demo 区角色卡正常展示。"
+      ],
+      "evidence": [
+        "2026-08-21: 构建产物包含所有角色图片资源。"
+      ],
+      "notes": "数据在 src/pages/Product.tsx 的 DEMO_CARDS 常量中；新增角色需同时补充 assets/demo/trace-inhabit/<角色名>/ 下的图片。"
+    },
+    {
+      "id": "demo-002",
+      "priority": 2,
+      "area": "demo",
+      "title": "角色卡音频播放",
+      "user_visible_behavior": "用户悬停/操作角色卡时可以播放对应角色的语音片段，并可暂停。",
+      "status": "passing",
+      "verification": [
+        "npm run build 通过，音频资源正确打包进 dist。",
+        "本地预览播放/暂停角色音频正常。"
+      ],
+      "evidence": [
+        "2026-08-21: 构建产物包含角色 mp3/wav 音频资源。"
+      ],
+      "notes": "音频映射在 DEMO_AUDIO_URLS；庄方宜为 wav，其余为 mp3。"
+    },
+    {
+      "id": "hero-001",
+      "priority": 2,
+      "area": "hero",
+      "title": "Hero 区 Hub 链接切换",
+      "user_visible_behavior": "Hero 区提供 clawhub/skillhub 两个来源选项，切换后显示对应链接。",
+      "status": "passing",
+      "verification": [
+        "检查 HERO_HUB_URLS 两条链接配置完整。",
+        "本地点击切换选项，链接随之变化。"
+      ],
+      "evidence": [
+        "2026-08-21: HERO_HUB_URLS 含 clawhub 与 skillhub 两组 URL。"
+      ],
+      "notes": "URL 定义在 src/pages/Product.tsx 的 HERO_HUB_URLS。"
+    },
+    {
+      "id": "usage-001",
+      "priority": 1,
+      "area": "usage",
+      "title": "使用方式区块填充",
+      "user_visible_behavior": "Usage 区展示具体使用说明，替代当前占位符文案。",
+      "status": "not_started",
+      "verification": [
+        "检查 src/locales/zh.json 的 sections.usage 不再是 placeholder。",
+        "本地预览 Usage 区块显示真实使用说明内容。"
+      ],
+      "evidence": [],
+      "notes": "当前 sections.usage.placeholder 文案为占位符，需补充真实内容（中英两份文案）。"
+    },
+    {
+      "id": "impl-001",
+      "priority": 2,
+      "area": "impl",
+      "title": "使用情景文章滚动条",
+      "user_visible_behavior": "Implementation 区滚动展示公众号文章链接。",
+      "status": "passing",
+      "verification": [
+        "检查 IMPLEMENTATION_ARTICLES 文章链接列表。",
+        "本地预览滚动条正常。"
+      ],
+      "evidence": [
+        "2026-08-21: IMPLEMENTATION_ARTICLES 包含多条微信文章链接。"
+      ],
+      "notes": "数据在 src/pages/Product.tsx 的 IMPLEMENTATION_ARTICLES。"
+    },
+    {
+      "id": "contact-001",
+      "priority": 2,
+      "area": "contact",
+      "title": "通讯方式（微信二维码 + 邮箱）",
+      "user_visible_behavior": "Contact 区展示公众号二维码图片与联系邮箱。",
+      "status": "passing",
+      "verification": [
+        "npm run build 通过，二维码图片资源正常打包。",
+        "本地预览 Contact 区展示正常。"
+      ],
+      "evidence": [
+        "2026-08-21: gongzhonghao.jpeg 打包进 dist。"
+      ],
+      "notes": "二维码在 src/assets/demo/other/gongzhonghao.jpeg。"
+    },
+    {
+      "id": "perf-001",
+      "priority": 3,
+      "area": "perf",
+      "title": "优化构建产物体积",
+      "user_visible_behavior": "减小 JS bundle 与超大可压缩图片体积，改善加载速度。",
+      "status": "not_started",
+      "verification": [
+        "npm run build 后无 500 kB chunk 警告。",
+        "庄方宜.jpeg / 拓跋玉儿.png 等大图有压缩处理。"
+      ],
+      "evidence": [],
+      "notes": "构建警告：index JS 517 kB；庄方宜.jpeg 3.2MB、拓跋玉儿.png 3.9MB。可考虑动态导入 + 图片压缩。"
+    }
+  ]
+}
