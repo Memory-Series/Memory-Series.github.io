@@ -6,7 +6,7 @@
 
 - 项目名：memory-series-site（Memory Series · Trace / Inhabit 展示站）
 - 技术栈：React 19 + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + framer-motion + wouter
-- 包管理器：npm（仓库同时保留 pnpm-lock.yaml，但 init 入口统一用 npm）
+- 包管理器：npm（lockfile 为 `package-lock.json`）
 - 唯一页面：`src/pages/Product.tsx`（`/product/trace`，其余路由重定向到它）
 - 双语文案：`src/locales/en.json` / `src/locales/zh.json`
 - 产品文案与结构：`src/lib/products.ts`
