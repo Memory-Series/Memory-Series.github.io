@@ -100,6 +100,16 @@
           <li>输出 SoulPod（profile.json / system_prompts.txt / memories）</li>
         </ul>
       </section>
+      <section class="scene" id="scene-3">
+        <div class="grain"></div>
+        <p id="s3-eyebrow" class="clip eyebrow" data-start="20.5" data-duration="13">入心 INHABIT</p>
+        <h2 id="s3-title" class="clip section-title" data-start="21.0" data-duration="12.5">以角色身份，持续存在</h2>
+        <ul id="s3-bullets" class="clip bullets" data-start="22.0" data-duration="11.5">
+          <li>加载 SoulPod，以角色身份对话</li>
+          <li>模式：复刻模式 / 伴侣模式</li>
+          <li>能力：角色场景对话，角色图像生成，角色语音生成</li>
+        </ul>
+      </section>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
     <script>
@@ -117,6 +127,15 @@
       tl.from("#scene-2 .eyebrow", { opacity: 0, y: 20, duration: 0.5, ease: "power2.out" }, 8.6);
       tl.from("#scene-2 .section-title", { opacity: 0, y: 24, duration: 0.6, ease: "power3.out" }, 9.1);
       tl.from("#scene-2 .bullets li", { opacity: 0, y: 16, stagger: 0.18, duration: 0.5, ease: "power2.out" }, 10.6);
+
+      // Scene 2 → 3 crossfade (20.0s, 1.0s)
+      tl.fromTo("#scene-3", { opacity: 0 }, { opacity: 1, duration: 1.0, ease: "sine.inOut" }, 20.0);
+      tl.to("#scene-2", { opacity: 0, duration: 1.0, ease: "sine.inOut" }, 20.0);
+      tl.set("#scene-2", { opacity: 0 }, 21.0);
+      // Scene 3 elements enter (slightly faster rhythm)
+      tl.from("#scene-3 .eyebrow", { opacity: 0, y: 18, duration: 0.4, ease: "power2.out" }, 20.6);
+      tl.from("#scene-3 .section-title", { opacity: 0, y: 22, duration: 0.5, ease: "power3.out" }, 21.1);
+      tl.from("#scene-3 .bullets li", { opacity: 0, y: 14, stagger: 0.15, duration: 0.4, ease: "power2.out" }, 22.1);
 
       window.__timelines["trace-promo"] = tl;
     </script>
