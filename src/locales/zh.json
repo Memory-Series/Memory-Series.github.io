@@ -41,7 +41,33 @@
     "usage": {
       "eyebrow": "使用",
       "title": "使用方式",
-      "placeholder": "使用区块内容占位符，后续补充具体使用说明。"
+      "lead": "从素材到角色，三步让一个数字角色真正“活”起来。",
+      "steps": [
+        {
+          "title": "寻迹 Trace · 提取",
+          "items": [
+            "准备角色素材：小说、剧本、动漫等文本资料",
+            "运行 Trace 分析语言风格、性格特征与行为模式",
+            "沉淀为结构化的角色档案 SoulPod"
+          ]
+        },
+        {
+          "title": "档案 SoulPod · 生成",
+          "items": [
+            "得到 profile.json / system_prompts.txt / memories",
+            "固定角色边界、能力来源与行为一致性",
+            "档案可复用、可共享、可持续迭代"
+          ]
+        },
+        {
+          "title": "入心 Inhabit · 对话",
+          "items": [
+            "加载 SoulPod，以角色身份开始对话",
+            "选择复刻模式或伴侣模式",
+            "支持角色场景对话、角色图像生成、角色语音生成"
+          ]
+        }
+      ]
     },
     "implementation": {
       "eyebrow": "情景",

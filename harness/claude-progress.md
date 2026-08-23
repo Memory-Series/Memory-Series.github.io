@@ -5,11 +5,23 @@
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
-- 当前最高优先级未完成功能：`usage-001`（使用方式区块填充，现为占位符）
+- 当前最高优先级未完成功能：`perf-001`（构建产物体积优化，优先级 3）
 - 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
-- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（3.3MB，45s，1920×1080），未提交（见 .gitignore）
+- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页
 
 ## 会话记录
+
+### Session 005
+
+- 日期：2026-08-23
+- 本轮目标：填充 usage-001 使用方式区块
+- 已完成：sections.usage 由 placeholder 替换为 lead + 3 步结构化文案（寻迹 Trace 提取 → SoulPod 生成 → 入心 Inhabit 对话），中英双语文案齐备；Product.tsx usage 区块渲染与 intro 区块样式完全一致
+- 运行过的验证：`npm run build`（通过）、`npm run lint`（0 错误）、locale 键结构一致性检查（zh/en 各 3 steps）
+- 已记录证据：build 通过、lint 0、双语文案对齐
+- 提交记录：尚未提交
+- 更新过的文件或工件：src/locales/zh.json、src/locales/en.json、src/pages/Product.tsx、harness/feature_list.json、harness/claude-progress.md
+- 已知风险或未解决问题：无
+- 下一步最佳动作：perf-001 构建产物体积优化（JS 517kB 警告 + 大图压缩）
 
 ### Session 004
 
@@ -18,10 +30,10 @@
 - 已完成：创建 compositions/ 组合（4 幕：开场主标题→寻迹 Trace→入心 Inhabit→收束）；补充 Manrope/Noto Sans SC 字体的 @font-face（两字体不在 hyperframes 内置列表，从 Google Fonts 下载 TTF）；曾压缩时间线至 15.3s（删主标题）后按用户要求回退；最终定版为 18.5s 压缩版（去除各场景静止留白）；渲染 trace-inhabit-promo.mp4
 - 运行过的验证：`npx hyperframes check compositions` 全绿（lint 0、runtime 0、layout 9 samples 0、motion 0、contrast 9/9）、ffprobe 确认 18.500000s/1920×1080/h264
 - 已记录证据：check 通过 + ffprobe 输出 + 渲染日志
-- 提交记录：worktree `feature/trace-inhabit-promo` 分支（11 个提交：6a59a85→10f22ae），待合并到 main
+- 提交记录：已合并到 main 并推送（`72772d2`，fast-forward 自 ce015d6）；feature 分支已删除
 - 更新过的文件或工件：compositions/index.html、compositions/fonts/（4 个 TTF）、.gitignore、harness/claude-progress.md、harness/feature_list.json
 - 已知风险或未解决问题：视频当前无背景音乐（用户选择"先无音乐，后续补"）；`compositions/trace-inhabit-promo.mp4` 未提交 git；视频曾试嵌入网站 Hero 区后按用户要求回退，**视频不参与网页**（独立产物）
-- 下一步最佳动作：合并 feature/trace-inhabit-promo 到 main；后续可选：补充背景音乐、将视频嵌入网站 Hero 区
+- 下一步最佳动作：填充 usage-001 使用方式文案（中英两份）——正在进行
 
 ### Session 003
 
