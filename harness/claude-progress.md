@@ -20,7 +20,7 @@
 - 已记录证据：check 通过 + ffprobe 输出 + 渲染日志
 - 提交记录：worktree `feature/trace-inhabit-promo` 分支（11 个提交：6a59a85→10f22ae），待合并到 main
 - 更新过的文件或工件：compositions/index.html、compositions/fonts/（4 个 TTF）、.gitignore、harness/claude-progress.md、harness/feature_list.json
-- 已知风险或未解决问题：视频当前无背景音乐（用户选择"先无音乐，后续补"）；`compositions/trace-inhabit-promo.mp4` 未提交 git；视频未嵌入网站（范围外）
+- 已知风险或未解决问题：视频当前无背景音乐（用户选择"先无音乐，后续补"）；`compositions/trace-inhabit-promo.mp4` 未提交 git；视频曾试嵌入网站 Hero 区后按用户要求回退，**视频不参与网页**（独立产物）
 - 下一步最佳动作：合并 feature/trace-inhabit-promo 到 main；后续可选：补充背景音乐、将视频嵌入网站 Hero 区
 
 ### Session 003

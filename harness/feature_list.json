@@ -167,7 +167,7 @@
       "evidence": [
         "2026-08-23: check 通过（layout 9 samples 0、contrast 9/9）；渲染日志确认完成；ffprobe 确认规格。"
       ],
-      "notes": "组合源码在 compositions/index.html（含 Manrope/Noto Sans SC @font-face，两字体非 hyperframes 内置）。曾尝试压缩至 15.3s 删主标题，按用户要求回退至 18.5s。MP4 产物未提交 git（.gitignore）。背景音乐待补充；视频尚未嵌入网站（计划范围外）。"
+      "notes": "组合源码在 compositions/index.html（含 Manrope/Noto Sans SC @font-face，两字体非 hyperframes 内置）。曾尝试压缩至 15.3s 删主标题，按用户要求回退至 18.5s。MP4 产物未提交 git（.gitignore）。背景音乐待补充；曾试嵌入网站 Hero 区后按用户要求回退，视频不参与网页（独立产物）。"
     }
   ]
 }
