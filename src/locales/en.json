@@ -48,7 +48,33 @@
     "usage": {
       "eyebrow": "Usage",
       "title": "How to Use",
-      "placeholder": "Usage section placeholder. Detailed usage instructions will be added later."
+      "lead": "From source material to living character — three steps to bring a digital character to life.",
+      "steps": [
+        {
+          "title": "Trace · Extract",
+          "items": [
+            "Prepare character source material: novels, scripts, animation text",
+            "Run Trace to analyze language style, personality traits, and behavior patterns",
+            "Distill into a structured character profile: SoulPod"
+          ]
+        },
+        {
+          "title": "SoulPod · Generate",
+          "items": [
+            "Obtain profile.json / system_prompts.txt / memories",
+            "Lock in character boundaries, capability origins, and behavior consistency",
+            "Reusable, shareable, and continuously iterable profile"
+          ]
+        },
+        {
+          "title": "Inhabit · Converse",
+          "items": [
+            "Load SoulPod and converse in character identity",
+            "Choose Replica Mode or Companion Mode",
+            "Supports role-scene dialogue, role image generation, role voice generation"
+          ]
+        }
+      ]
     },
     "implementation": {
       "eyebrow": "Scenarios",
