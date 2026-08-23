@@ -14,12 +14,12 @@
 ### Session 004
 
 - 日期：2026-08-23
-- 本轮目标：用 hyperframes 生成 Trace/Inhabit 产品宣传视频（45s，1920×1080），用于网站 Hero 区
-- 已完成：创建 compositions/ 组合（4 幕：开场主标题→寻迹 Trace→入心 Inhabit→收束）；补充 Manrope/Noto Sans SC 字体的 @font-face（两字体不在 hyperframes 内置列表，从 Google Fonts 下载 TTF）；渲染 trace-inhabit-promo.mp4
-- 运行过的验证：`npx hyperframes check compositions` 全绿（lint 0、runtime 0、layout 9 samples 0、motion 0、contrast 17/17）、ffprobe 确认 45.000s/1920×1080/h264
+- 本轮目标：用 hyperframes 生成 Trace/Inhabit 产品宣传视频（1920×1080），用于网站 Hero 区
+- 已完成：创建 compositions/ 组合（4 幕：开场主标题→寻迹 Trace→入心 Inhabit→收束）；补充 Manrope/Noto Sans SC 字体的 @font-face（两字体不在 hyperframes 内置列表，从 Google Fonts 下载 TTF）；曾压缩时间线至 15.3s（删主标题）后按用户要求回退；最终定版为 18.5s 压缩版（去除各场景静止留白）；渲染 trace-inhabit-promo.mp4
+- 运行过的验证：`npx hyperframes check compositions` 全绿（lint 0、runtime 0、layout 9 samples 0、motion 0、contrast 9/9）、ffprobe 确认 18.500000s/1920×1080/h264
 - 已记录证据：check 通过 + ffprobe 输出 + 渲染日志
-- 提交记录：worktree `feature/trace-inhabit-promo` 分支（8 个提交：6a59a85→c4cffc8），待合并到 main
-- 更新过的文件或工件：compositions/index.html、compositions/fonts/（6 个 TTF）、.gitignore
+- 提交记录：worktree `feature/trace-inhabit-promo` 分支（11 个提交：6a59a85→10f22ae），待合并到 main
+- 更新过的文件或工件：compositions/index.html、compositions/fonts/（4 个 TTF）、.gitignore、harness/claude-progress.md、harness/feature_list.json
 - 已知风险或未解决问题：视频当前无背景音乐（用户选择"先无音乐，后续补"）；`compositions/trace-inhabit-promo.mp4` 未提交 git；视频未嵌入网站（范围外）
 - 下一步最佳动作：合并 feature/trace-inhabit-promo 到 main；后续可选：补充背景音乐、将视频嵌入网站 Hero 区
 
