@@ -18,7 +18,7 @@
 - 已完成：创建 compositions/ 组合（4 幕：开场主标题→寻迹 Trace→入心 Inhabit→收束）；补充 Manrope/Noto Sans SC 字体的 @font-face（两字体不在 hyperframes 内置列表，从 Google Fonts 下载 TTF）；渲染 trace-inhabit-promo.mp4
 - 运行过的验证：`npx hyperframes check compositions` 全绿（lint 0、runtime 0、layout 9 samples 0、motion 0、contrast 17/17）、ffprobe 确认 45.000s/1920×1080/h264
 - 已记录证据：check 通过 + ffprobe 输出 + 渲染日志
-- 提交记录：worktree `feature/trace-inhabit-promo` 分支（7 个提交：6a59a85→d574bf8），待合并到 main
+- 提交记录：worktree `feature/trace-inhabit-promo` 分支（8 个提交：6a59a85→c4cffc8），待合并到 main
 - 更新过的文件或工件：compositions/index.html、compositions/fonts/（6 个 TTF）、.gitignore
 - 已知风险或未解决问题：视频当前无背景音乐（用户选择"先无音乐，后续补"）；`compositions/trace-inhabit-promo.mp4` 未提交 git；视频未嵌入网站（范围外）
 - 下一步最佳动作：合并 feature/trace-inhabit-promo 到 main；后续可选：补充背景音乐、将视频嵌入网站 Hero 区
