@@ -5,11 +5,25 @@
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
-- 当前最高优先级未完成功能：`perf-001`（构建产物体积优化，优先级 3）
+- 当前最高优先级未完成功能：无（feature_list.json 全部 passing）
 - 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
 - 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页
 
 ## 会话记录
+
+### Session 006
+
+- 日期：2026-08-23
+- 本轮目标：执行 perf-001 构建产物体积优化
+- 已完成：vite.config.ts 添加 manualChunks 代码分割（motion/i18n/ui 独立 chunk），主 index.js 519kB→291kB 消除 500kB 警告；ffmpeg 压缩大图（庄方宜 3.2MB→379KB、拓跋玉儿 3.9MB→124KB、hero-bg 462KB→46KB）；拓跋玉儿 png 改名 jpg 并更新 import
+- 运行过的验证：`npm run build`（通过，无 chunk 警告）、`npm run lint`（0 错误）、用户预览确认视觉质量可接受
+- 已记录证据：build 无警告 + lint 0 + 产物大小对比
+- 提交记录：f441459（perf: code-split vendor chunks and compress images），未推送
+- 更新过的文件或工件：vite.config.ts、src/pages/Product.tsx、src/assets/hero-bg.jpeg、src/assets/demo/trace-inhabit/庄方宜/庄方宜.jpeg、拓跋玉儿 .png→.jpg、harness/feature_list.json、harness/claude-progress.md
+- 已知风险或未解决问题：无
+- 下一步最佳动作：feature_list.json 全部 passing，可推送并收尾
+
+### Session 005
 
 ### Session 005
 

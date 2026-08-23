@@ -148,13 +148,15 @@
       "area": "perf",
       "title": "优化构建产物体积",
       "user_visible_behavior": "减小 JS bundle 与超大可压缩图片体积，改善加载速度。",
-      "status": "not_started",
+      "status": "passing",
       "verification": [
         "npm run build 后无 500 kB chunk 警告。",
         "庄方宜.jpeg / 拓跋玉儿.png 等大图有压缩处理。"
       ],
-      "evidence": [],
-      "notes": "构建警告：index JS 517 kB；庄方宜.jpeg 3.2MB、拓跋玉儿.png 3.9MB。可考虑动态导入 + 图片压缩。"
+      "evidence": [
+        "2026-08-23: 代码分割后主 index.js 519kB→291kB（motion/ui/i18n 独立 chunk），无 500kB 警告；庄方宜 3.2MB→379KB、拓跋玉儿 3.9MB→124KB、hero-bg 462KB→46KB；build/lint 通过，用户确认视觉质量可接受。"
+      ],
+      "notes": "vite.config.ts 添加 manualChunks（motion/i18n/ui）；图片用 ffmpeg q:v 压缩。拓跋玉儿由 png 改名为 jpg（内容为 JPEG）。"
     },
     {
       "id": "video-001",
