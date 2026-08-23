@@ -7,7 +7,7 @@ import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼/夏以昼.jpg";
 import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修/叶修.jpg";
 import traceDemoZhuangFangyi from "@/assets/demo/trace-inhabit/庄方宜/庄方宜.jpeg";
-import traceDemoTuobaYuer from "@/assets/demo/trace-inhabit/拓跋玉儿/拓跋玉儿.png";
+import traceDemoTuobaYuer from "@/assets/demo/trace-inhabit/拓跋玉儿/拓跋玉儿.jpg";
 import traceDemoDiana from "@/assets/demo/trace-inhabit/戴安娜/戴安娜.jpg";
 import traceDemoQinChe from "@/assets/demo/trace-inhabit/秦彻/秦彻.jpg";
 import traceDemoXiaYizhouAudio from "@/assets/demo/trace-inhabit/夏以昼/夏以昼_没错你如果偷偷做了坏事.mp3";
