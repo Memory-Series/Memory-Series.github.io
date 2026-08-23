@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUp, Link2, Pause, Volume2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import traceInhabitPromo from "@/assets/trace-inhabit-promo.mp4";
+import heroBg from "@/assets/hero-bg.jpeg";
 import traceDemoXiaYizhou from "@/assets/demo/trace-inhabit/夏以昼/夏以昼.jpg";
 import traceDemoYeXiu from "@/assets/demo/trace-inhabit/叶修/叶修.jpg";
 import traceDemoZhuangFangyi from "@/assets/demo/trace-inhabit/庄方宜/庄方宜.jpeg";
@@ -265,14 +265,7 @@ export default function Product({ keyParam }: ProductProps) {
 
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <video
-            src={traceInhabitPromo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="h-full min-h-[42vh] w-full object-cover opacity-[0.72] md:min-h-0"
-          />
+          <img src={heroBg} alt="" className="h-full min-h-[42vh] w-full object-cover opacity-[0.72] md:min-h-0" />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,oklch(0.145_0.03_262/0.55),oklch(0.145_0.03_262/0.82)_45%,oklch(0.145_0.03_262/0.96))]" />
           <div className="absolute inset-0 grain" />
         </div>
