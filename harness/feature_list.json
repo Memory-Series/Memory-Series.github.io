@@ -1,6 +1,6 @@
 {
   "project": "memory-series-site (Memory Series · Trace / Inhabit 展示站)",
-  "last_updated": "2026-08-21",
+  "last_updated": "2026-08-23",
   "rules": {
     "single_active_feature": true,
     "passing_requires_evidence": true,
@@ -152,6 +152,22 @@
       ],
       "evidence": [],
       "notes": "构建警告：index JS 517 kB；庄方宜.jpeg 3.2MB、拓跋玉儿.png 3.9MB。可考虑动态导入 + 图片压缩。"
+    },
+    {
+      "id": "video-001",
+      "priority": 2,
+      "area": "video",
+      "title": "Trace/Inhabit 产品宣传视频（hyperframes）",
+      "user_visible_behavior": "网站 Hero 区可展示 45s 产品宣传视频（1920×1080），四幕理念叙事：开场主标题→寻迹 Trace→入心 Inhabit→收束。",
+      "status": "passing",
+      "verification": [
+        "npx hyperframes check compositions 全绿（lint/runtime/layout/motion/contrast 五项）。",
+        "ffprobe 确认 trace-inhabit-promo.mp4 为 45.000s、1920×1080、h264。"
+      ],
+      "evidence": [
+        "2026-08-23: check 通过（layout 9 samples 0、contrast 17/17）；渲染日志确认 1350 帧完成；ffprobe 确认规格。"
+      ],
+      "notes": "组合源码在 compositions/index.html（含 Manrope/Noto Sans SC @font-face，两字体非 hyperframes 内置）。MP4 产物未提交 git（.gitignore）。背景音乐待补充；视频尚未嵌入网站（计划范围外）。"
     }
   ]
 }
