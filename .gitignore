@@ -15,6 +15,10 @@ dist-ssr
 # Worktrees
 .worktrees
 
+# Render artifacts
+compositions/*.mp4
+compositions/snapshots/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
