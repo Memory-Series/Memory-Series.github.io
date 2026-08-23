@@ -42,25 +42,6 @@
         box-sizing: border-box;
         opacity: 0; /* every scene starts invisible; its fromTo() crossfade reveals it */
       }
-      .hero-title {
-        font-family: Manrope, "Noto Sans SC", sans-serif;
-        font-weight: 600;
-        font-size: 84px;
-        letter-spacing: -0.02em;
-        color: #e8ecf5;
-        text-align: center;
-        text-wrap: balance;
-        max-width: 70%;
-        padding: 0 120px;
-        box-sizing: border-box;
-      }
-      .glow-dots {
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at 30% 40%, rgba(217, 164, 65, 0.14), transparent 35%),
-                    radial-gradient(circle at 70% 60%, rgba(217, 164, 65, 0.10), transparent 40%);
-        filter: blur(8px);
-      }
       .grain {
         position: absolute;
         inset: 0;
@@ -129,41 +110,34 @@
     </style>
   </head>
   <body>
-    <div id="stage" data-composition-id="trace-promo" data-start="0" data-duration="18.5" data-width="1920" data-height="1080">
+    <div id="stage" data-composition-id="trace-promo" data-start="0" data-duration="15.3" data-width="1920" data-height="1080">
       <section class="scene" id="scene-1">
         <div class="grain"></div>
-        <div class="glow-dots" aria-hidden="true"></div>
-        <h1 id="hero-title" class="clip hero-title" data-start="0.4" data-duration="2.8">
-          让存在，不止停留在记忆里。
-        </h1>
-      </section>
-      <section class="scene" id="scene-2">
-        <div class="grain"></div>
-        <p id="s2-eyebrow" class="clip eyebrow" data-start="3.9" data-duration="4.9">寻迹 TRACE</p>
-        <h2 id="s2-title" class="clip section-title" data-start="4.4" data-duration="4.4">从素材中提取角色人格</h2>
-        <ul id="s2-bullets" class="clip bullets" data-start="5.2" data-duration="3.6">
+        <p id="s1-eyebrow" class="clip eyebrow" data-start="0.6" data-duration="4.9">寻迹 TRACE</p>
+        <h2 id="s1-title" class="clip section-title" data-start="1.1" data-duration="4.4">从素材中提取角色人格</h2>
+        <ul id="s1-bullets" class="clip bullets" data-start="1.9" data-duration="3.6">
           <li>从小说、剧本、动漫素材提取角色人格</li>
           <li>分析语言风格、性格特征、行为模式</li>
           <li>输出 SoulPod（profile.json / system_prompts.txt / memories）</li>
         </ul>
       </section>
-      <section class="scene" id="scene-3">
+      <section class="scene" id="scene-2">
         <div class="grain"></div>
-        <p id="s3-eyebrow" class="clip eyebrow" data-start="9.5" data-duration="4.7">入心 INHABIT</p>
-        <h2 id="s3-title" class="clip section-title" data-start="10.0" data-duration="4.2">以角色身份，持续存在</h2>
-        <ul id="s3-bullets" class="clip bullets" data-start="10.7" data-duration="3.5">
+        <p id="s2-eyebrow" class="clip eyebrow" data-start="6.3" data-duration="4.7">入心 INHABIT</p>
+        <h2 id="s2-title" class="clip section-title" data-start="6.8" data-duration="4.2">以角色身份，持续存在</h2>
+        <ul id="s2-bullets" class="clip bullets" data-start="7.5" data-duration="3.5">
           <li>加载 SoulPod，以角色身份对话</li>
           <li>模式：复刻模式 / 伴侣模式</li>
           <li>能力：角色场景对话，角色图像生成，角色语音生成</li>
         </ul>
       </section>
-      <section class="scene" id="scene-4">
+      <section class="scene" id="scene-3">
         <div class="grain"></div>
-        <p id="s4-closing" class="clip closing" data-start="14.9" data-duration="3.6">
+        <p id="s3-closing" class="clip closing" data-start="11.7" data-duration="3.6">
           让行为逻辑与角色能力，以更持续的数字生命形式继续存在。
         </p>
-        <div id="s4-line" class="clip gold-line" data-start="16.0" data-duration="2.5"></div>
-        <p id="s4-brand" class="clip brand" data-start="16.6" data-duration="1.9">
+        <div id="s3-line" class="clip gold-line" data-start="12.8" data-duration="2.5"></div>
+        <p id="s3-brand" class="clip brand" data-start="13.4" data-duration="1.9">
           Memory · Trace / Inhabit
         </p>
       </section>
@@ -172,39 +146,31 @@
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      // Scene 1 entrance — deep space glow + hero title (0–3.2s)
-      tl.from("#scene-1", { opacity: 0, duration: 0.8, ease: "sine.out" }, 0);
-      tl.from("#scene-1 .glow-dots", { opacity: 0, duration: 0.6, ease: "sine.out" }, 0);
-      tl.from("#scene-1 .hero-title", { opacity: 0, y: 30, duration: 0.6, ease: "power3.out" }, 0.4);
+      // Scene 1 — 寻迹 Trace entrance (0s)
+      tl.from("#scene-1", { opacity: 0, duration: 0.7, ease: "sine.out" }, 0);
+      tl.from("#scene-1 .eyebrow", { opacity: 0, y: 20, duration: 0.4, ease: "power2.out" }, 0.6);
+      tl.from("#scene-1 .section-title", { opacity: 0, y: 24, duration: 0.5, ease: "power3.out" }, 1.1);
+      tl.from("#scene-1 .bullets li", { opacity: 0, y: 16, stagger: 0.16, duration: 0.45, ease: "power2.out" }, 1.9);
 
-      // Scene 1 → 2 crossfade (3.2s, 0.8s)
-      tl.fromTo("#scene-2", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.inOut" }, 3.2);
-      tl.to("#scene-1", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, 3.2);
-      tl.set("#scene-1", { opacity: 0 }, 4.0);
-      // Scene 2 elements enter (staggered)
-      tl.from("#scene-2 .eyebrow", { opacity: 0, y: 20, duration: 0.4, ease: "power2.out" }, 3.9);
-      tl.from("#scene-2 .section-title", { opacity: 0, y: 24, duration: 0.5, ease: "power3.out" }, 4.4);
-      tl.from("#scene-2 .bullets li", { opacity: 0, y: 16, stagger: 0.16, duration: 0.45, ease: "power2.out" }, 5.2);
+      // Scene 1 → 2 crossfade (5.6s, 0.8s)
+      tl.fromTo("#scene-2", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.inOut" }, 5.6);
+      tl.to("#scene-1", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, 5.6);
+      tl.set("#scene-1", { opacity: 0 }, 6.4);
+      // Scene 2 — 入心 Inhabit elements enter
+      tl.from("#scene-2 .eyebrow", { opacity: 0, y: 18, duration: 0.35, ease: "power2.out" }, 6.3);
+      tl.from("#scene-2 .section-title", { opacity: 0, y: 22, duration: 0.45, ease: "power3.out" }, 6.8);
+      tl.from("#scene-2 .bullets li", { opacity: 0, y: 14, stagger: 0.14, duration: 0.4, ease: "power2.out" }, 7.5);
 
-      // Scene 2 → 3 crossfade (8.8s, 0.8s)
-      tl.fromTo("#scene-3", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.inOut" }, 8.8);
-      tl.to("#scene-2", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, 8.8);
-      tl.set("#scene-2", { opacity: 0 }, 9.6);
-      // Scene 3 elements enter (slightly faster rhythm)
-      tl.from("#scene-3 .eyebrow", { opacity: 0, y: 18, duration: 0.35, ease: "power2.out" }, 9.5);
-      tl.from("#scene-3 .section-title", { opacity: 0, y: 22, duration: 0.45, ease: "power3.out" }, 10.0);
-      tl.from("#scene-3 .bullets li", { opacity: 0, y: 14, stagger: 0.14, duration: 0.4, ease: "power2.out" }, 10.7);
-
-      // Scene 3 → 4 crossfade (14.2s, 0.8s)
-      tl.fromTo("#scene-4", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.inOut" }, 14.2);
-      tl.to("#scene-3", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, 14.2);
-      tl.set("#scene-3", { opacity: 0 }, 15.0);
-      // Scene 4 elements enter
-      tl.from("#scene-4 .closing", { opacity: 0, y: 24, duration: 0.6, ease: "power3.out" }, 14.9);
-      tl.fromTo("#scene-4 .gold-line", { width: 0 }, { width: 240, duration: 0.6, ease: "power2.out" }, 16.0);
-      tl.from("#scene-4 .brand", { opacity: 0, y: 12, duration: 0.4, ease: "power2.out" }, 16.6);
-      // Final scene: fade to black (17.7s, ends at 18.5s)
-      tl.to("#scene-4", { opacity: 0, duration: 0.8, ease: "sine.in" }, 17.7);
+      // Scene 2 → 3 crossfade (11.0s, 0.8s)
+      tl.fromTo("#scene-3", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.inOut" }, 11.0);
+      tl.to("#scene-2", { opacity: 0, duration: 0.8, ease: "sine.inOut" }, 11.0);
+      tl.set("#scene-2", { opacity: 0 }, 11.8);
+      // Scene 3 — 收束 elements enter
+      tl.from("#scene-3 .closing", { opacity: 0, y: 24, duration: 0.6, ease: "power3.out" }, 11.7);
+      tl.fromTo("#scene-3 .gold-line", { width: 0 }, { width: 240, duration: 0.6, ease: "power2.out" }, 12.8);
+      tl.from("#scene-3 .brand", { opacity: 0, y: 12, duration: 0.4, ease: "power2.out" }, 13.4);
+      // Final scene: fade to black (14.5s, ends at 15.3s)
+      tl.to("#scene-3", { opacity: 0, duration: 0.8, ease: "sine.in" }, 14.5);
 
       window.__timelines["trace-promo"] = tl;
     </script>
