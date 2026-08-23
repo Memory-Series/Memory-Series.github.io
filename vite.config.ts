@@ -17,5 +17,17 @@ export default defineConfig({
   ],
   resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
   base: "./",
-  build: { outDir: "dist", emptyOutDir: true },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          motion: ["framer-motion"],
+          i18n: ["i18next", "react-i18next"],
+          ui: ["lucide-react", "sonner", "wouter"],
+        },
+      },
+    },
+  },
 });
