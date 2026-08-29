@@ -173,6 +173,21 @@
         "2026-08-23: check 通过（layout 9 samples 0、contrast 9/9）；渲染日志确认完成；ffprobe 确认规格。"
       ],
       "notes": "组合源码在 compositions/index.html（含 Manrope/Noto Sans SC @font-face，两字体非 hyperframes 内置）。曾尝试压缩至 15.3s 删主标题，按用户要求回退至 18.5s。MP4 产物未提交 git（.gitignore）。背景音乐待补充；曾试嵌入网站 Hero 区后按用户要求回退，视频不参与网页（独立产物）。"
+    },
+    {
+      "id": "flash-001",
+      "priority": 1,
+      "area": "flash",
+      "title": "网页烧录 ESP32-S3（1.85B 设备）",
+      "user_visible_behavior": "网页新增「烧录」锚点区块，用户通过浏览器 WebSerial 连接 ESP32-S3（1.85B 板），选择固件并烧录，实时显示进度与状态。",
+      "status": "not_started",
+      "verification": [
+        "本地/线上访问烧录区块，WebSerial 连接 ESP32-S3 设备成功。",
+        "选择 1.85B 固件后完成烧录，设备重启进入正常运行。",
+        "npm run build 通过，区块与现有页面风格一致。"
+      ],
+      "evidence": [],
+      "notes": "技术路线：WebSerial + esptool.js（tasmota-webserial-esptool，esp-claw 官方同款）。固件从 esp-claw build_audio002 产物合并（bootloader 22KB + partition-table 3KB + edge_agent.bin 4091KB + emote_assets 2676KB + storage 3456KB + ota_data_initial 8KB，16MB flash）。仅支持 ESP32-S3 1.85B 板。仅烧录，不做配网/console。嵌入方式：Product.tsx 新增页内锚点区块（通讯之后），锚点导航加「烧录」项。不得推翻现有网页设计与功能。"
     }
   ]
 }

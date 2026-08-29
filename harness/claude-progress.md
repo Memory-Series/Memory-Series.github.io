@@ -5,11 +5,23 @@
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
-- 当前最高优先级未完成功能：无（feature_list.json 全部 passing）
+- 当前最高优先级未完成功能：`flash-001`（网页烧录 ESP32-S3 1.85B 设备）——已规划，待实现
 - 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
 - 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页
 
 ## 会话记录
+
+### Session 007
+
+- 日期：2026-08-23
+- 本轮目标：规划网页烧录功能（flash-001）需求并写入 harness
+- 已完成：调研 esp-claw 官方 flash-tool（WebSerial + tasmota-webserial-esptool + firmware.json + merged bin）；确认固件产物组成（bootloader/partition-table/edge_agent.bin 4091KB/emote_assets 2676KB/storage 3456KB/ota_data_initial，16MB flash）；澄清决策（固件从 esp-claw 产物合并、仅烧录不含配网/console、仅支持 ESP32-S3 1.85B、新增页内锚点区块）；写入 feature_list.json 的 flash-001（not_started）
+- 运行过的验证：esp-claw 构建产物存在性 + sdkconfig flash 配置确认（16MB/QIO）
+- 已记录证据：feature_list.json 的 flash-001 项（含固件组成清单）
+- 提交记录：尚未提交
+- 更新过的文件或工件：harness/feature_list.json、harness/claude-progress.md
+- 已知风险或未解决问题：WebSerial 需 HTTPS（GitHub Pages 可用）；固件合并需 esptool 命令确认偏移；烧录实机验证需设备在手
+- 下一步最佳动作：实现 flash-001（设计烧录区块 UI → 合并固件 → 实现 WebSerial 烧录逻辑 → 实机验证）
 
 ### Session 006
 
@@ -22,8 +34,6 @@
 - 更新过的文件或工件：vite.config.ts、src/pages/Product.tsx、src/assets/hero-bg.jpeg、src/assets/demo/trace-inhabit/庄方宜/庄方宜.jpeg、拓跋玉儿 .png→.jpg、harness/feature_list.json、harness/claude-progress.md
 - 已知风险或未解决问题：无
 - 下一步最佳动作：feature_list.json 全部 passing，可推送并收尾
-
-### Session 005
 
 ### Session 005
 
