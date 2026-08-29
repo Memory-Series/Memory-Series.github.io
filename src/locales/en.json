@@ -16,7 +16,8 @@
       "usage": "Usage",
       "demo": "Characters",
       "implementation": "Scenarios",
-      "contact": "Contact"
+      "contact": "Contact",
+      "flash": "Flash"
     }
   },
   "footer": {
@@ -83,6 +84,34 @@
     "contact": {
       "eyebrow": "Contact",
       "title": "Contact Information"
+    },
+    "flash": {
+      "eyebrow": "Flash",
+      "title": "Firmware Flashing",
+      "lead": "Flash Companion firmware directly to your ESP32-S3 device from the browser.",
+      "supportHint": "Currently supported: Waveshare 1.85B board (ESP32-S3)",
+      "connect": "Connect Device",
+      "disconnect": "Disconnect",
+      "connected": "Connected",
+      "notConnected": "Not Connected",
+      "deviceInfo": "Device Info",
+      "firmwareLabel": "Firmware",
+      "firmwareName": "Memory Series · Companion 1.85B",
+      "firmwareSize": "Firmware Size",
+      "flashTarget": "Flash Target",
+      "flashOffset": "Offset 0x0 · 16MB Flash",
+      "startFlash": "Start Flashing",
+      "flashing": "Flashing…",
+      "flashSuccess": "Flashing complete! Device will restart.",
+      "flashError": "Flashing failed",
+      "downloadProgress": "Downloading firmware",
+      "writeProgress": "Writing to device",
+      "unsupported": "WebSerial is not supported in this browser. Please use Chrome or Edge.",
+      "cancel": "Cancel",
+      "statusIdle": "Ready",
+      "statusConnecting": "Connecting…",
+      "statusReading": "Reading device info…",
+      "progress": "Progress"
     }
   }
 }
