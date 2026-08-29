@@ -51,9 +51,17 @@ export function FlashTool({ onProgress }: FlashToolProps) {
         error: () => {},
         debug: () => {},
       });
-      loaderRef.current = loader;
-      setDeviceName(loader.chipName ?? "ESP32-S3");
-      setFlashSize(loader.flashSize ? `${loader.flashSize} MB` : null);
+      // Full initialization sequence (mirrors esp-claw official flash-tool):
+      // sync + chip info, then load the ROM stub for high-speed flashing,
+      // then detect flash size if not already known.
+      await loader.initialize();
+      const activeLoader = await loader.runStub();
+      if (!activeLoader.flashSize) {
+        await activeLoader.detectFlashSize();
+      }
+      loaderRef.current = activeLoader;
+      setDeviceName(activeLoader.chipName ?? "ESP32-S3");
+      setFlashSize(activeLoader.flashSize ? `${activeLoader.flashSize} MB` : null);
       setPhase("connected");
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : String(err));
@@ -95,6 +103,15 @@ export function FlashTool({ onProgress }: FlashToolProps) {
       setPhase("flashing");
       setProgress(0);
       onProgress?.("download", 100);
+
+      // Speed up UART when the ROM stub is active (mirrors esp-claw official flow)
+      if (loader.IS_STUB) {
+        try {
+          await loader.setBaudrate(921600);
+        } catch {
+          /* keep default baud if speed-up fails */
+        }
+      }
 
       await loader.flashData(
         binary,
