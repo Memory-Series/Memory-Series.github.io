@@ -11,6 +11,18 @@
 
 ## 会话记录
 
+### Session 010
+
+- 日期：2026-08-29
+- 本轮目标：设备配置向导 + 烧录区块拆分为「固件烧录」/「角色部署」两个独立区块
+- 已完成：调研确认设备有 http_server WebUI（端口 80）且支持 `wifi --status` console 命令返回设备 IP（官方 flash-tool 同机制）；FlashTool 拆为两个独立组件——FirmwareFlash（连接+烧录+进度）和 CharacterDeploy（获取设备地址→打开配置界面→导入 SoulPod 指引）；两个区块眉标区分（固件/角色），横向并列（lg:grid-cols-2），flash 区块移到 max-w-6xl 容器
+- 运行过的验证：`npm run build`（通过）、`npm run lint`（0 错误 0 警告）
+- 已记录证据：build/lint 通过；用户确认布局符合要求
+- 提交记录：fed8753（refactor(flash): split into firmware flash and character deploy sections），未推送
+- 更新过的文件或工件：src/components/FirmwareFlash.tsx（原 FlashTool rename）、src/components/CharacterDeploy.tsx（新增）、src/locales/zh.json/en.json、src/pages/Product.tsx
+- 已知风险或未解决问题：获取设备地址需实机验证（console 模式读 IP）；设备 WebUI 跳转需设备与电脑同网络；设备 WebUI 域名/captive portal 行为待确认
+- 下一步最佳动作：实机验证 CharacterDeploy 获取设备地址 → 推送远程
+
 ### Session 009
 
 - 日期：2026-08-29
