@@ -16,7 +16,8 @@
       "usage": "使用",
       "demo": "角色",
       "implementation": "情景",
-      "contact": "通讯"
+      "contact": "通讯",
+      "flash": "烧录"
     }
   },
   "sections": {
@@ -76,6 +77,34 @@
     "contact": {
       "eyebrow": "通讯",
       "title": "通讯方式"
+    },
+    "flash": {
+      "eyebrow": "烧录",
+      "title": "固件烧录",
+      "lead": "通过浏览器直接为你的 ESP32-S3 设备烧录 Companion 固件。",
+      "supportHint": "当前支持：微雪 1.85B 板（ESP32-S3）",
+      "connect": "连接设备",
+      "disconnect": "断开连接",
+      "connected": "已连接",
+      "notConnected": "未连接",
+      "deviceInfo": "设备信息",
+      "firmwareLabel": "固件",
+      "firmwareName": "Memory Series · Companion 1.85B",
+      "firmwareSize": "固件大小",
+      "flashTarget": "烧录目标",
+      "flashOffset": "偏移 0x0 · 16MB Flash",
+      "startFlash": "开始烧录",
+      "flashing": "烧录中…",
+      "flashSuccess": "烧录完成！设备即将重启。",
+      "flashError": "烧录失败",
+      "downloadProgress": "下载固件中",
+      "writeProgress": "写入设备中",
+      "unsupported": "当前浏览器不支持 WebSerial，请使用 Chrome / Edge 浏览器。",
+      "cancel": "取消",
+      "statusIdle": "准备就绪",
+      "statusConnecting": "连接中…",
+      "statusReading": "读取设备信息…",
+      "progress": "进度"
     }
   },
   "footer": {

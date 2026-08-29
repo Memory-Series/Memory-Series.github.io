@@ -18,6 +18,7 @@ import traceDemoQinCheAudio from "@/assets/demo/trace-inhabit/秦彻/这不算�
 import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { FlashTool } from "@/components/FlashTool";
 import { cn } from "@/lib/utils";
 import { PRODUCT_BY_KEY, type ProductKey } from "@/lib/products";
 
@@ -232,6 +233,7 @@ export default function Product({ keyParam }: ProductProps) {
     { id: "demo", t: t("nav.anchors.demo") },
     { id: "implementation", t: t("nav.anchors.implementation") },
     { id: "contact", t: t("nav.anchors.contact") },
+    { id: "flash", t: t("nav.anchors.flash") },
   ] as const;
 
   return (
@@ -567,6 +569,14 @@ export default function Product({ keyParam }: ProductProps) {
       </section>
 
       <main className="mx-auto max-w-3xl space-y-20 px-5 py-16 md:space-y-28 md:py-24">
+        <motion.section id="flash" className="scroll-mt-32" {...fadeUp}>
+          <SectionEyebrow>{t("sections.flash.eyebrow")}</SectionEyebrow>
+          <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
+            {t("sections.flash.title")}
+          </h2>
+          <FlashTool />
+        </motion.section>
+
         <motion.section id="implementation" className="scroll-mt-32" {...fadeUp}>
           <SectionEyebrow>{t("sections.implementation.eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
