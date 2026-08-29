@@ -11,6 +11,18 @@
 
 ## 会话记录
 
+### Session 012
+
+- 日期：2026-08-29
+- 本轮目标：部署管理纳入 harness——GitHub Pages 与京东云两处部署统一管理
+- 已完成：修复 GitHub Pages 工作流（pnpm→npm，因项目 lockfile 已从 pnpm-lock.yaml 迁到 package-lock.json，原工作流会构建失败）；新建 scripts/deploy-jd.ps1 京东云部署脚本（npm run build → tar 打包 → SFTP 上传 → 解压 /opt/memory-series → docker restart nginx → curl 验证 HTTP 200）；新增 harness/docs/deployment.md 部署管理文档；更新 AGENTS.md 与 docs README 索引
+- 运行过的验证：deploy-jd.ps1 完整执行成功（HTTP 200）；京东云站点外部访问 200
+- 已记录证据：部署脚本完整输出（build/upload/restart/HTTP 200）
+- 提交记录：898cb45（chore(deploy): fix pages workflow to npm, add JD cloud deploy script and docs），待推送
+- 更新过的文件或工件：.github/workflows/deploy-pages.yml、scripts/deploy-jd.ps1（新增）、harness/docs/deployment.md（新增）、harness/docs/README.md、harness/AGENTS.md
+- 已知风险或未解决问题：京东云 WebSerial 需 HTTPS（域名备案中）；部署脚本含明文密码（建议后续改用 SSH 密钥或 GitHub Actions 自动同步京东云）
+- 下一步最佳动作：推送 898cb45；域名备案完成后配置 HTTPS 并验证 WebSerial
+
 ### Session 011
 
 - 日期：2026-08-29
