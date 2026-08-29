@@ -5,7 +5,7 @@
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
-- 当前最高优先级未完成功能：`flash-001`（网页烧录 ESP32-S3 1.85B）——UI 已实现，待实机烧录验证
+- 当前最高优先级未完成功能：无（feature_list.json 全部 passing）
 - 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
 - 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页
 
@@ -14,14 +14,14 @@
 ### Session 008
 
 - 日期：2026-08-29
-- 本轮目标：实现 flash-001 网页烧录功能（WebSerial + esptool.js）
-- 已完成：合并 esp-claw 固件（6 分区 → public/merged_binary/memory-series-1.85b.bin 15.1MB）；安装 tasmota-webserial-esptool；创建 FlashTool 组件（连接/下载/烧录/进度/错误处理，双语）；烧录区块嵌入 Product.tsx（demo 与 implementation 之间），锚点加「烧录」；用户确认 UI 风格 OK
-- 运行过的验证：`npm run build`（通过）、`npm run lint`（0 错误）、dev server 5273 端口预览
-- 已记录证据：build/lint 通过；固件复制进 dist；页面顺序 demo→flash→implementation 确认
-- 提交记录：83038de（feat(flash): add WebSerial firmware flashing for ESP32-S3 1.85B），未推送
+- 本轮目标：实现并验证 flash-001 网页烧录功能（WebSerial + esptool.js）
+- 已完成：合并 esp-claw 固件（6 分区 → public/merged_binary/memory-series-1.85b.bin 15.1MB）；安装 tasmota-webserial-esptool；创建 FlashTool 组件（连接/初始化/烧录/进度/错误处理，双语）；烧录区块嵌入 Product.tsx（demo 与 implementation 之间）；用户确认 UI 风格与实机烧录成功
+- 运行过的验证：`npm run build`（通过）、`npm run lint`（0 错误）、实机烧录（用户确认成功）
+- 已记录证据：build/lint 通过；固件复制进 dist；实机烧录成功
+- 提交记录：83038de（feat: add WebSerial firmware flashing）、36d398d（harness 记录）、待提交本次 passing 更新
 - 更新过的文件或工件：package.json/lock、src/locales/zh.json/en.json、src/pages/Product.tsx、src/components/FlashTool.tsx（新增）、public/merged_binary/（新增）、harness/feature_list.json、harness/claude-progress.md
-- 已知风险或未解决问题：**实机烧录验证未做**（需设备在手）；WebSerial 需 HTTPS（GitHub Pages 部署后可用，localhost 预览也可）；Windows 5170-5269 保留端口导致 dev 用 5273
-- 下一步最佳动作：实机烧录验证 flash-001 → 标记 passing；未来规划：连接设备后可选角色卡直接烧录固件 + 下载 SoulPod
+- 已知风险或未解决问题：WebSerial 需 HTTPS（GitHub Pages 部署后可用，localhost 预览也可）；Windows 5170-5269 保留端口导致 dev 用 5273；固件后续更新需重新 merge
+- 下一步最佳动作：推送 flash-001 到远程；未来规划：连接设备后可选角色卡直接烧录固件 + 下载 SoulPod
 
 ### Session 007
 
