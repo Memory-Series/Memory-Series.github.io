@@ -18,7 +18,8 @@ import traceDemoQinCheAudio from "@/assets/demo/trace-inhabit/秦彻/这不算�
 import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { FlashTool } from "@/components/FlashTool";
+import { FirmwareFlash } from "@/components/FirmwareFlash";
+import { CharacterDeploy } from "@/components/CharacterDeploy";
 import { SoulPodDownload } from "@/components/SoulPodDownload";
 import { cn } from "@/lib/utils";
 import { PRODUCT_BY_KEY, type ProductKey } from "@/lib/products";
@@ -572,15 +573,43 @@ export default function Product({ keyParam }: ProductProps) {
         </motion.section>
       </section>
 
-      <main className="mx-auto max-w-3xl space-y-20 px-5 py-16 md:space-y-28 md:py-24">
-        <motion.section id="flash" className="scroll-mt-32" {...fadeUp}>
-          <SectionEyebrow>{t("sections.flash.eyebrow")}</SectionEyebrow>
-          <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
-            {t("sections.flash.title")}
-          </h2>
-          <FlashTool />
-        </motion.section>
+      <section className="px-5">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-6">
+            <motion.section id="flash" className="scroll-mt-32" {...fadeUp}>
+              <SectionEyebrow>{t("sections.flash.eyebrowFlash")}</SectionEyebrow>
+              <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
+                {t("sections.flash.sectionFlash")}
+              </h2>
+              <p className="mt-2 text-pretty text-sm leading-7 text-foreground/75 md:text-[0.975rem] md:leading-8">
+                {t("sections.flash.lead")}
+              </p>
+              <p className="mt-1 flex items-center gap-2 text-xs tracking-[0.2em] text-foreground/55">
+                <span className="h-1 w-1 rounded-full bg-[oklch(0.78_0.12_75)]" aria-hidden />
+                {t("sections.flash.sectionFlashDesc")}
+              </p>
+              <div className="mt-4">
+                <FirmwareFlash />
+              </div>
+            </motion.section>
 
+            <motion.section id="deploy" className="scroll-mt-32" {...fadeUp}>
+              <SectionEyebrow>{t("sections.flash.eyebrowDeploy")}</SectionEyebrow>
+              <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">
+                {t("sections.flash.sectionDeploy")}
+              </h2>
+              <p className="mt-2 text-pretty text-sm leading-7 text-foreground/75 md:text-[0.975rem] md:leading-8">
+                {t("sections.flash.supportHint")}
+              </p>
+              <div className="mt-4">
+                <CharacterDeploy />
+              </div>
+            </motion.section>
+          </div>
+        </div>
+      </section>
+
+      <main className="mx-auto max-w-3xl space-y-20 px-5 py-16 md:space-y-28 md:py-24">
         <motion.section id="implementation" className="scroll-mt-32" {...fadeUp}>
           <SectionEyebrow>{t("sections.implementation.eyebrow")}</SectionEyebrow>
           <h2 className="mt-4 font-[Manrope] text-2xl font-semibold tracking-[-0.02em] text-foreground md:text-3xl">

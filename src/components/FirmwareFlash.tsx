@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { connect, type ESPLoader } from "tasmota-webserial-esptool";
 import { useTranslation } from "react-i18next";
-import { Loader2, Plug, PlugZap, Radio, RotateCcw, Usb } from "lucide-react";
+import { Loader2, Plug, PlugZap, Radio, Usb } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,11 +18,11 @@ type FlashState =
   | "success"
   | "error";
 
-interface FlashToolProps {
+interface FirmwareFlashProps {
   onProgress?: (phase: "download" | "write", pct: number) => void;
 }
 
-export function FlashTool({ onProgress }: FlashToolProps) {
+export function FirmwareFlash({ onProgress }: FirmwareFlashProps) {
   const { t } = useTranslation();
   const loaderRef = useRef<ESPLoader | null>(null);
   const [state, setState] = useState<FlashState>("idle");
@@ -51,9 +51,6 @@ export function FlashTool({ onProgress }: FlashToolProps) {
         error: () => {},
         debug: () => {},
       });
-      // Full initialization sequence (mirrors esp-claw official flash-tool):
-      // sync + chip info, then load the ROM stub for high-speed flashing,
-      // then detect flash size if not already known.
       await loader.initialize();
       const activeLoader = await loader.runStub();
       if (!activeLoader.flashSize) {
@@ -91,7 +88,6 @@ export function FlashTool({ onProgress }: FlashToolProps) {
       setPhase("downloading");
       setProgress(0);
 
-      // 1. Download merged firmware binary
       const resp = await fetch(FIRMWARE_URL);
       if (!resp.ok) {
         throw new Error(`Firmware download failed (${resp.status})`);
@@ -99,12 +95,10 @@ export function FlashTool({ onProgress }: FlashToolProps) {
       const blob = await resp.blob();
       const binary: ArrayBuffer = await blob.arrayBuffer();
 
-      // 2. Write to flash at 0x0 (merged image contains bootloader + partitions + app)
       setPhase("flashing");
       setProgress(0);
       onProgress?.("download", 100);
 
-      // Speed up UART when the ROM stub is active (mirrors esp-claw official flow)
       if (loader.IS_STUB) {
         try {
           await loader.setBaudrate(921600);
@@ -137,21 +131,10 @@ export function FlashTool({ onProgress }: FlashToolProps) {
   const isConnected = state === "connected" || state === "downloading" || state === "flashing" || state === "success";
 
   return (
-    <Card className="mt-4 rounded-3xl border-border/50 bg-card/30 p-5 backdrop-blur md:p-7">
-      <div className="space-y-6">
-        {/* Lead */}
-        <p className="text-pretty text-sm leading-7 text-foreground/75 md:text-[0.975rem] md:leading-8">
-          {t("sections.flash.lead")}
-        </p>
-
-        {/* Support hint */}
-        <p className="flex items-center gap-2 text-xs tracking-[0.2em] text-foreground/55">
-          <span className="h-1 w-1 rounded-full bg-[oklch(0.78_0.12_75)]" aria-hidden />
-          {t("sections.flash.supportHint")}
-        </p>
-
+    <Card className="h-full rounded-3xl border-border/50 bg-card/30 p-5 backdrop-blur md:p-7">
+      <div className="space-y-5">
         {/* Connection status */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <span
               className={cn(
@@ -200,28 +183,26 @@ export function FlashTool({ onProgress }: FlashToolProps) {
           )}
         </div>
 
-        {/* Firmware card */}
-        <div className="rounded-2xl border border-border/50 bg-background/15 p-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="space-y-1">
-              <p className="text-xs tracking-[0.2em] text-foreground/50">{t("sections.flash.firmwareLabel")}</p>
-              <p className="font-[Manrope] text-sm font-semibold tracking-[-0.02em] text-foreground">
-                {t("sections.flash.firmwareName")}
-              </p>
-              <p className="text-xs leading-5 text-foreground/55">
-                {t("sections.flash.flashTarget")} · {t("sections.flash.flashOffset")}
-              </p>
-            </div>
-            <Button
-              type="button"
-              onClick={() => void handleFlash()}
-              disabled={!isConnected || isBusy}
-              className="bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)] hover:bg-[oklch(0.82_0.12_75)]"
-            >
-              {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Radio className="mr-2 h-4 w-4" />}
-              {isBusy ? t("sections.flash.flashing") : t("sections.flash.startFlash")}
-            </Button>
+        {/* Firmware flash button */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="space-y-1">
+            <p className="text-xs tracking-[0.2em] text-foreground/50">{t("sections.flash.firmwareLabel")}</p>
+            <p className="font-[Manrope] text-sm font-semibold tracking-[-0.02em] text-foreground">
+              {t("sections.flash.firmwareName")}
+            </p>
+            <p className="text-xs leading-5 text-foreground/55">
+              {t("sections.flash.flashTarget")} · {t("sections.flash.flashOffset")}
+            </p>
           </div>
+          <Button
+            type="button"
+            onClick={() => void handleFlash()}
+            disabled={!isConnected || isBusy}
+            className="bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)] hover:bg-[oklch(0.82_0.12_75)]"
+          >
+            {isBusy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Radio className="mr-2 h-4 w-4" />}
+            {isBusy ? t("sections.flash.flashing") : t("sections.flash.startFlash")}
+          </Button>
         </div>
 
         {/* Progress */}
@@ -240,19 +221,11 @@ export function FlashTool({ onProgress }: FlashToolProps) {
               <div
                 className={cn(
                   "h-full rounded-full transition-[width] duration-200",
-                  state === "error"
-                    ? "bg-destructive"
-                    : "bg-[oklch(0.78_0.12_75)]"
+                  state === "error" ? "bg-destructive" : "bg-[oklch(0.78_0.12_75)]"
                 )}
                 style={{ width: `${progress}%` }}
               />
             </div>
-            {state === "success" && (
-              <div className="flex items-center gap-2 text-xs text-foreground/60">
-                <RotateCcw className="h-3.5 w-3.5" />
-                <span>{t("sections.flash.flashSuccess")}</span>
-              </div>
-            )}
             {state === "error" && <p className="text-xs leading-5 text-destructive">{errorMsg}</p>}
           </div>
         ) : (
