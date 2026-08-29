@@ -9,6 +9,7 @@
 | `README.md` | 仓库根目录 | 项目主页介绍（Trace / Inhabit、寻迹/入心、主页/项目地址、Agent Skill 说明） | 首次接触仓库时 |
 | `DESIGN.md` | 仓库根目录 | 设计系统规范：配色、字体、布局节奏、动效、产品页模式、可访问性（Cinematic Tech-Noir Minimalism） | 涉及样式/UI 改动时 |
 | `product-page-copy.md` | `core/` | Trace / Inhabit 产品页完整中文文案（Hero、定义、价值、体验、技术、场景、结尾、一句话） | 修改产品文案时 |
+| `deployment.md` | 新增 | 部署管理：GitHub Pages 自动部署 + 京东云脚本部署（deploy-jd.ps1）、HTTPS/WebSerial 注意事项、验证清单 | 部署/发版时 |
 
 ## 与 harness 其他文件的关联
 

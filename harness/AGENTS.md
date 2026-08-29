@@ -10,7 +10,8 @@
 - 唯一页面：`src/pages/Product.tsx`（`/product/trace`，其余路由重定向到它）
 - 双语文案：`src/locales/en.json` / `src/locales/zh.json`
 - 产品文案与结构：`src/lib/products.ts`
-- 历史文档（从仓库根目录迁移）：`harness/docs/`（见下方“文档索引”）
+- 历史文档（从仓库根目录迁移）：`harness/docs/`（见下方"文档索引"）
+- 部署：GitHub Pages 自动部署（push main）+ 京东云脚本部署（`scripts/deploy-jd.ps1`，见 `harness/docs/deployment.md`）
 
 ## 文档索引
 
