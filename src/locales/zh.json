@@ -104,7 +104,11 @@
       "statusIdle": "准备就绪",
       "statusConnecting": "连接中…",
       "statusReading": "读取设备信息…",
-      "progress": "进度"
+      "progress": "进度",
+      "deploySoulpod": "下载 SoulPod",
+      "soulpodComingSoon": "即将上线",
+      "soulpodDownloading": "打包中…",
+      "soulpodReady": "SoulPod 已生成，请解压后放入设备 SD 卡的 personas 目录"
     }
   },
   "footer": {

@@ -19,6 +19,7 @@ import wechatOfficialQr from "@/assets/demo/other/gongzhonghao.jpeg";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FlashTool } from "@/components/FlashTool";
+import { SoulPodDownload } from "@/components/SoulPodDownload";
 import { cn } from "@/lib/utils";
 import { PRODUCT_BY_KEY, type ProductKey } from "@/lib/products";
 
@@ -532,6 +533,9 @@ export default function Product({ keyParam }: ProductProps) {
                                 {tag}
                               </span>
                             ))}
+                          </div>
+                          <div className="pt-0.5">
+                            <SoulPodDownload characterName={item.title} />
                           </div>
                         </div>
                       )}

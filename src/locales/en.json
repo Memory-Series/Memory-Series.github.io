@@ -111,7 +111,11 @@
       "statusIdle": "Ready",
       "statusConnecting": "Connecting…",
       "statusReading": "Reading device info…",
-      "progress": "Progress"
+      "progress": "Progress",
+      "deploySoulpod": "Download SoulPod",
+      "soulpodComingSoon": "Coming Soon",
+      "soulpodDownloading": "Packaging…",
+      "soulpodReady": "SoulPod ready — extract it into the personas folder on the device SD card"
     }
   }
 }
