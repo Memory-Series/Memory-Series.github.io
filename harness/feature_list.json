@@ -179,15 +179,17 @@
       "priority": 1,
       "area": "flash",
       "title": "网页烧录 ESP32-S3（1.85B 设备）",
-      "user_visible_behavior": "网页新增「烧录」锚点区块，用户通过浏览器 WebSerial 连接 ESP32-S3（1.85B 板），选择固件并烧录，实时显示进度与状态。",
-      "status": "not_started",
+      "user_visible_behavior": "网页新增「烧录」锚点区块（角色卡下方/情景上方），用户通过浏览器 WebSerial 连接 ESP32-S3（1.85B 板），选择固件并烧录，实时显示进度与状态。",
+      "status": "in_progress",
       "verification": [
         "本地/线上访问烧录区块，WebSerial 连接 ESP32-S3 设备成功。",
         "选择 1.85B 固件后完成烧录，设备重启进入正常运行。",
         "npm run build 通过，区块与现有页面风格一致。"
       ],
-      "evidence": [],
-      "notes": "技术路线：WebSerial + esptool.js（tasmota-webserial-esptool，esp-claw 官方同款）。固件从 esp-claw build_audio002 产物合并（bootloader 22KB + partition-table 3KB + edge_agent.bin 4091KB + emote_assets 2676KB + storage 3456KB + ota_data_initial 8KB，16MB flash）。仅支持 ESP32-S3 1.85B 板。仅烧录，不做配网/console。嵌入方式：Product.tsx 新增页内锚点区块（通讯之后），锚点导航加「烧录」项。不得推翻现有网页设计与功能。"
+      "evidence": [
+        "2026-08-29: build/lint 通过；FlashTool 组件实现（WebSerial 连接 + 固件下载 + flashData 烧录 + 进度条）；固件合并（6 分区 → memory-series-1.85b.bin 15.1MB）；烧录区块嵌入 Product.tsx（demo 与 implementation 之间）；用户确认 UI 风格。实机烧录验证待做。"
+      ],
+      "notes": "技术路线：WebSerial + esptool.js（tasmota-webserial-esptool，esp-claw 官方同款）。固件从 esp-claw build_audio002 产物合并（bootloader 0x0 + partition-table 0x9000 + ota 0x10000 + edge_agent 0x20000 + emote_assets 0x820000 + storage 0xbc0000，16MB flash）。仅支持 ESP32-S3 1.85B 板。仅烧录，不含配网/console。未来规划：连接设备后可选角色卡直接烧录固件 + 下载 SoulPod。开发端口注意：Windows 5170-5269 为保留端口，dev 用 5273。"
     }
   ]
 }
