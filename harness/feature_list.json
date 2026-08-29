@@ -190,6 +190,23 @@
         "2026-08-29: build/lint 通过；固件合并（6 分区 → memory-series-1.85b.bin 15.1MB）；FlashTool 组件（WebSerial 连接 + initialize/runStub/detectFlashSize 初始化 + 921600 加速烧录 + 进度条）；烧录区块嵌入 Product.tsx（demo 与 implementation 之间）；用户确认 UI 风格与实机烧录成功。"
       ],
       "notes": "技术路线：WebSerial + esptool.js（tasmota-webserial-esptool，esp-claw 官方同款）。固件从 esp-claw build_audio002 产物合并（bootloader 0x0 + partition-table 0x9000 + ota 0x10000 + edge_agent 0x20000 + emote_assets 0x820000 + storage 0xbc0000，16MB flash）。关键经验：connect() 后必须 initialize() → runStub() → detectFlashSize()，否则 WritableStream is locked。仅支持 ESP32-S3 1.85B 板。仅烧录，不含配网/console。未来规划：连接设备后可选角色卡直接烧录固件 + 下载 SoulPod。开发端口注意：Windows 5170-5269 为保留端口，dev 用 5273。"
+    },
+    {
+      "id": "soulpod-001",
+      "priority": 2,
+      "area": "soulpod",
+      "title": "角色卡下载 SoulPod 包",
+      "user_visible_behavior": "Demo 角色卡聚焦时显示「下载 SoulPod」按钮，可下载对应角色的 SoulPod zip 包（含 profile/config/memories/prompt/assets）。",
+      "status": "passing",
+      "verification": [
+        "角色卡聚焦时显示下载按钮。",
+        "夏以昼/叶修/秦彻可打包下载 SoulPod zip；庄方宜/拓跋玉儿/戴安娜显示「即将上线」。",
+        "npm run build 通过。"
+      ],
+      "evidence": [
+        "2026-08-29: SoulPodDownload 组件实现（JSZip 动态打包）；soulpod.ts manifest 从 Trace-Inhabit 远程仓库拉取文件（raw.githubusercontent.com 已验证可访问）；zip 保留 personas/<角色>/ 目录结构；用户确认布局。"
+      ],
+      "notes": "数据源：Trace-Inhabit 远程仓库 inhabit/personas/（夏以昼/叶修/秦彻/Lucy 有完整包；庄方宜仅 assets）。JSZip 通过动态 import 拆分独立 chunk（97kB 按需加载）。用户要求 SoulPod 下载与固件烧录分离：下载在角色卡上，烧录保留在烧录区块。设备读取 SD 卡 /sdcard/personas/<角色>/ 目录，zip 需用户解压后放入。"
     }
   ]
 }

@@ -11,6 +11,18 @@
 
 ## 会话记录
 
+### Session 009
+
+- 日期：2026-08-29
+- 本轮目标：角色卡直接下载 SoulPod 包（soulpod-001）
+- 已完成：创建 src/lib/soulpod.ts（角色→SoulPod 文件清单 manifest，从 Trace-Inhabit 远程仓库 raw 拉取）；创建 SoulPodDownload 组件（JSZip 动态打包 zip 下载，有包可下载/无包「即将上线」）；角色卡聚焦时在标签下方显示下载按钮；FlashTool 还原为纯烧录功能；清理未用 locale
+- 运行过的验证：`npm run build`（通过）、`npm run lint`（0 错误）、远程 raw URL 可访问性验证（夏以昼 profile/叶修图片 200）
+- 已记录证据：build/lint 通过；远程文件 URL 验证；用户确认布局
+- 提交记录：900410a（feat(soulpod): add per-character SoulPod zip download on demo cards），未推送
+- 更新过的文件或工件：package.json/lock、src/lib/soulpod.ts（新增）、src/components/SoulPodDownload.tsx（新增）、src/pages/Product.tsx、src/locales/zh.json/en.json、harness/feature_list.json、harness/claude-progress.md
+- 已知风险或未解决问题：SoulPod zip 需用户解压后手动放 SD 卡；设备固件无文件上传协议（网页直写 SD 暂不可行，用户已放弃该方案）；庄方宜/拓跋玉儿/戴安娜无完整包
+- 下一步最佳动作：推送 soulpod-001 到远程
+
 ### Session 008
 
 - 日期：2026-08-29
