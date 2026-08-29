@@ -7,9 +7,21 @@
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
 - 当前最高优先级未完成功能：无（feature_list.json 全部 passing）
 - 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
-- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页
+- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页；网页已部署京东云 http://111.228.60.135/（待域名+HTTPS 配置 WebSerial 可用）
 
 ## 会话记录
+
+### Session 011
+
+- 日期：2026-08-29
+- 本轮目标：deploy-001 实机验证 + 网页部署到京东云
+- 已完成：用户实机验证 deploy-001 获取设备地址成功（标记 passing）；部署网页到京东云主机（CentOS7+Docker 20.10.21，Nginx alpine 容器 80 端口挂载 /opt/memory-series，HTTP 200）；解决 Docker Hub 不可达（配置 daocloud/dockerproxy/USTC 镜像加速器）与 CentOS7+nginx pwrite 限制（--privileged）
+- 运行过的验证：京东云站点 HTTP 200、JS/CSS/固件 bin 资源 200、首页 title 正常
+- 已记录证据：curl HTTP 200；用户实机验证 deploy-001
+- 提交记录：待提交 feature_list 更新
+- 更新过的文件或工件：harness/feature_list.json、harness/claude-progress.md
+- 已知风险或未解决问题：WebSerial 需 HTTPS——域名备案审核中，备案完成后配置域名+HTTPS 证书
+- 下一步最佳动作：域名备案完成后绑定域名 + 配置 HTTPS；推送 feature_list 更新
 
 ### Session 010
 

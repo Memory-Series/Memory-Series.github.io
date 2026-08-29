@@ -214,14 +214,14 @@
       "area": "flash",
       "title": "设备配置向导（获取地址→跳转配置→导入 SoulPod）",
       "user_visible_behavior": "烧录区块拆分为「固件烧录」与「角色部署」两个独立区块（眉标区分：固件/角色）。角色部署区块提供 3 步引导：获取设备配置地址（console 模式 wifi --status）→ 打开配置界面（新标签）→ 导入 SoulPod 指引。",
-      "status": "in_progress",
+      "status": "passing",
       "verification": [
         "实机验证 CharacterDeploy 获取设备地址（console 模式读 IP）。",
         "配置界面链接可打开设备 WebUI（http://<ip>/#llm）。",
         "npm run build 通过，两个区块横向并列且风格一致。"
       ],
       "evidence": [
-        "2026-08-29: build/lint 通过；FlashTool 拆为 FirmwareFlash + CharacterDeploy；设备 http_server WebUI（端口 80）+ wifi --status console 命令已确认（官方 flash-tool 同机制）；用户确认布局。实机验证待做。"
+        "2026-08-29: build/lint 通过；FlashTool 拆为 FirmwareFlash + CharacterDeploy；设备 http_server WebUI（端口 80）+ wifi --status console 命令已确认（官方 flash-tool 同机制）；用户确认布局与实机验证获取设备地址成功。"
       ],
       "notes": "获取设备 IP 机制：WebSerial 连接后 setConsoleMode(true)，发送 `wifi --status\\n`，解析输出行 `CMD_WIFI: ... cmd=status ... ok=1 ... sta_ip=<ip>`。配置地址 http://<ip>/#llm。设备需与电脑同一网络才能打开 WebUI。眉标：固件烧录=「固件」，角色部署=「角色」。"
     }
