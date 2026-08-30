@@ -7,7 +7,7 @@
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
 - 当前最高优先级未完成功能：无（feature_list.json 全部 passing）
 - 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
-- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页；网页已部署京东云 http://111.228.60.135/（待域名+HTTPS 配置 WebSerial 可用）
+- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页；网页已部署京东云 http://111.228.60.135/（CentOS7+Docker nginx 容器，HTTP 200 已验证）；WebSerial 烧录功能需 HTTPS——域名备案中，备案完成后配置
 
 ## 会话记录
 
@@ -22,6 +22,18 @@
 - 更新过的文件或工件：.github/workflows/deploy-pages.yml、scripts/deploy-jd.ps1（新增）、harness/docs/deployment.md（新增）、harness/docs/README.md、harness/AGENTS.md
 - 已知风险或未解决问题：京东云 WebSerial 需 HTTPS（域名备案中）；部署脚本含明文密码（建议后续改用 SSH 密钥或 GitHub Actions 自动同步京东云）
 - 下一步最佳动作：推送 898cb45；域名备案完成后配置 HTTPS 并验证 WebSerial
+
+### Session 013
+
+- 日期：2026-08-29
+- 本轮目标：deploy-001 实机验证 + 京东云部署完成确认
+- 已完成：用户实机验证 deploy-001 获取设备地址成功（console 模式 wifi --status 读 IP）；京东云站点部署完成（CentOS7+Docker20.10.21，Nginx alpine 容器 80 端口挂载 /opt/memory-series，HTTP 200）；解决 Docker Hub 不可达（配 daocloud/dockerproxy/USTC 镜像加速）与 CentOS7+nginx pwrite 限制（--privileged）；修复 GitHub Pages 工作流 pnpm→npm（lockfile 已迁至 package-lock.json）
+- 运行过的验证：京东云 curl HTTP 200、JS/CSS/固件 bin 均 200、首页 title 正常；deploy-001 实机验证通过
+- 已记录证据：curl 200 响应；用户实机验证 deploy-001
+- 提交记录：50d05d3（deploy-001 passing）、898cb45（部署脚本+文档）、b7992bd（harness 部署管理记录），均已推送
+- 更新过的文件或工件：.github/workflows/deploy-pages.yml、scripts/deploy-jd.ps1、harness/docs/deployment.md、harness/feature_list.json、harness/claude-progress.md
+- 已知风险或未解决问题：京东云 WebSerial 需 HTTPS（域名备案审核中）；部署脚本含明文密码（建议后续 SSH 密钥或 GitHub Actions 同步京东云）
+- 下一步最佳动作：域名备案完成后配置域名+HTTPS 证书；验证线上 WebSerial 烧录功能
 
 ### Session 011
 
