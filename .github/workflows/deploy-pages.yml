@@ -27,6 +27,15 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # ci-001: lint gate. Run before build so a regression never ships.
+      # - npm run lint: ESLint
+      # - npm run lint:locales: zh/en key drift + REQUIRED path existence
+      - name: Lint (ESLint)
+        run: npm run lint
+      - name: Lint locales
+        run: npm run lint:locales
+
       - run: npm run build
 
       - uses: actions/upload-pages-artifact@v3
