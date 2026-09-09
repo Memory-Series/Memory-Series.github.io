@@ -147,6 +147,23 @@
 - 更新过的文件或工件：harness/claude-progress.md（本条）
 - 下一步最佳动作：等待用户决定下一步（提交 ci-001 + cleanup-001、启动新工作项、或本次会话结束）。flash-002 保持 not_started。
 
+### Session 025
+
+- 日期：2026-09-09
+- 本轮目标：用户决定启动 handoff 全流程——git add + commit + push + 验证 + 京东云同步 + 收尾
+- 已完成：
+    - git add + 3 commit 创建：a1ec036 (cleanup-001) / 413a44d (ci-001) / 7f2d5bb (harness 同步)
+    - git push origin main：首次失败（沙箱代理 502）；retry 2 次后成功（807a27d..7f2d5bb）
+    - GitHub Actions Deploy GitHub Pages #90 自动触发，56s 完成（commit 7f2d5bb）；主 bundle index-mu4Dtlme.js
+    - 京东云：用户 PowerShell 手动跑 deploy-jd.ps1 完成，主 bundle index-DYXyFfqU.js（与本地 dist 一致）
+    - harness 收尾：更新 session-handoff.md（5.8KB 完整交接文档）+ claude-progress.md（本条）
+- 运行过的验证：git push 成功（807a27d..7f2d5bb）；GitHub Actions run #90 56s 成功；https://memory-series.github.io/ HTTP 200（index-mu4Dtlme.js）；https://www.traceinhabit.cn/ HTTP 200（index-DYXyFfqU.js）
+- 已记录证据：git log（9 个 commit）+ 两个站点 main bundle hash
+- 提交记录：本次 3 commit 推送至 origin/main
+- 更新过的文件或工件：harness/session-handoff.md（本条）、harness/claude-progress.md（本条）、harness/feature_list.json
+- 已知风险或未解决问题：两站点 main bundle hash 不一致（Actions linux vs 本地 Windows tree-shake 差异）；data-001 引入 zod 同步 +59 kB 待优化
+- 下一步最佳动作：本会话可正式收尾。剩余工作：flash-002（用户两次决定收回）；data-001 zod 体积优化；ts-strict 渐进开启其他 flag
+
 ### Session 018
 
 - 日期：2026-09-09
