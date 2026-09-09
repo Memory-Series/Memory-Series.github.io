@@ -13,10 +13,12 @@
 
 ## 2. 京东云主机（手动/脚本部署）
 
-- **URL**：http://111.228.60.135/（域名备案后绑定 + HTTPS）
+- **URL**：https://www.traceinhabit.cn/（正式域名，HTTPS 已配置，2026-08 备案完成）
+- **IP 直连**：http://111.228.60.135/
 - **主机**：CentOS 7 · Docker 20.10.21
 - **站点根**：`/opt/memory-series`（挂载进 nginx 容器）
-- **容器**：`memory-series-nginx`（nginx:alpine，`-p 80:80`，`--privileged`，`--restart unless-stopped`）
+- **容器**：`memory-series-nginx`（nginx，`-p 80:80`，`--privileged`，`--restart unless-stopped`）
+- **HTTPS**：已配置（域名 + 证书），HTTP 自动 301 → HTTPS
 - **部署脚本**：`scripts/deploy-jd.ps1`
 
 ### 部署命令（PowerShell）
@@ -62,12 +64,13 @@ docker run -d --name memory-series-nginx \
 
 - **WebSerial 烧录功能要求 HTTPS**（或 localhost）。
 - GitHub Pages 已自动提供 HTTPS。
-- 京东云当前是 `http://IP` 访问，WebSerial 不可用。域名备案完成后需配置 HTTPS 证书（如 Let's Encrypt），再通过域名访问即可解锁烧录功能。
+- 京东云正式域名 **https://www.traceinhabit.cn/** 已配置 HTTPS（2026-08），WebSerial 烧录功能可用。
+- 纯 IP 访问 http://111.228.60.135/ 时 WebSerial 不可用（非 HTTPS 且非 localhost）。
 
 ## 5. 部署后验证清单
 
-- [ ] 首页 HTTP 200（`curl -s -o /dev/null -w '%{http_code}' <url>`）
+- [ ] 首页 HTTPS 200（`curl -s -o /dev/null -w '%{http_code}' https://www.traceinhabit.cn/`）
 - [ ] 关键资源 200：`/assets/index-*.js`、`/assets/index-*.css`
 - [ ] 固件可访问：`/merged_binary/memory-series-1.85b.bin`
 - [ ] 页面 title 正确（`Memory Series（记忆系列）`）
-- [ ]（HTTPS 就绪后）WebSerial 连接设备烧录
+- [ ] WebSerial 连接设备烧录（HTTPS 下验证）

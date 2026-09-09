@@ -7,7 +7,7 @@
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
 - 当前最高优先级未完成功能：无（feature_list.json 全部 passing）
 - 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
-- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页；网页已部署京东云 http://111.228.60.135/（CentOS7+Docker nginx 容器，HTTP 200 已验证）；WebSerial 烧录功能需 HTTPS——域名备案中，备案完成后配置
+- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页；网页已部署京东云 https://www.traceinhabit.cn/（HTTPS 200 已验证，WebSerial 烧录功能可用）
 
 ## 会话记录
 
