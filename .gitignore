@@ -15,6 +15,9 @@ dist-ssr
 # Worktrees
 .worktrees
 
+# Local agent memory / tooling data
+.workbuddy/
+
 # Render artifacts
 compositions/*.mp4
 compositions/snapshots/
