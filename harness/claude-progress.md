@@ -11,41 +11,41 @@
 
 ## 会话记录
 
-### Session 012
+### Session 015
+
+- 日期：2026-09-09
+- 本轮目标：部署脚本安全化（SSH 密钥认证）+ 仓库整洁
+- 已完成：本地 id_rsa 公钥上传主机 ~/.ssh/authorized_keys；deploy-jd.ps1 重写为优先 SSH 密钥认证（KeyFile），密码改为仅从 $env:JD_PASS 读取作为后备，移除硬编码密码；.workbuddy/（本地 agent 记忆工具数据）加入 .gitignore
+- 运行过的验证：deploy-jd.ps1 用密钥认证完整执行成功（uploaded → HTTP 301 HTTPS 正常）；HTTPS 站点 200
+- 已记录证据：脚本输出 "Using SSH key" + 部署成功
+- 提交记录：f8af91b（security: SSH key auth for deploy...），已推送
+- 更新过的文件或工件：scripts/deploy-jd.ps1、.gitignore、harness/claude-progress.md（本次）
+- 已知风险或未解决问题：无（历史提交 898cb45/9b81558 曾含云主机密码，均已改密钥认证且云主机密码已更新，旧密码失效）
+- 下一步最佳动作：无待办
+
+### Session 014
+
+- 日期：2026-09-09
+- 本轮目标：域名备案完成 + 京东云 HTTPS 配置
+- 已完成：域名 www.traceinhabit.cn 备案通过；DNS 解析到 111.228.60.135；HTTPS 在 nginx 容器上配置（容器现映射 80+443，HTTP 自动 301 → HTTPS）；验证 https://www.traceinhabit.cn/ 200
+- 运行过的验证：HTTPS 200、固件 bin 200、hash 路由 200；本地 dist 与线上 JS 哈希一致（index-Do-BFPhf）
+- 已记录证据：curl HTTPS 200；GitHub Pages Actions 部署 success
+- 提交记录：e5afc03（docs: record production domain...）、9b81558（chore: update JD creds...），已推送
+- 更新过的文件或工件：harness/docs/deployment.md、harness/claude-progress.md
+- 已知风险或未解决问题：SSH 密码变更（旧密码失效），已改密钥认证
+- 下一步最佳动作：无待办
+
+### Session 012-013（合并）
 
 - 日期：2026-08-29
-- 本轮目标：部署管理纳入 harness——GitHub Pages 与京东云两处部署统一管理
-- 已完成：修复 GitHub Pages 工作流（pnpm→npm，因项目 lockfile 已从 pnpm-lock.yaml 迁到 package-lock.json，原工作流会构建失败）；新建 scripts/deploy-jd.ps1 京东云部署脚本（npm run build → tar 打包 → SFTP 上传 → 解压 /opt/memory-series → docker restart nginx → curl 验证 HTTP 200）；新增 harness/docs/deployment.md 部署管理文档；更新 AGENTS.md 与 docs README 索引
-- 运行过的验证：deploy-jd.ps1 完整执行成功（HTTP 200）；京东云站点外部访问 200
-- 已记录证据：部署脚本完整输出（build/upload/restart/HTTP 200）
-- 提交记录：898cb45（chore(deploy): fix pages workflow to npm, add JD cloud deploy script and docs），待推送
-- 更新过的文件或工件：.github/workflows/deploy-pages.yml、scripts/deploy-jd.ps1（新增）、harness/docs/deployment.md（新增）、harness/docs/README.md、harness/AGENTS.md
-- 已知风险或未解决问题：京东云 WebSerial 需 HTTPS（域名备案中）；部署脚本含明文密码（建议后续改用 SSH 密钥或 GitHub Actions 自动同步京东云）
-- 下一步最佳动作：推送 898cb45；域名备案完成后配置 HTTPS 并验证 WebSerial
-
-### Session 013
-
-- 日期：2026-08-29
-- 本轮目标：deploy-001 实机验证 + 京东云部署完成确认
-- 已完成：用户实机验证 deploy-001 获取设备地址成功（console 模式 wifi --status 读 IP）；京东云站点部署完成（CentOS7+Docker20.10.21，Nginx alpine 容器 80 端口挂载 /opt/memory-series，HTTP 200）；解决 Docker Hub 不可达（配 daocloud/dockerproxy/USTC 镜像加速）与 CentOS7+nginx pwrite 限制（--privileged）；修复 GitHub Pages 工作流 pnpm→npm（lockfile 已迁至 package-lock.json）
-- 运行过的验证：京东云 curl HTTP 200、JS/CSS/固件 bin 均 200、首页 title 正常；deploy-001 实机验证通过
-- 已记录证据：curl 200 响应；用户实机验证 deploy-001
+- 本轮目标：deploy-001 实机验证 + 京东云部署完成 + 部署管理纳入 harness
+- 已完成：用户实机验证 deploy-001 获取设备地址成功（console 模式 wifi --status 读 IP，标记 passing）；京东云站点部署完成（CentOS7+Docker20.10.21，Nginx 容器 80 端口挂载 /opt/memory-series，HTTP 200）；解决 Docker Hub 不可达（配 daocloud/dockerproxy/USTC 镜像加速）与 CentOS7+nginx pwrite 限制（--privileged）；修复 GitHub Pages 工作流 pnpm→npm（lockfile 已迁至 package-lock.json）；新建 scripts/deploy-jd.ps1 部署脚本；新增 harness/docs/deployment.md 部署管理文档；更新 AGENTS.md 与 docs README 索引
+- 运行过的验证：京东云 curl HTTP 200、JS/CSS/固件 bin 均 200、首页 title 正常；deploy-001 实机验证通过；deploy-jd.ps1 完整执行成功
+- 已记录证据：curl 200 响应；部署脚本输出；用户实机验证 deploy-001
 - 提交记录：50d05d3（deploy-001 passing）、898cb45（部署脚本+文档）、b7992bd（harness 部署管理记录），均已推送
-- 更新过的文件或工件：.github/workflows/deploy-pages.yml、scripts/deploy-jd.ps1、harness/docs/deployment.md、harness/feature_list.json、harness/claude-progress.md
-- 已知风险或未解决问题：京东云 WebSerial 需 HTTPS（域名备案审核中）；部署脚本含明文密码（建议后续 SSH 密钥或 GitHub Actions 同步京东云）
-- 下一步最佳动作：域名备案完成后配置域名+HTTPS 证书；验证线上 WebSerial 烧录功能
-
-### Session 011
-
-- 日期：2026-08-29
-- 本轮目标：deploy-001 实机验证 + 网页部署到京东云
-- 已完成：用户实机验证 deploy-001 获取设备地址成功（标记 passing）；部署网页到京东云主机（CentOS7+Docker 20.10.21，Nginx alpine 容器 80 端口挂载 /opt/memory-series，HTTP 200）；解决 Docker Hub 不可达（配置 daocloud/dockerproxy/USTC 镜像加速器）与 CentOS7+nginx pwrite 限制（--privileged）
-- 运行过的验证：京东云站点 HTTP 200、JS/CSS/固件 bin 资源 200、首页 title 正常
-- 已记录证据：curl HTTP 200；用户实机验证 deploy-001
-- 提交记录：待提交 feature_list 更新
-- 更新过的文件或工件：harness/feature_list.json、harness/claude-progress.md
-- 已知风险或未解决问题：WebSerial 需 HTTPS——域名备案审核中，备案完成后配置域名+HTTPS 证书
-- 下一步最佳动作：域名备案完成后绑定域名 + 配置 HTTPS；推送 feature_list 更新
+- 更新过的文件或工件：.github/workflows/deploy-pages.yml、scripts/deploy-jd.ps1、harness/docs/deployment.md、harness/docs/README.md、harness/AGENTS.md、harness/feature_list.json、harness/claude-progress.md
+- 已知风险或未解决问题：当时 WebSerial 需 HTTPS（域名备案中）、部署脚本含明文密码——均已在 Session 014/015 解决
+- 下一步最佳动作：已完成（后续见 Session 014/015）
 
 ### Session 010
 
