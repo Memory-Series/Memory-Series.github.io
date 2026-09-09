@@ -17,7 +17,7 @@ $ErrorActionPreference = 'Stop'
 
 $JD_HOST = if ($env:JD_HOST) { $env:JD_HOST } else { '111.228.60.135' }
 $JD_USER = if ($env:JD_USER) { $env:JD_USER } else { 'root' }
-$JD_PASS = if ($env:JD_PASS) { $env:JD_PASS } else { '955777Qq..' }
+$JD_PASS = if ($env:JD_PASS) { $env:JD_PASS } else { 'mlx955777...' }
 
 $REPO = Split-Path -Parent $PSScriptRoot
 $DIST = Join-Path $REPO 'dist'

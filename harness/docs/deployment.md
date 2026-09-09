@@ -33,7 +33,7 @@ powershell -ExecutionPolicy Bypass -File scripts/deploy-jd.ps1
 3. SFTP 上传到主机 `/root/`
 4. 解压替换 `/opt/memory-series/` 内容
 5. `docker restart memory-series-nginx`
-6. curl 验证 HTTP 200
+6. curl 验证——返回 **301** 为正常（容器已配 HTTP→HTTPS 重定向）；HTTPS 直连返回 200
 
 ### 环境变量（可覆盖默认值）
 
@@ -41,7 +41,7 @@ powershell -ExecutionPolicy Bypass -File scripts/deploy-jd.ps1
 |------|------|
 | `JD_HOST` | `111.228.60.135` |
 | `JD_USER` | `root` |
-| `JD_PASS` | （脚本内配置）|
+| `JD_PASS` | （脚本内配置，**建议用 `$env:JD_PASS` 覆盖，勿明文提交**）|
 
 ### 首次部署（新主机）
 
