@@ -21,8 +21,10 @@ import { Card } from "@/components/ui/card";
 import { FirmwareFlash } from "@/components/FirmwareFlash";
 import { CharacterDeploy } from "@/components/CharacterDeploy";
 import { SoulPodDownload } from "@/components/SoulPodDownload";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { cn } from "@/lib/utils";
 import { PRODUCT_BY_KEY, type ProductKey } from "@/lib/products";
+import { persistLng } from "@/lib/i18n-storage";
 
 interface ProductProps {
   keyParam?: string;
@@ -258,9 +260,12 @@ export default function Product({ keyParam }: ProductProps) {
             type="button"
             className="inline-flex h-9 min-w-12 items-center justify-center rounded-md border border-border/70 bg-background/65 px-3 text-sm font-medium tracking-wide text-foreground/85 transition-colors hover:bg-background/80 hover:text-foreground"
             onClick={() => {
-              void i18n.changeLanguage(isChineseLanguage ? "en" : "zh");
+              const next: "en" | "zh" = isChineseLanguage ? "en" : "zh";
+              persistLng(next);
+              void i18n.changeLanguage(next);
             }}
             aria-label="语言切换按钮"
+            aria-pressed={isChineseLanguage}
           >
             {isChineseLanguage ? "EN" : "中"}
           </button>
@@ -536,7 +541,9 @@ export default function Product({ keyParam }: ProductProps) {
                             ))}
                           </div>
                           <div className="pt-0.5">
-                            <SoulPodDownload characterName={item.title} />
+                            <ErrorBoundary name="soulpod-card">
+                              <SoulPodDownload characterName={item.title} />
+                            </ErrorBoundary>
                           </div>
                         </div>
                       )}
@@ -589,7 +596,9 @@ export default function Product({ keyParam }: ProductProps) {
                 {t("sections.flash.sectionFlashDesc")}
               </p>
               <div className="mt-4">
-                <FirmwareFlash />
+                <ErrorBoundary name="firmware-flash">
+                  <FirmwareFlash />
+                </ErrorBoundary>
               </div>
             </motion.section>
 
@@ -602,7 +611,9 @@ export default function Product({ keyParam }: ProductProps) {
                 {t("sections.flash.supportHint")}
               </p>
               <div className="mt-4">
-                <CharacterDeploy />
+                <ErrorBoundary name="character-deploy">
+                  <CharacterDeploy />
+                </ErrorBoundary>
               </div>
             </motion.section>
           </div>

@@ -144,5 +144,13 @@
       "eyebrowFlash": "Firmware",
       "eyebrowDeploy": "Character"
     }
+  },
+  "errorBoundary": {
+    "degraded": {
+      "title": "This section is temporarily unavailable",
+      "body": "The error has been recorded. You can retry this section or reload the page to restore full functionality.",
+      "retry": "Retry",
+      "reload": "Reload page"
+    }
   }
 }
