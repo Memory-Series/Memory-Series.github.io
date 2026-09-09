@@ -328,6 +328,42 @@
         "2026-09-09: tsconfig.app.json 的 strict 由 false 改为 true（noImplicitAny 已包含在 strict 内）；预演 npx tsc --strict 报 0 错误——证实项目代码类型实际已足够严格，无需修任何产品代码；build 通过（main hash index-DYXyFfqU.js 不变，证明源码未改动）；lint 0 错误 0 警告；lint:locales ✓。"
       ],
       "notes": "决策：只开启 strict（包含 noImplicitAny），不动 noUncheckedIndexedAccess 等其他 flag——预演发现其他 flag 会暴露 6 处 noUncheckedIndexedAccess 错误（涉及 CharacterDeploy / Product.tsx 字典访问 + 1 处未用 import），按 AGENTS.md '完成定义'（最小改动、不破坏现有功能）原则，不为工程完美而动核心业务代码。"
+    },
+    {
+      "id": "ci-001",
+      "priority": 1,
+      "area": "ci",
+      "title": "CI/CD lint gate（npm run lint + lint:locales 在 deploy 前必跑）",
+      "user_visible_behavior": "无 UI 改动。push 到 main 后，GitHub Actions 在 build 之前跑 npm run lint 和 npm run lint:locales，任一失败则停止部署。",
+      "status": "passing",
+      "verification": [
+        ".github/workflows/deploy-pages.yml 加 job step：'npm run lint' + 'npm run lint:locales' 在 'npm run build' 之前",
+        "任一 lint 失败时 workflow exit 1，不上传 dist/ 到 Pages",
+        "本地模拟：故意改 zh.json 删一个 key → npm run lint:locales 失败 → 不允许 push（git push 仍能传，但 Actions 会 fail）",
+        "npm run build 通过；npm run lint 0 错误 0 警告；npm run lint:locales 通过"
+      ],
+      "evidence": [
+        "2026-09-09: .github/workflows/deploy-pages.yml 加 'Lint (ESLint)' + 'Lint locales' 两个 step 在 npm run build 之前；同时 scripts/lint-locales.cjs REQUIRED map 补 footer.links.{privacy,terms,contact} 3 个 key（反演发现原 REQUIRED 缺漏）；反演验证：删 zh.footer.links.terms 后 npm run lint:locales fail（'missing zh.footer.links.terms'，process.exit(1)），恢复后 pass；本地三件套全绿（build main 474.76 kB / hash index-BGtFiVkE.js — 因 lint-locales.cjs 改动 hash 微变但产物一致）；lint 0 错误 0 警告。"
+      ],
+      "notes": "零 UI 改动。下一个 push 到 main 即可验证 GitHub Actions 实际触发 lint gate（无法本地 mock Actions）。"
+    },
+    {
+      "id": "cleanup-001",
+      "priority": 2,
+      "area": "cleanup",
+      "title": "清理 src/App.css 残留 Vite 模板样式",
+      "user_visible_behavior": "无 UI 改动（残留样式被 Tailwind reset 与全宽暗色布局覆盖）。代码层面消除 #root max-width: 1280px; padding: 2rem; text-align: center 等 Vite 模板默认样式与未引用的 logo/keyframes 定义。",
+      "status": "passing",
+      "verification": [
+        "src/App.css 删除 Vite 模板残留样式块",
+        "无任何 *.tsx 文件 import './App.css' 之外的内容因此丢失",
+        "npm run build 通过；npm run lint 0 错误 0 警告",
+        "浏览器打开页面视觉与之前一致——如果发现异常立即回滚"
+      ],
+      "evidence": [
+        "2026-09-09: grep 确认 src/App.css 在 src 中无任何 import（仅 src/main.tsx import './index.css'），无任何元素使用 .logo/.card/.read-the-docs className——完全是 Vite 模板死代码；删除 src/App.css；build 通过（main hash index-DYXyFfqU.js 与 Session 021 完全一致，证明源码未受影响）；lint 0 错误 0 警告；lint:locales ✓。文件大小 -606 字节。"
+      ],
+      "notes": "决策：直接删除整个文件，因为零引用。零 UI 风险。"
     }
   ]
 }
