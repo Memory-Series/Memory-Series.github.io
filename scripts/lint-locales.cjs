@@ -67,6 +67,8 @@ const REQUIRED = {
   "sections.flash.eyebrow": true,
   "sections.flash.title": true,
   "footer.links.privacy": true,
+  "footer.links.terms": true,
+  "footer.links.contact": true,
   "errorBoundary.degraded.title": true,
   "errorBoundary.degraded.body": true,
   "errorBoundary.degraded.retry": true,
