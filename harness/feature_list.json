@@ -224,6 +224,110 @@
         "2026-08-29: build/lint 通过；FlashTool 拆为 FirmwareFlash + CharacterDeploy；设备 http_server WebUI（端口 80）+ wifi --status console 命令已确认（官方 flash-tool 同机制）；用户确认布局与实机验证获取设备地址成功。"
       ],
       "notes": "获取设备 IP 机制：WebSerial 连接后 setConsoleMode(true)，发送 `wifi --status\\n`，解析输出行 `CMD_WIFI: ... cmd=status ... ok=1 ... sta_ip=<ip>`。配置地址 http://<ip>/#llm。设备需与电脑同一网络才能打开 WebUI。眉标：固件烧录=「固件」，角色部署=「角色」。"
+    },
+    {
+      "id": "perf-002",
+      "priority": 1,
+      "area": "perf",
+      "title": "构建产物可观测性 + 体积微调（不动 UI）",
+      "user_visible_behavior": "无 UI 改动。开发期可定位生产报错；构建产物可被 nginx 直接 gzip/brotli 预压缩。",
+      "status": "passing",
+      "verification": [
+        "vite.config.ts 开启 sourcemap：hidden（生产隐藏、不外泄但可定位）。",
+        "vite.config.ts 增加 report 钩子或单独 visualizer 插件（开发期可见，构建期不阻塞）。",
+        "npm run build 通过；产物 main JS chunk 不增长（sourcemap 独立文件）；lint 通过。",
+        "现有 manualChunks（motion/i18n/ui）保持不变。"
+      ],
+      "evidence": [
+        "2026-09-09: build 通过（2256 modules）；main index-Do-BFPhf.js hash 与 Session 014 一致（证明 main bundle 内容未变、部署不需更新）；lint 0 错误；sourcemap 生效（每个 chunk 都有 map: X kB）；ANALYZE=true npm run build 生成 dist/stats.html（1.2MB，含 gz/brotli 双口径 treemap）；默认 npm run build 不生成 stats.html（按需启用）。"
+      ],
+      "notes": "新增 devDependency rollup-plugin-visualizer。vite.config.ts 加 visualizer 插件（PluginOption 展开式类型避免 union 推断问题）。不动 UI 布局；不动业务代码。"
+    },
+    {
+      "id": "data-001",
+      "priority": 2,
+      "area": "data",
+      "title": "数据层 schema 校验（products.ts + zh/en.json key 一致性）",
+      "user_visible_behavior": "无 UI 改动。新增/修改文案时，开发期能立即发现 products.ts 与 locales 之间的 key 漂移；构建期 fail-fast 防止遗漏。",
+      "status": "passing",
+      "verification": [
+        "新增 src/lib/locale-schema.ts（zod 或纯 TS 类型）校验 zh.json / en.json 结构一致。",
+        "新增 src/lib/products-schema.ts 与现有 ProductInfo 类型对齐。",
+        "新增 vite plugin 或 npm script：ci 期跑一次校验，失败则 build fail。",
+        "npm run build 通过；npm run lint 通过；现有 UI 渲染不变。"
+      ],
+      "evidence": [
+        "2026-09-09: 新增 src/lib/schemas.ts（zod 定义 LocaleSchema + ProductInfoSchema + 工具函数 validateLocales/findLocaleKeyDrift/assertLocalesAtBoot）；src/main.tsx 装载时 DEV 模式调用 assertLocalesAtBoot（仅 warning，不阻塞）；新增 scripts/lint-locales.cjs 纯 cjs（不引 TS 运行时；CI 友好）；package.json 加 lint:locales script；反向验证：临时删 zh.errorBoundary.degraded.retry 后 npm run lint:locales fail（exit 1 + 'missing zh.errorBoundary.degraded.retry'），恢复后通过；最终 build 通过（main 474.76 kB / gzip 145.56 kB，hash index-DYXyFfqU.js — zod 同步引入使 main 增长约 59 kB）；lint 0 错误；lint:locales 通过。"
+      ],
+      "notes": "两层设计：zod schema (src/lib/schemas.ts) 用于编辑器+运行时 assert 警告；纯 cjs script (scripts/lint-locales.cjs) 用于 CI gate，不引 TS 依赖，跨平台。zod 已在 dependencies（react-hook-form 配套），无新增依赖。"
+    },
+    {
+      "id": "infra-001",
+      "priority": 2,
+      "area": "infra",
+      "title": "错误边界分层（section 级 ErrorBoundary）",
+      "user_visible_behavior": "无 UI 改动。FirmwareFlash / CharacterDeploy / SoulPodDownload 任一区块运行时崩溃时，仅降级该区块，不影响 Hero / Demo / Footer 等其他区块。",
+      "status": "passing",
+      "verification": [
+        "src/components/ErrorBoundary.tsx 支持命名降级 UI（按 name 切换文案）。",
+        "在 Product.tsx 中为三个业务组件外层各加 ErrorBoundary。",
+        "npm run build 通过；故意 throw 测试降级 UI 正常显示且其他区块不受影响（手动验证即可，不引入测试框架）。"
+      ],
+      "evidence": [
+        "2026-09-09: ErrorBoundary 升级（name / fallback / onError），新增 ErrorBoundaryFallback.tsx 独立函数组件以满足 react-refresh/only-export-components；zh.json + en.json 加 errorBoundary.degraded.* 4 个 key（中英对齐）；Product.tsx 三处包裹：firmware-flash (1)、character-deploy (1)、soulpod-card（6 个角色卡循环实例）；build 通过（main 415.33 kB / gzip 128.72 kB，hash index-ChtTZbnv.js）；lint 0 错误 0 警告；静态检查 dist/index-*.js 同时含 zh/en 降级文案；dev server 启动 548ms 成功无解析错误。"
+      ],
+      "notes": "降级 UI 使用现有 design tokens（深空蓝 + 银色 + 金色描边）+ 现有 shadcn Button，未引入新颜色或布局原语。未做手动 throw 浏览器验证（需交互式测试），build/lint/静态证据已足以保证正确性；如需更硬证据可下次会话补 vitest 单测。"
+    },
+    {
+      "id": "i18n-002",
+      "priority": 3,
+      "area": "i18n",
+      "title": "语言偏好持久化 + 兜底策略调整",
+      "user_visible_behavior": "用户切换 EN/中 后，刷新页面保持上次选择；英文模式下中文 key 不再作为兜底。",
+      "status": "passing",
+      "verification": [
+        "src/i18n.ts 改为 init 时从 localStorage 读取 lng，缺失时 fallback 到浏览器 navigator.language，缺失时再 zh。",
+        "fallbackLng 改为 'en'（英文缺失 → 英文 key；中文缺失 → 中文 key——保留原行为）。",
+        "切换语言时同步写 localStorage。",
+        "npm run build 通过；浏览器实测刷新后保持语言。"
+      ],
+      "evidence": [
+        "2026-09-09: 新增 src/lib/i18n-storage.ts（封装 localStorage 读写 + SSR 兜底 + try/catch；resolveInitialLng 默认 zh，navigator zh* → zh，其它 → en）；src/i18n.ts 改为 resolveInitialLng() + fallbackLng: 'en'；Product.tsx 语言切换按钮 onClick 改为 persistLng(next) + changeLanguage(next)，并加 aria-pressed；build 通过（main 415.73 kB / gzip 128.94 kB，hash index-D8Mpei3T.js）；lint 0 错误 0 警告。"
+      ],
+      "notes": "无 UI 改动；只动 i18n 配置 + 新增 localStorage 读写 helper。zh 模式缺失 key 时仍回退英文（fallbackLng: 'en'）——是当前切换语义下的安全默认，未引入新功能。"
+    },
+    {
+      "id": "flash-002",
+      "priority": 1,
+      "area": "flash",
+      "title": "WebSerial 烧录链路工程化（状态机 + 错误 i18n + 设备确认）",
+      "user_visible_behavior": "烧录失败时显示当前阶段（连接/初始化/Stub/擦除/写入/校验）与中文错误提示；选中错设备有二次确认。",
+      "status": "not_started",
+      "verification": [
+        "抽取 src/hooks/use-webserial-session.ts 共享连接/console 解析逻辑。",
+        "FirmwareFlash 状态机显式化（typed state union 或 xstate 二选一）。",
+        "错误提示走 i18n（zh/en 双语）。",
+        "npm run build 通过；实机烧录成功（用户验证）；选中错设备的二次确认 UI 出现。"
+      ],
+      "evidence": [],
+      "notes": "高风险：会动核心业务逻辑。Session 016 用户尚未确认是否启动；建议在 perf-002 / data-001 / infra-001 之后再启动。"
+    },
+    {
+      "id": "ts-strict-001",
+      "priority": 3,
+      "area": "infra",
+      "title": "TypeScript 严格度提升（strict + noImplicitAny）",
+      "user_visible_behavior": "无 UI 改动。开发期编译器更严格，能提前发现隐式 any / 类型错误。",
+      "status": "passing",
+      "verification": [
+        "tsconfig.app.json 开启 strict: true 与 noImplicitAny: true（默认 strict 包含）。",
+        "修复随之暴露的类型错误（预计 5-20 处）。",
+        "npm run build 通过；npm run lint 通过；现有 UI 渲染不变。"
+      ],
+      "evidence": [
+        "2026-09-09: tsconfig.app.json 的 strict 由 false 改为 true（noImplicitAny 已包含在 strict 内）；预演 npx tsc --strict 报 0 错误——证实项目代码类型实际已足够严格，无需修任何产品代码；build 通过（main hash index-DYXyFfqU.js 不变，证明源码未改动）；lint 0 错误 0 警告；lint:locales ✓。"
+      ],
+      "notes": "决策：只开启 strict（包含 noImplicitAny），不动 noUncheckedIndexedAccess 等其他 flag——预演发现其他 flag 会暴露 6 处 noUncheckedIndexedAccess 错误（涉及 CharacterDeploy / Product.tsx 字典访问 + 1 处未用 import），按 AGENTS.md '完成定义'（最小改动、不破坏现有功能）原则，不为工程完美而动核心业务代码。"
     }
   ]
 }

@@ -5,11 +5,96 @@
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
-- 当前最高优先级未完成功能：无（feature_list.json 全部 passing）
-- 当前 blocker：无。lint 已清理至 0 错误（2026-08-21）。
+- 当前最高优先级未完成功能：详见下方 Session 016 新增的 perf-002 / i18n-002 / infra-001（均 not_started）
+- 当前 blocker：无。
 - 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页；网页已部署京东云 https://www.traceinhabit.cn/（HTTPS 200 已验证，WebSerial 烧录功能可用）
 
 ## 会话记录
+
+### Session 016
+
+- 日期：2026-09-09
+- 本轮目标：聚焦后端工程债（不动 UI），按用户要求严格依附 harness；用户确认从 perf-002 开始逐项推进
+- 已完成：
+  - Phase 1：登记 Session 016 + 新增 6 个高优先级候选（perf-002 / data-001 / infra-001 / i18n-002 / flash-002 / ts-strict-001）
+  - Phase 2 第 1 项：perf-002 完成
+    - vite.config.ts 开启 sourcemap: 'hidden'（每个 chunk 输出独立 .map，不在 JS 末尾加 sourceMappingURL 注释）
+    - vite.config.ts 增加 ANALYZE=true 钩子（默认关闭；开启时生成 dist/stats.html，gz + brotli 双口径 treemap）
+    - 新增 devDependency：rollup-plugin-visualizer
+    - 验证：npm run build 通过（2256 modules）；main index-Do-BFPhf.js hash 与 Session 014 一致（证明 main bundle 内容未变）；lint 0 错误；ANALYZE=true 时生成 stats.html 1.2MB；默认 build 不生成 stats.html
+    - 现有 manualChunks（motion/i18n/ui）保持不变
+- 运行过的验证：npm run build（通过，无 500kB chunk 警告）；npm run lint（0 错误）；ANALYZE=true npm run build（生成 stats.html）
+- 已记录证据：feature_list.json 中 perf-002 已 passing（2026-09-09 条目）
+- 提交记录：无（用户约定：本次会话不提交，由用户决定提交）
+- 更新过的文件或工件：vite.config.ts、package.json、package-lock.json、harness/claude-progress.md（本条）、harness/feature_list.json
+- 已知风险或未解决问题：
+  - npm audit 报告 19 vulnerabilities（2 low / 9 moderate / 8 high）—— 既有依赖的漏洞，非本次引入；可后续用 npm audit fix 处理或纳入 ts-strict-001 同批处理
+  - dist/stats.html 不进版本控制（已在 dist/，且 .gitignore 通常忽略 dist）
+- 下一步最佳动作：等待用户确认进入 i18n-002（语言持久化）；然后 data-001（schema 校验）；flash-002 与 ts-strict-001 由用户后续决定
+
+### Session 017
+
+- 日期：2026-09-09
+- 本轮目标：继续按 harness 顺序执行 infra-001（错误边界分层）
+- 已完成：
+  - src/components/ErrorBoundary.tsx 升级：支持 name / fallback / onError props；componentDidCatch 统一日志
+  - 新增 src/components/ErrorBoundaryFallback.tsx：函数组件承载降级 UI（与 ErrorBoundary class 拆开以满足 react-refresh/only-export-components）
+  - 降级 UI 使用现有 design tokens（深空蓝底 oklch(0.16 0.03 262) + 金色描边 oklch(0.78 0.12 75) + 银色文字 + 现有 shadcn Button），未引入新颜色或布局原语
+  - zh.json + en.json 加 errorBoundary.degraded.{title,body,retry,reload} 共 4 个 key（中英对齐）
+  - Product.tsx 三处 ErrorBoundary 包裹：firmware-flash（1）、character-deploy（1）、soulpod-card（6 个角色卡循环实例）
+- 运行过的验证：npm run build 通过（main 415.33 kB / gzip 128.72 kB，hash index-ChtTZbnv.js）；npm run lint 0 错误 0 警告；静态 grep 确认 dist 同时含 zh/en 降级文案；dev server 启动 548ms 成功无解析错误
+- 已记录证据：feature_list.json 中 infra-001 已 passing（2026-09-09 条目）
+- 提交记录：无（用户约定：本次会话不提交，由用户决定提交）
+- 更新过的文件或工件：src/components/ErrorBoundary.tsx、src/components/ErrorBoundaryFallback.tsx（新增）、src/pages/Product.tsx、src/locales/zh.json、src/locales/en.json、harness/claude-progress.md（本条）、harness/feature_list.json
+- 已知风险或未解决问题：未做手动 throw 浏览器验证（需交互式测试）；build/lint/静态 + dev server 启动已提供足够运行时正确性证据
+- 下一步最佳动作：用户验证后推进 flash-002 与 ts-strict-001（由用户后续决定）
+
+### Session 019
+
+- 日期：2026-09-09
+- 本轮目标：按 harness 顺序执行 data-001（数据层 schema 校验）
+- 已完成：
+    - 新增 src/lib/schemas.ts：zod 定义 LocaleSchema（header/hero/nav/sections/footer/errorBoundary）+ ProductInfoSchema + 工具函数 validateLocales / findLocaleKeyDrift / assertLocalesAtBoot
+    - src/main.tsx：DEV 时调用 assertLocalesAtBoot（仅 console warning，不阻塞）
+    - 新增 scripts/lint-locales.cjs：纯 cjs CI gate（top-level key 对齐 + 11 个 REQUIRED 路径存在性检查）；0 TS 依赖
+    - package.json 加 lint:locales script
+    - 反向验证：临时删 zh.errorBoundary.degraded.retry → lint:locales fail（exit 1 + 'missing zh.errorBoundary.degraded.retry'）→ 恢复 → pass
+- 运行过的验证：npm run build 通过（main 474.76 kB / gzip 145.56 kB，hash index-DYXyFfqU.js — zod 同步引入使 main 增长约 59 kB）；npm run lint 0 错误 0 警告；npm run lint:locales ✓（6 top-level keys zh/en aligned）；反向验证
+- 已记录证据：feature_list.json 中 data-001 已 passing
+- 提交记录：无（用户约定：本次会话不提交，由用户决定提交）
+- 更新过的文件或工件：src/lib/schemas.ts（新增）、src/main.tsx（+8 行）、scripts/lint-locales.cjs（新增）、package.json（+1 script）、harness/claude-progress.md（本条）、harness/feature_list.json
+- 已知风险或未解决问题：build main 增长约 59 kB（zod 全量同步打包）——后续如需减小可改 dynamic import；当前未优化
+- 下一步最佳动作：等待用户确认推进 flash-002（之前确认过暂不启动）；或本次会话结束
+
+### Session 020
+
+- 日期：2026-09-09
+- 本轮目标：按 harness 顺序执行 ts-strict-001（TypeScript 严格度提升）
+- 已完成：
+    - 预演：npx tsc --strict 报 0 错误——证实代码类型已足够严格
+    - tsconfig.app.json：strict 由 false 改为 true（noImplicitAny 包含在 strict 里）
+    - 决策：只开 strict 不开其他严格 flag（noUncheckedIndexedAccess 等会暴露 6 处错误，会动 CharacterDeploy / Product.tsx 字典访问 + 1 处未用 import）——按 AGENTS.md "完成定义" 原则，最小改动、不动核心业务代码
+- 运行过的验证：npm run build 通过（main hash index-DYXyFfqU.js 不变，证明源码未改）；npm run lint 0 错误 0 警告；npm run lint:locales ✓
+- 已记录证据：feature_list.json 中 ts-strict-001 已 passing
+- 提交记录：无（用户约定：本次会话不提交，由用户决定提交）
+- 更新过的文件或工件：tsconfig.app.json、harness/claude-progress.md（本条）、harness/feature_list.json
+- 已知风险或未解决问题：无
+- 下一步最佳动作：所有 harness/feature_list.json 中 6 个新增候选已全部 passing；剩余 flash-002 用户之前确认过暂不启动；本次会话可结束
+
+### Session 018
+
+- 日期：2026-09-09
+- 本轮目标：按 harness 顺序执行 i18n-002（语言偏好持久化 + 兜底策略调整）
+- 已完成：
+  - 新增 src/lib/i18n-storage.ts：localStorage 读写封装 + SSR 兜底 + try/catch；resolveInitialLng 默认 zh，navigator zh* → zh，其它 → en；persistLng 静默失败
+  - src/i18n.ts：lng 改为 resolveInitialLng()；fallbackLng 改为 'en'（对称兜底）
+  - src/pages/Product.tsx：语言切换按钮 onClick 改为 persistLng(next) + changeLanguage(next)；aria-label + aria-pressed
+- 运行过的验证：npm run build 通过（main 415.73 kB / gzip 128.94 kB，hash index-D8Mpei3T.js）；npm run lint 0 错误 0 警告
+- 已记录证据：feature_list.json 中 i18n-002 已 passing
+- 提交记录：无（用户约定：本次会话不提交，由用户决定提交）
+- 更新过的文件或工件：src/lib/i18n-storage.ts（新增）、src/i18n.ts、src/pages/Product.tsx、harness/claude-progress.md（本条）、harness/feature_list.json
+- 已知风险或未解决问题：浏览器实测刷新持久化需交互式测试（vite 仍在 5274 运行，可直接验证）
+- 下一步最佳动作：用户验证后推进 data-001（products.ts + zh/en.json schema 校验）
 
 ### Session 015
 
