@@ -88,6 +88,15 @@ export const PRODUCTS: ProductInfo[] = [
   },
 ];
 
+/**
+ * Hash routes for the two product pages.
+ * Trace/Inhabit is the Skill (software); Inhabit Device is the hardware that consumes SoulPod archives.
+ */
+export const PRODUCT_ROUTES = {
+  trace: "/product/trace",
+  device: "/product/inhabit-device",
+} as const;
+
 export const PRODUCT_BY_KEY = PRODUCTS.reduce<Record<ProductKey, ProductInfo>>((acc, p) => {
   acc[p.key] = p;
   return acc;
