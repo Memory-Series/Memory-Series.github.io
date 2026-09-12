@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { ContactSection } from "@/sections/ContactSection";
 import { CrossLinkSection } from "@/sections/CrossLinkSection";
 import { DemoSection } from "@/sections/DemoSection";
+import { DeviceAssetsSection } from "@/sections/DeviceAssetsSection";
 import { FlashDeployRow } from "@/sections/FlashDeployRow";
 import { HeroSection } from "@/sections/HeroSection";
 import { SetupSection } from "@/sections/SetupSection";
@@ -22,6 +23,7 @@ export default function InhabitDevicePage() {
   const anchors = [
     { id: "setup", label: t("nav.anchors.setup") },
     { id: "flash", label: t("nav.anchors.flash") },
+    { id: "assets", label: t("nav.anchors.assets") },
     { id: "deploy", label: t("nav.anchors.deploy") },
     { id: "demo", label: t("nav.anchors.demo") },
     { id: "contact", label: t("nav.anchors.contact") },
@@ -42,9 +44,15 @@ export default function InhabitDevicePage() {
         anchors={anchors}
       />
 
-      <main className="mx-auto max-w-6xl space-y-20 px-5 py-16 md:space-y-28 md:py-24">
-        <ShowcaseSection />
-        <SetupSection />
+      <main className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <div className="space-y-20 md:space-y-28">
+          <ShowcaseSection />
+          <SetupSection />
+        </div>
+
+        <div className="mt-20 md:mt-28">
+          <DeviceAssetsSection />
+        </div>
       </main>
 
       <FlashDeployRow />
