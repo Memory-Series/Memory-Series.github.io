@@ -4,13 +4,149 @@
 
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
-- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-12 通过（含 split-001 双页 + showcase-001 视频区块，main `index-Cp38yVaE.js` 487.07 kB）
+- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 assets-001 素材库区块定版，main `index-DMBt39Vx.js` 500.24 kB）
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
-- 当前最高优先级未完成功能：flash-002（WebSerial 烧录链路工程化 —— 用户两次决策"收回"，保持 not_started）
-- 当前 blocker：无。
+- 当前进行中功能：**无**。`assets-001`（硬件页「素材库」区块）已由用户浏览器实测确认，状态 **passing**。全部 24 项特性中 23 passing，唯一未开始项为 `flash-002`（用户两次决策收回，保持 not_started）
+- 当前 blocker：无。flash-002 用户两次决策"收回"，保持 not_started。
+- **方向变更（2026-09-10）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
 - 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 已于 Session 029 同步为双页新版**（`index-Cp38yVaE.js`，HTTPS 200，媒体 200）；WebSerial 烧录功能依赖浏览器安全上下文，HTTPS 下可用
 
 ## 会话记录
+
+### Session 034
+
+- 日期：2026-09-13
+- 本轮目标：assets-001 收尾 —— 用户浏览器实测确认后置为 passing，提交并同步 GitHub 与京东云
+- **用户确认**：`很好，我已经看过了，可以了，请你开始收尾，同步到github和京东云网页`
+  - 视觉风格与既有区块一致、下载可用、素材范围（仅默认款开机动画 + 仅 2 个有素材角色）符合预期
+- 已完成：
+  - `assets-001` 状态 in_progress → **passing**，追加用户确认 evidence；`last_updated` 改为 2026-09-13
+  - 收尾提交：新增 `src/lib/device-assets.ts`、`src/sections/DeviceAssetsSection.tsx`、`public/assets/**`（6 个素材）、`harness/docs/archive/`；修改 `InhabitDevicePage.tsx`、双语文案、harness 两份
+  - 发布：GitHub（main 分支推送，GitHub Pages 自动构建）+ 京东云 https://www.traceinhabit.cn/（上传 `dist/`）
+- 运行过的验证：见 Session 033（构建 / lint / 字节一致性 / 双语言视觉），本轮无代码改动，仅状态与文档收尾
+- 已记录证据：本条 + `feature_list.json` assets-001 收尾 evidence
+- 提交记录：（本轮提交）
+- 更新过的文件或工件：`harness/feature_list.json`、`harness/claude-progress.md`
+- 已知风险或未解决问题：
+  - `flash-002`（WebSerial 烧录链路工程化）保持 not_started，用户两次决策收回
+  - 角色主动画（main.eaf）一期未做，等素材；其余 4 个角色的气泡底图待补
+- 下一步最佳动作：无待办。后续如需扩充素材（主动画 / 其余角色气泡底图），另立 features 项
+
+### Session 033
+
+- 日期：2026-09-10
+- 本轮目标：执行用户对素材库的两点收敛指令 —— ① 删除高清款（"留了反而会造成误会"）；② 删除无素材角色的占位卡（"暂时只列有素材的角色"）
+- **用户决策**：
+  - `高清款的就不要留了，留了反而会造成误会`
+  - `暂无素材的就不放上去了，暂时只列有素材的角色`
+- 已完成：
+  - **删高清款**：移除 `public/assets/boot/boot-variant-02.eaf`（6,210,780 B）、`boot-preview-01.png`、`boot-preview-02.png`；`BOOT_ASSETS` 只留 `boot-default`；连带清掉 `DeviceAssetFile.oversize` 字段、卡片金色超限警示分支、i18n 键 `boot.bootHiRes` / `notes.oversizeNote` / `oversizeWarning`
+  - **删占位卡**：`DIALOGUE_CHARACTERS` 只留夏以昼（xia-yizhou）/ 秦彻（qin-che）；`DialogueCharacterAssets.entry` 由可空改为必填；移除占位卡渲染分支与 i18n 键 `comingSoon`
+  - **版式微调（同轮顺手修）**：
+    - 素材库区块并入上方 `max-w-6xl` 主容器 —— 原先 6xl 区块夹在两个 3xl `main` 之间，整页出现两级宽度跳动（影响所有区块，非本区块独有）
+    - anchors 顺序改为 上手 / 烧录 / **素材** / 部署 / 角色 / 通讯（与 DOM 顺序一致）
+    - 区块标题 `mt-4`→`mt-3` 收紧眉标—标题间距；开机动画单卡改用 `max-w-sm` 网格，避免独卡被拉成整行留白
+- 运行过的验证（全绿）：
+  - `npm run lint:locales` → exit 0（9 top-level keys zh/en aligned）
+  - `tsc -b` → exit 0
+  - `vite build` → exit 0，main `index-DMBt39Vx.js` 500.24 kB（较收敛前 502.20 kB 略降）
+  - `npm run lint` → exit 0，0 错误 0 警告
+  - **HTTP + 字节一致性**：dev server 上 6 个在售素材全部 200 且 MD5 与磁盘逐一相符；3 个已下架 URL 只返回 SPA fallback（`text/html`）而非真实二进制
+  - **视觉验证**：Playwright 实测中英文两版，区块结构断言为 开机动画 1 卡 + 对话气泡底图 2 卡，路径/文案/下载按钮齐备
+- 已记录证据：本条 + `feature_list.json` assets-001 第二轮 evidence + 上述构建/HTTP/截图
+- 提交记录：无（用户约定：验证后再提交）
+- 更新过的文件或工件：`src/lib/device-assets.ts`、`src/sections/DeviceAssetsSection.tsx`、`src/pages/InhabitDevicePage.tsx`、`src/locales/zh.json`、`src/locales/en.json`、`public/assets/**`（删除 3 个文件）、`harness/feature_list.json`、`harness/claude-progress.md`
+- 已知风险或未解决问题：
+  - **待用户浏览器实测确认**（验证清单最后一项）
+  - 角色主动画（main.eaf）一期未做，等素材；其余 4 个角色的气泡底图待补
+  - **排错备忘**：Vite dev server 走 SPA fallback，访问不存在的 `/assets/...` 会返回 `index.html` + **HTTP 200**，极易误判为"已删文件仍在服务"。本轮曾因此产生一次假阳性告警，实际磁盘与线上均不可达。校验素材可用性必须同时看 `Content-Type` 与响应体 MD5
+- 下一步最佳动作：用户浏览器确认视觉与下载；确认后将 `assets-001` 置为 passing 并提交
+
+### Session 032
+
+- 日期：2026-09-10
+- 本轮目标：执行用户新方向 —— 硬件页新增「素材库」区块（网页端提供可用下载素材 + 告知 SD 卡落位），一期只做「开机动画 + 对话气泡底图」两类
+- **用户决策（方向变更）**：
+  - 不再从设备读信息 → 改为**纯网页端提供素材 + 告知放置位置**（绕开 CORS / 混合内容，零固件改动）
+  - 素材用现成的先做出功能；下载**直接给原始文件**，网页预览用 gif/png；**暂不打包**
+  - 一期只做「开机动画 + 气泡底图」，角色主动画（main.eaf）等有素材再补
+- 已完成：
+  - **素材搬运与校正**（`public/assets/`）：
+    - `boot/boot-default.eaf` 3,054,945 B（MD5 47e1c51a85e0f52355371ccb46b8f919）
+    - `boot/boot-variant-02.eaf` 6,210,780 B（高清版，超 3 MB 上限）
+    - `boot/boot-preview-default.png` / `boot-preview-01.png` / `boot-preview-02.png`（新生成的预览）
+    - `dialogue/xia-yizhou/{dialogue_bg.bin 509,244 B, preview.png}`、`dialogue/qin-che/{dialogue_bg.bin 509,244 B, preview.png}`
+  - **发现并修正两个素材问题**：
+    1. 源目录 `docs/start/` 中 **2.9 MB 的 GIF 没有对应的 `.eaf`**（`lottie_inline_20260715155423.eaf` 实际不存在）→ 不能按原设想配对，已改为按真实配对建模
+    2. **原始 GIF 导出全黑**（Lottie 导出缺陷：mode P、alpha 全 255、亮度恒为 0）→ 弃用 GIF，改用两类真实来源重新生成预览：从 MP4 抽帧（后段字标帧）、从 `boot_bin/frame_051.bin` 解码 RGB565A8
+    3. 两个 `.eaf` 实为**同一设计的不同分辨率版本**（280×280 默认 / 1200×1200 高清），非两个不同样式 —— 已在 UI 上按此呈现
+  - **新增文件**：`src/lib/device-assets.ts`（素材清单 + `DEVICE_PATHS` + `formatBytes`/`assetUrl`）、`src/sections/DeviceAssetsSection.tsx`（区块组件）
+  - **挂载**：`src/pages/InhabitDevicePage.tsx` 在 `<FlashDeployRow />` 与 `<DemoSection variant="device" />` 之间插入 `<DeviceAssetsSection />`，anchors 增 `assets`
+  - **i18n**：zh/en 同步新增 `sections.assets.*`（含 `boot` / `notes` / `spec` 子键）+ `nav.anchors.assets`，键结构严格对齐
+- 运行过的验证（全绿）：
+  - `npm run lint:locales` → exit 0（9 top-level keys zh/en aligned）
+  - `tsc -b` → exit 0
+  - `vite build` → exit 0，main `index-jyQeod4o.js` 502.20 kB
+  - `npm run lint` → exit 0，0 错误 0 警告
+  - **HTTP + 字节一致性**：起静态服务校验 `dist/` 下 8 个素材全部 200，且 `.eaf`/`.bin`/`.png` 的 **MD5 与源文件逐一相符**（下载链路无损，对硬件素材尤其关键）；同时确认已废弃的 GIF 不再被服务
+  - **视觉验证**：headless Chrome 渲染 `#/product/inhabit-device`，确认区块与全站基调一致（深空底 + 银色 + 金色点睛），并单独核验英文渲染
+- 已记录证据：本条 + `feature_list.json` assets-001 + 上述构建/HTTP/截图验证
+- 提交记录：无（用户约定：验证后再提交）
+- 更新过的文件或工件：`src/lib/device-assets.ts`（新增）、`src/sections/DeviceAssetsSection.tsx`（新增）、`src/pages/InhabitDevicePage.tsx`、`src/locales/zh.json`、`src/locales/en.json`、`public/assets/**`（新增）、`harness/feature_list.json`、`harness/claude-progress.md`
+- 已知风险或未解决问题：
+  - **待用户浏览器实测确认**（验证清单最后一项）
+  - 高清款 `.eaf`（6.2 MB）超 3 MB 推荐上限，UI 已加金色警示；是否适合设备需硬件侧确认
+  - 6 个角色中仅「夏以昼」「秦彻」有气泡底图素材，其余显示"暂无素材"占位
+  - 角色主动画（main.eaf）一期未做，等素材
+  - 环境坑：本机 Git Bash coreutils 失效（`dirname`/`ls`/`tail` 等报 command not found）→ 全程改用 Python 绝对路径 + 内置工具；构建验证走 `node` 二进制直调（见 `windows-shell-fallback` skill）
+- 下一步最佳动作：用户浏览器确认视觉与下载；确认后将 `assets-001` 置为 passing 并提交
+
+### Session 031
+
+- 日期：2026-09-12
+- 本轮目标：硬件侧回复了 device-info-001 的决策，需将决策落地到需求文档与 harness
+- **硬件侧决策（原话）**：
+  - 一期只做 **R1**：全局加 CORS 头 + `OPTIONS /*` → 204
+  - **R2 选方案 3**：先只打通「局域网 / 本地 http:// 开发」，把网页开发阻塞解开；**HTTPS 作为独立特性再上**
+  - R3 / HEAD 一期不做，网页端用现有 `/api/files` 拼装
+  - 二期再考虑：聚合接口、首帧预览、写保护策略
+- 已完成：
+  - `harness/docs/device-info-api-requirements.md` 更新：R2 章节改为「已决策 · 一期只做 R1，HTTPS 后置」，新增**能力边界表**明确「哪些场景可达 / 哪些不可达」；R1 验收改为以 http 场景为准；第 4 章重写为一期范围（必须 = 仅 R1；明确不做 5 项；二期待议 4 项）
+  - `feature_list.json`：`device-info-001` 由 blocked → not_started，标题改为「固件侧一期：全局 CORS + OPTIONS 预检」，notes 记入决策与边界；`device-info-002` notes 补场景限制与实现要点
+- **本轮最重要的澄清（需持续记住）**：
+  > **R1 只解决"开发期可验证"，不解决"生产环境可用"。**
+  > R1 完成后：本地 dev（`http://localhost`）与局域网 http 场景可读设备；
+  > 生产站是 https → 读 http 设备仍被 **Mixed Content** 拦截，**必须等二期 HTTPS**。
+  > 因此 device-info-002 只能先在本地/局域网场景立项；**生产站入口需降级或暂不上线，不得让用户看到必然失败的功能。**
+- 运行过的验证：`feature_list.json` JSON 合法性校验通过（25 项 / 22 passing / 3 not_started）
+- 已记录证据：本条 + 文档更新 + feature_list.json
+- 提交记录：无（用户约定：验证后再提交）
+- 更新过的文件或工件：`harness/docs/device-info-api-requirements.md`、`harness/feature_list.json`、`harness/claude-progress.md`
+- 已知风险或未解决问题：
+  - 网页端 device-info-002 的**生产环境可用性悬空**（依赖二期 HTTPS），产品上需决定：先只做本地可用版本，还是等 HTTPS 就绪再上线
+  - 实现提示：新增 OPTIONS handler 会占用一个 `max_uri_handlers` 槽位（当前 32），需确认余量
+- 下一步最佳动作：等固件侧 R1 落地后实机验证；或先启动 device-info-002 的本地可用版本（UI 先行，数据层留接口）
+
+### Session 030
+
+- 日期：2026-09-12
+- 本轮目标：用户提出「Inhabit Device 页新增设备信息读取」设想（开机动画 + 各角色 SoulPod 概览 + 后续可替换）。用户确认：① 走串口（设备已 USB 连接）；② 只做简单预览；③ 一期只读不写；④ 硬件固件**可以改**，但要产出具体需求交给硬件侧。
+- 已完成：**只读调研 + 产出固件侧需求规格书**，网页端一行代码未动
+  - 调研结论：设备已具备读 SD 卡的全部 HTTP 能力（`/api/files?volume=sdcard`、`/files/sdcard/*`、`/api/status`），SD 挂载点 `/sdcard`
+  - **排除串口通道**：`cap_files` 的 base_dir 硬编码为 `/fatfs`（`main.c:133` `app_fatfs_base_path`），`cap_files_path_is_valid()` 要求路径以 base_dir 开头 → `cap call list_dir/read_file` 读不到 `/sdcard` 下的 SoulPod。串口在此场景不可用。
+  - **定位真正缺口**：① 设备 HTTP 服务无任何 `Access-Control-*` 响应头、无 OPTIONS 处理（全局检索 C 源码确认）；② 网页 https / 设备 http → Mixed Content 拦截
+  - 产出 `harness/docs/device-info-api-requirements.md`：R1 CORS（必需）、R2 混合内容路径（必需）、R3 聚合接口（建议）、R4 动画首帧位图（二期）、R5 一期不写；含接口契约清单、代码位置索引、SD 目录结构、验收步骤
+  - harness 登记：新增 `device-info-001`（blocked，固件侧）+ `device-info-002`（not_started，网页端）
+- 运行过的验证：`feature_list.json` JSON 合法性校验通过（25 项 / 22 passing / 2 not_started / 1 blocked）
+- 已记录证据：本条 + `harness/docs/device-info-api-requirements.md` + feature_list.json 两项登记
+- 提交记录：无（用户约定：验证后再提交）
+- 更新过的文件或工件：`harness/docs/device-info-api-requirements.md`（新增）、`harness/feature_list.json`、`harness/claude-progress.md`
+- 已知风险或未解决问题：
+  - **device-info-001 阻塞中**：需硬件侧确认 R1/R2，特别是**混合内容走 TLS 还是仅支持局域网 http**
+  - R2 方案 A（自签 TLS）有个坑：浏览器对 `fetch` 到自签 HTTPS 同样会失败，用户需先手动访问一次并接受证书——此点已写入文档，待硬件侧评估
+  - 动画 `.eaf` 为私有格式，浏览器无法解码；一期只做「元信息 + 静态预览」（用 `docs/start/` 下已有的 boot.gif/mp4），真渲染列为二期
+  - 素材完备度参差（5 个角色中仅「夏以昼」动画齐全；「叶修」仅一张图；「秦彻」几乎为空；「庄方宜」空目录）—— 正是设备信息面板的价值所在
+- 下一步最佳动作：等待硬件侧回复 R1/R2 决策；确认后启动 device-info-002（网页端面板）
 
 ### Session 029
 

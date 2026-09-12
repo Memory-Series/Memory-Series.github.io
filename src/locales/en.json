@@ -24,7 +24,8 @@
       "contact": "Contact",
       "flash": "Flash",
       "deploy": "Deploy",
-      "setup": "Setup"
+      "setup": "Setup",
+      "assets": "Assets"
     }
   },
   "device": {
@@ -174,6 +175,39 @@
       "sectionDeployDesc": "Get the device config page address and import character SoulPod (repeatable).",
       "eyebrowFlash": "Firmware",
       "eyebrowDeploy": "Character"
+    },
+    "assets": {
+      "eyebrow": "Asset Library",
+      "title": "Make it look a little more like yours.",
+      "lead": "Boot animations and dialogue bubble backgrounds — download the original files and drop them into place on the SD card. No network transfer, no firmware changes.",
+      "howToTitle": "How it applies",
+      "howTo": "Overwrite the file with the same name on the SD card, then restart the device. Create the target folder manually if it does not exist.",
+      "download": "Download",
+      "downloading": "Preparing…",
+      "copyPath": "Copy path",
+      "previewOnly": "Preview only",
+      "noPreview": "No preview",
+      "bootGroupTitle": "Boot animation",
+      "bootGroupMeta": "Replaces /sdcard/system/boot/boot.eaf",
+      "dialogueGroupTitle": "Dialogue bubble background",
+      "dialogueGroupMeta": "Replaces /sdcard/personas/<character>/assets/ui/dialogue_bg.bin",
+      "boot": {
+        "bootDefault": "Default · 280p",
+        "dialogueBg": "Dialogue background"
+      },
+      "notes": {
+        "bootDefaultNote": "The production default — 3.05 MB, right around the recommended 3 MB ceiling. Recommended."
+      },
+      "spec": {
+        "format": "Boot format",
+        "formatValue": ".eaf (full-screen frame sequence, 24 FPS)",
+        "dialogueSize": "Bubble size",
+        "dialogueSizeValue": "412 × 412, RGB565A8, exactly 509,244 bytes",
+        "fps": "Frame rate",
+        "fpsValue": "24 FPS",
+        "limit": "Recommended size",
+        "limitValue": "Boot animation ≤ 3 MB"
+      }
     }
   },
   "bridge": {

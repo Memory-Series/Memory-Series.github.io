@@ -24,7 +24,8 @@
       "contact": "通讯",
       "flash": "烧录",
       "deploy": "部署",
-      "setup": "上手"
+      "setup": "上手",
+      "assets": "素材"
     }
   },
   "device": {
@@ -167,6 +168,39 @@
       "sectionDeployDesc": "获取设备配置界面地址，并导入角色 SoulPod（可重复操作）。",
       "eyebrowFlash": "固件",
       "eyebrowDeploy": "角色"
+    },
+    "assets": {
+      "eyebrow": "素材库",
+      "title": "想让它的样子更像你一点。",
+      "lead": "开机动画与对话气泡底图，直接下载原始文件，放到 SD 卡对应位置即可替换。无需联网传输，也不改动固件。",
+      "howToTitle": "生效方式",
+      "howTo": "覆盖 SD 卡中的同名文件后，重启设备即可生效。目标目录不存在时请手动新建。",
+      "download": "下载",
+      "downloading": "准备中…",
+      "copyPath": "复制路径",
+      "previewOnly": "仅预览",
+      "noPreview": "暂无预览图",
+      "bootGroupTitle": "开机动画",
+      "bootGroupMeta": "替换 /sdcard/system/boot/boot.eaf",
+      "dialogueGroupTitle": "对话气泡底图",
+      "dialogueGroupMeta": "替换 /sdcard/personas/<角色>/assets/ui/dialogue_bg.bin",
+      "boot": {
+        "bootDefault": "默认款 · 280p",
+        "dialogueBg": "对话气泡底图"
+      },
+      "notes": {
+        "bootDefaultNote": "产线默认版本，3.05 MB，在推荐的 3 MB 上限附近，优先推荐。"
+      },
+      "spec": {
+        "format": "开机动画格式",
+        "formatValue": ".eaf（全屏位图序列，24 FPS）",
+        "dialogueSize": "底图尺寸",
+        "dialogueSizeValue": "412 × 412，RGB565A8，固定 509,244 字节",
+        "fps": "帧率",
+        "fpsValue": "24 FPS",
+        "limit": "推荐体积上限",
+        "limitValue": "开机动画 ≤ 3 MB"
+      }
     }
   },
   "bridge": {

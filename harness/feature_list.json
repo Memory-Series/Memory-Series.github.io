@@ -1,6 +1,6 @@
 {
   "project": "memory-series-site (Memory Series · Trace / Inhabit 展示站)",
-  "last_updated": "2026-09-12",
+  "last_updated": "2026-09-13",
   "rules": {
     "single_active_feature": true,
     "passing_requires_evidence": true,
@@ -406,6 +406,33 @@
         "2026-09-12: 源素材 F:/Pictures/TraceInhabit/Memory · Inhabit Device.mp4（720×1280 竖屏 / 10s / H.264+AAC / 2.9MB @2.3Mbps，内容为设备实拍：圆形吊坠屏显 Q 版角色）。ffmpeg CRF 30 重压 → public/media/inhabit-device.mp4 684KB（-76%，+faststart）；抽 1.5s 首帧 → public/media/inhabit-device-poster.jpg 44KB。新增 src/sections/ShowcaseSection.tsx，挂载于 src/pages/InhabitDevicePage.tsx（Hero 之后、SetupSection 之前）。i18n 新增 sections.showcase.{eyebrow,title,lead,hint,mute,unmute} 中英双语。public 资源用 import.meta.env.BASE_URL 拼接（vite base:'./'）。"
       ],
       "notes": "设计决策：竖屏素材不强行拉伸成 16:9，而是作为「设备屏幕」立置于区块右侧——竖屏在这里是优势不是缺陷。已知未处理（记为后续可选项，非 blocker）：prefers-reduced-motion 未响应（项目全局均无该处理）；无字幕/文字替代；移动端 684KB 自动播放对流量敏感用户不友好（可改点击加载）。ffmpeg 位于 G:/Memory-Series/Esp32S3/tools/microwakeword-xiayizhou/scripts/ffmpeg/bin。"
+    },
+    {
+      "id": "assets-001",
+      "priority": 1,
+      "area": "device",
+      "title": "硬件页「素材库」区块：开机动画 + 对话气泡底图（网页端下载 + 落位指引）",
+      "user_visible_behavior": "Memory · Inhabit Device 页「素材库」区块（位于「固件烧录 / 角色部署」之后、「角色卡」之前）：分两类展示可下载素材 —— ①开机动画（一期仅默认款，png 预览 + 原始 .eaf 下载）；②对话气泡底图（按角色分组，png 预览 + dialogue_bg.bin 下载）。每项素材展示文件名、体积、原始分辨率，并给出目标 SD 卡路径（可一键复制）与「下载」按钮。区块顶部说明用途与生效方式（覆盖后重启设备），底部附格式规范。**一期只列出真正有素材的条目**：开机动画 1 项（默认款），角色 2 个（夏以昼 / 秦彻）；不展示高清款，也不为无素材角色留占位卡。纯网页端提供素材，不读取设备。",
+      "status": "passing",
+      "verification": [
+        "npm run build 通过（tsc -b + vite build）",
+        "npm run lint 0 错误 0 警告",
+        "npm run lint:locales 通过（9 top-level keys zh/en aligned）",
+        "dist 静态服务下 6 个在售素材 URL 返回 200；.eaf/.bin/.png 的 MD5 与源文件逐一相符",
+        "已下架素材（boot-variant-02.eaf / boot-preview-01.png / boot-preview-02.png）不再作为真实文件提供",
+        "点击下载得到与源文件字节一致的原始二进制（fetch → blob → downloadBlob）",
+        "每个素材卡片显示目标 SD 卡路径，且可一键复制",
+        "桌面宽度下卡片网格对齐，预览图可辨识（非全黑）",
+        "中文与英文渲染均正确（i18n 键结构对齐）",
+        "不破坏现有 FirmwareFlash / CharacterDeploy / SoulPodDownload 功能",
+        "用户在浏览器实测确认视觉风格与既有区块一致"
+      ],
+      "evidence": [
+        "2026-09-10: 实现完成并全绿。新增 src/lib/device-assets.ts（DEVICE_PATHS / BOOT_ASSETS / DIALOGUE_CHARACTERS / assetUrl / formatBytes）+ src/sections/DeviceAssetsSection.tsx；挂载于 src/pages/InhabitDevicePage.tsx（FlashDeployRow 与 DemoSection 之间），anchors 增 assets；zh/en 新增 sections.assets.* + nav.anchors.assets。验证：lint:locales exit 0；tsc -b exit 0；vite build exit 0（main index-jyQeod4o.js 502.20 kB）；eslint exit 0（0 错误 0 警告）；dist 静态服务 8 个素材全 200 且 MD5 与源一致，已废弃 GIF 确认不再被服务；headless Chrome 渲染中英文两版确认版式与基调一致。素材落盘：public/assets/boot/{boot-default.eaf,boot-variant-02.eaf,boot-preview-default.png,boot-preview-01.png,boot-preview-02.png}、public/assets/dialogue/{xia-yizhou,qin-che}/{dialogue_bg.bin,preview.png}。事实校正：① 原 GIF 导出全黑（Lottie 导出缺陷，mode P / alpha 全 255 / 亮度恒 0）已弃用，预览改由 MP4 抽帧 + boot_bin/frame_051.bin 解码 RGB565A8 生成；② 两个 .eaf 实为同一设计的不同分辨率版本（280×280 默认款 / 1200×1200 高清款），非两个不同样式；③ 源目录 docs/start/ 中 2.9MB 的 GIF 无对应 .eaf（文件不存在），已按真实配对建模而非造出不存在的下载项。",
+        "2026-09-10（第二轮：按用户指令收敛素材范围）：① 删除高清款 —— 移除 public/assets/boot/boot-variant-02.eaf（6,210,780 B）、boot-preview-01.png、boot-preview-02.png，BOOT_ASSETS 只留 boot-default；同时移除 DeviceAssetFile.oversize 字段、卡片金色超限警示分支、i18n 键 boot.bootHiRes / notes.oversizeNote / oversizeWarning。② 删除「暂无素材」占位 —— DIALOGUE_CHARACTERS 只留夏以昼（xia-yizhou）/ 秦彻（qin-che），DialogueCharacterAssets.entry 由可空改为必填，移除占位卡渲染分支与 i18n 键 comingSoon。③ 版式微调：素材库区块并入上方 max-w-6xl 主容器（原先 6xl 区块夹在 3xl main 之间造成整页两级宽度跳动），锚点顺序调整为 上手/烧录/素材/部署/角色/通讯，区块标题 mt-4→mt-3 收紧，开机动画单卡改用 max-w-sm 网格避免独占整行留白。验证：lint:locales exit 0；tsc -b exit 0；vite build exit 0（main index-DMBt39Vx.js 500.24 kB，较增删前 502.20 kB 略降）；eslint exit 0（0 错误 0 警告）；dev server 上 6 个在售素材全部 200 且 MD5 与磁盘逐一相符，3 个已下架 URL 只返回 SPA fallback（text/html）而非真实二进制；Playwright 实测中英文两版，区块结构为 开机动画 1 卡 + 对话气泡底图 2 卡，路径与文案正确。",
+        "2026-09-10（收尾）：用户在浏览器实测确认 —— 视觉风格与既有区块一致，下载可用，素材范围（仅默认款开机动画 + 仅 2 个有素材角色）符合预期。据此将状态置为 passing。本轮收尾提交后同步发布到 GitHub Pages 与京东云 https://www.traceinhabit.cn/。"
+      ],
+      "notes": "**方向变更（2026-09-10，用户决定）**：本需求原为「从设备读开机动画 + 角色 SoulPod 概览」（旧 device-info-001 固件侧 CORS 需求 + device-info-002 网页端设备信息面板），已整体作废，两条登记已删除。新方向彻底绕开跨源 / 混合内容难题 —— 只做「网页端提供素材 + 告知放置位置」，**零固件改动**。旧需求书已移至 `harness/docs/archive/device-info-api-requirements.md` 并加作废横幅（仅「素材格式规范」「SD 目录结构」两节仍有参考价值）。\n\n**一期范围（用户确认）**：只做「开机动画 + 对话气泡底图」两类。角色主动画 main.eaf 等有素材再补（后续可另立 features 项）。**不做打包**（直接给原始文件，不 zip）。\n\n**素材清单（已核实，最终上架范围）**：\n- 开机动画：**仅默认款** `boot-default.eaf` 3,054,945 B（MD5 47e1c51a85e0f52355371ccb46b8f919，280×280，产线版本），预览 `boot-preview-default.png` 14,148 B。\n  『同设计的 1200×1200 高清款（boot-variant-02.eaf）已按用户要求下架』—— 用户原话：高清款留了反而会造成误会。\n- 对话气泡底图：**仅列有素材的 2 个角色** —— 夏以昼（xia-yizhou，MD5 1ff1ee2fb606c0e9af467a142f1f51c2）、秦彻（qin-che，MD5 302d07e0da0f58ac352bc61a96c5e875），各 509,244 B。\n  其余 4 角色（叶修/庄方宜/拓跋玉儿/戴安娜）暂无素材，**不展示占位卡**，待有素材再补。\n- 总量：6 个文件（1 eaf + 1 png + 2 × (bin + png)）。\n\n**格式规范（实测）**：\n- 开机动画 `.eaf`：私有格式，文件头 `\\x89EAF`；目标路径 `/sdcard/system/boot/boot.eaf`；24 FPS；建议 ≤ 3 MB。\n- 对话气泡底图 `dialogue_bg.bin`：**412×412 RGB565A8，固定 509,244 字节**。前 12 字节为 `lv_image_header_t`，实测 `struct.unpack('<6H', head[:12]) == (2585, 0, 412, 412, 824, 0)`，即 cf=RGB565A8(0x0A19) / always_zero=0 / w=412 / h=412 / stride=824 / reserved=0。路径 `/sdcard/personas/<角色key>/assets/ui/dialogue_bg.bin`。\n- 同一格式可解码 `boot_bin/frame_*.bin`（280×280，52 帧）—— 已用此法生成默认款预览。\n\n**实现要点**：\n- 资源 URL 一律用 `${import.meta.env.BASE_URL}assets/...` 拼接（vite base:'./'）。\n- 下载复用 `src/lib/soulpod.ts` 的 `downloadBlob`；数据源用 `fetch(url)` → `blob()` 保证字节一致。\n- 角色 key 复用 `SOULPOD_MANIFEST[].key`（kebab-case），与 DemoSection 的 6 个角色一一对应，未另造 key。\n- `src/sections/*.tsx` 只导出组件；常量放在 `src/lib/device-assets.ts`（遵守 react-refresh/only-export-components 约束）。\n- 卡片样式沿用既有区块：`rounded-2xl border border-border/50 bg-card/30 p-4 backdrop-blur`；眉标用 `SectionEyebrow`；金色强调用 `oklch(0.78 0.12 75)`；下载按钮沿用 SoulPodDownload 的 pill 样式。\n- 预览图垫底用 `bg-[oklch(0.21 0.02 262)]` 而非纯透明，避免深色星空素材看起来像空卡。\n- `public/assets/` 只保留上架的 6 个文件，历史上架的 3 个文件已从磁盘删除（不靠 UI 隐藏）。\n\n**不要做的事**：不读设备；不改 `G://Memory-Series//Esp32S3//esp-claw` 硬件代码（只读参考）；不做打包。\n\n**用户已确认（2026-09-10）**：浏览器实测视觉与下载均符合预期，状态置为 passing。\n\n**排错备忘（dev server 假阳性）**：Vite dev server 走 SPA fallback，访问不存在的 `/assets/...` 路径会返回 `index.html` + **HTTP 200**，易被误判为「已删文件仍可下载」。校验必须同时看 Content-Type 与响应体 MD5，或直接比对 dev 响应与磁盘文件字节；本次曾因此误报，实际磁盘与线上均已不可达。"
     }
   ]
 }
