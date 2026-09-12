@@ -8,9 +8,34 @@
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
 - 当前最高优先级未完成功能：flash-002（WebSerial 烧录链路工程化 —— 用户两次决策"收回"，保持 not_started）
 - 当前 blocker：无。
-- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。网页已部署京东云 https://www.traceinhabit.cn/（HTTPS 200 已验证，WebSerial 烧录功能可用）
+- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 已于 Session 029 同步为双页新版**（`index-Cp38yVaE.js`，HTTPS 200，媒体 200）；WebSerial 烧录功能依赖浏览器安全上下文，HTTPS 下可用
 
 ## 会话记录
+
+### Session 029
+
+- 日期：2026-09-12
+- 本轮目标：用户确认网页验证通过后，要求**同步京东云**（`https://www.traceinhabit.cn/`）。无代码改动，纯部署
+- 已完成：
+  - **推翻旧结论**：此前记录的「京东云必须走 `deploy-jd.ps1`、沙箱会拦 SSH」不成立——实测本机 Git Bash 的 `ssh` / `scp` / `tar` 可直连 `root@111.228.60.135:22`。真正失效的是 PowerShell 工具的输出回显（`Write-Output` 无输出），而 `deploy-jd.ps1` 依赖 Posh-SSH + PowerShell，故本轮弃用该脚本，改走等价 bash 链路
+  - 部署前确认 `dist` 是当前源码产物（`dist/index.html` mtime 08:32 > 源码最新 01:42），未重新构建
+  - 打包：`tar -czf` → 7667438 B / 58 entries，含 `dist/index.html` + `dist/media/*`
+  - 上传：`scp` → 远端 `md5sum` 比对 **`7e75b74a58f8216d423bbf397e2c7c7e` 完全一致**
+  - 部署前基线：远端旧版为 `index-DYXyFfqU.js`（单页），且**无 `media/` 目录**
+  - 远端执行：`rm -rf /opt/memory-series/*` → `tar -xzf ... --strip-components=1` → `docker restart memory-series-nginx` → 容器 `Up`，`curl 127.0.0.1` 返回 **301**（HTTP→HTTPS，预期）
+  - 公网验证（https://www.traceinhabit.cn/）：
+    - 首页 200 / 1031 B，`index.html` 引用 `index-Cp38yVaE.js`
+    - 主 bundle 200 / 487065 B / application/javascript，特征全 **[OK]**：`showcase`（产品影片）、`inhabit-device` 路由、`product/trace` 路由、`bridge`、`inhabit-device.mp4`、`inhabit-device-poster`、`productSwitch`
+    - `/media/inhabit-device.mp4` 200 / **684845 B** video/mp4（与本地字节数一致）
+    - `/media/inhabit-device-poster.jpg` 200 / **44021 B** image/jpeg（与本地字节数一致）
+- 已记录证据：本条 + 远端 md5sum 比对 + 公网 bundle 特征检查 + 媒体字节数比对
+- 提交记录：无代码提交（仅 harness 文档更新）
+- 更新过的文件或工件：`harness/claude-progress.md`、`harness/session-handoff.md`
+- 已知风险或未解决问题：
+  - 远端文件属主为 `197609:197609`（Windows scp 侧 uid），非 `root`；nginx 容器以 `--privileged` + 挂载运行，实测读取正常，但若后续出现权限问题可 `chown -R root:root /opt/memory-series`
+  - `scripts/deploy-jd.ps1` 在当前环境下**不可用**（PowerShell 回显故障），建议后续部署走 bash 链路或先修复 PowerShell
+  - 两站点 bundle hash 仍不同（Pages `index-2BFTwUJQ.js` linux vs 京东云 `index-Cp38yVaE.js` Windows），已知跨平台 tree-shake 差异，功能一致
+- 下一步最佳动作：硬件页增量区块（规格表 / FAQ / 获取渠道）；同步 Ardot 设计稿为双页结构
 
 ### Session 028
 

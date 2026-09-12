@@ -109,5 +109,22 @@ f094616 docs(harness): closeout Session 025 — git add + commit + push + deploy
 | 部署目标 | URL | 主 bundle hash | 状态 |
 |---|---|---|---|
 | **GitHub Pages** | https://memory-series.github.io/ | `index-2BFTwUJQ.js` | ✅ Actions run #34662124552（build 46s + deploy 9s）；线上 bundle 特征全 FOUND，媒体 200 |
-| **京东云** | https://www.traceinhabit.cn/ | `index-DYXyFfqU.js` | ⚠️ **仍是单页旧版**——用户本轮明确要求暂不同步；需另行 `powershell -ExecutionPolicy Bypass -File scripts/deploy-jd.ps1` |
+| **京东云** | https://www.traceinhabit.cn/ | `index-Cp38yVaE.js` | ✅ **已同步为双页新版**（Session 029，tarball MD5 `7e75b74a…` 校验一致）；nginx `memory-series-nginx` 已重启，`/media/*` 200 且字节数与本地一致 |
 | **本地 dist** | G:\Memory-Series\Memory-Series.github.io\dist | `index-Cp38yVaE.js` | ✅ 干净重建通过（Windows 构建，与 Pages 的 linux hash 不同属已知差异） |
+
+## 京东云部署方式修正（Session 029，重要）
+
+此前记录的「京东云必须走 `deploy-jd.ps1`、沙箱会拦 SSH」**不成立**，实测已推翻：
+
+- 本机 Git Bash 的 `ssh` / `scp` / `tar` **可直接连京东云**（`root@111.228.60.135:22`），无需 Posh-SSH。
+- 失效的是 **PowerShell 工具的输出通道**（`Write-Output` 完全无回显），而 `deploy-jd.ps1` 依赖 Posh-SSH + PowerShell 回显，因此**本次弃用该脚本**。
+- 验证过的等价 bash 流程：`dist` 已是当前源码产物 → `tar -czf` 打包 → `scp` 上传 → 远端 `md5sum` 比对 → `ssh` 解压到 `/opt/memory-series`（`--strip-components=1`）→ `docker restart memory-series-nginx`。
+- 建议：后续京东云部署优先用上述 bash 链路；若要保留 `deploy-jd.ps1`，需先解决 PowerShell 回显问题。
+
+## 下一步
+
+1. **硬件页增量**（待用户拍板）：设备规格参数表、FAQ/排障、获取渠道。当前硬件页仅「影片 + 上手向导 + 烧录/部署」。
+2. **外部旧锚点**：`#flash` / `#deploy` 现已只在硬件页，根域名旧链接会重定向到 SKILL 页并静默跳到页首；需确认公众号历史文章是否有此类链接。
+3. **视频无障碍**：全项目未处理 `prefers-reduced-motion`，视频是首个持续运动元素，建议加默认暂停。
+4. **Ardot 设计稿已过时**：文件 `724413235736238` 是拆页**之前**的单页版本，后续调 UI 前建议同步为双页结构。
+5. **`flash-002`**（WebSerial 工程化）仍为 `not_started`。
