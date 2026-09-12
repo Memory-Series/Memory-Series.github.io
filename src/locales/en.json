@@ -2,6 +2,11 @@
   "header": {
     "backToTop": "Back to Top"
   },
+  "productSwitch": {
+    "aria": "Product switch",
+    "skill": "Trace / Inhabit",
+    "device": "Inhabit Device"
+  },
   "hero": {
     "series": "Memory Series",
     "title": "Trace/Inhabit · SKILL",
@@ -17,7 +22,18 @@
       "demo": "Characters",
       "implementation": "Scenarios",
       "contact": "Contact",
-      "flash": "Flash"
+      "flash": "Flash",
+      "deploy": "Deploy",
+      "setup": "Setup"
+    }
+  },
+  "device": {
+    "hero": {
+      "series": "Memory Series",
+      "badge": "Inhabit Device",
+      "title": "Let a character live in a real device.",
+      "subtitle": "Memory · Inhabit Device is a desktop device that carries SoulPod character archives offline. Flash the firmware once, drop a character onto the SD card, and it stays on your desk.",
+      "primaryCta": "Get started"
     }
   },
   "footer": {
@@ -28,6 +44,14 @@
     }
   },
   "sections": {
+    "showcase": {
+      "eyebrow": "Product Film",
+      "title": "Ten seconds of it, alive.",
+      "lead": "A live-action clip: the moment a SoulPod character appears on the round display. Plays muted on loop — tap the button to enable sound.",
+      "hint": "Plays muted on loop",
+      "mute": "Mute",
+      "unmute": "Unmute"
+    },
     "intro": {
       "eyebrow": "Overview",
       "title": "Trace / Inhabit",
@@ -44,7 +68,14 @@
     },
     "demo": {
       "eyebrow": "Characters",
-      "title": "Character Cards"
+      "title": "Character Cards",
+      "cardMetaSkill": "Trace / Inhabit character card · {{enName}}",
+      "cardMetaDevice": "Deployable to device · {{enName}}"
+    },
+    "setup": {
+      "eyebrow": "Setup",
+      "title": "Full setup guide",
+      "lead": "Four steps from unboxing to a live character — about ten minutes the first time. Firmware flashing is a one-time step."
     },
     "usage": {
       "eyebrow": "Usage",
@@ -143,6 +174,20 @@
       "sectionDeployDesc": "Get the device config page address and import character SoulPod (repeatable).",
       "eyebrowFlash": "Firmware",
       "eyebrowDeploy": "Character"
+    }
+  },
+  "bridge": {
+    "toDevice": {
+      "eyebrow": "Next",
+      "title": "Put the character into a device",
+      "desc": "The SoulPod archive produced by Trace / Inhabit can be imported straight into Inhabit Device, so the character keeps you company offline on your desk.",
+      "cta": "View Inhabit Device"
+    },
+    "toSkill": {
+      "eyebrow": "Previous",
+      "title": "Get a character archive first",
+      "desc": "The device needs a SoulPod archive to work. Use Trace / Inhabit to extract a character from novels or scripts.",
+      "cta": "View Trace / Inhabit"
     }
   },
   "errorBoundary": {

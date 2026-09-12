@@ -2,6 +2,11 @@
   "header": {
     "backToTop": "返回顶部"
   },
+  "productSwitch": {
+    "aria": "产品切换",
+    "skill": "Trace / Inhabit",
+    "device": "Inhabit Device"
+  },
   "hero": {
     "series": "Memory Series",
     "title": "Trace/Inhabit · SKILL",
@@ -17,10 +22,29 @@
       "demo": "角色",
       "implementation": "情景",
       "contact": "通讯",
-      "flash": "烧录"
+      "flash": "烧录",
+      "deploy": "部署",
+      "setup": "上手"
+    }
+  },
+  "device": {
+    "hero": {
+      "series": "Memory Series",
+      "badge": "Inhabit Device",
+      "title": "让角色住进一台真实的设备。",
+      "subtitle": "Memory · Inhabit Device 是一台离线承载 SoulPod 角色档案的桌面设备。烧录一次固件，把角色放进 SD 卡，它就在桌面上持续存在。",
+      "primaryCta": "开始上手"
     }
   },
   "sections": {
+    "showcase": {
+      "eyebrow": "产品影片",
+      "title": "十秒，看见它亮起来的样子。",
+      "lead": "实拍短片：SoulPod 角色出现在圆形屏幕上的瞬间。默认静音循环播放，点右下角按钮开启声音。",
+      "hint": "视频默认静音循环播放",
+      "mute": "关闭声音",
+      "unmute": "开启声音"
+    },
     "intro": {
       "eyebrow": "简介",
       "title": "寻迹 / 入心",
@@ -37,7 +61,14 @@
     },
     "demo": {
       "eyebrow": "角色",
-      "title": "角色卡"
+      "title": "角色卡",
+      "cardMetaSkill": "Trace / Inhabit 角色卡 · {{enName}}",
+      "cardMetaDevice": "可部署到设备 · {{enName}}"
+    },
+    "setup": {
+      "eyebrow": "上手",
+      "title": "完整上手向导",
+      "lead": "从开箱到角色上线一共四步，首次使用约十分钟。其中固件烧录只需做一次。"
     },
     "usage": {
       "eyebrow": "使用",
@@ -136,6 +167,20 @@
       "sectionDeployDesc": "获取设备配置界面地址，并导入角色 SoulPod（可重复操作）。",
       "eyebrowFlash": "固件",
       "eyebrowDeploy": "角色"
+    }
+  },
+  "bridge": {
+    "toDevice": {
+      "eyebrow": "下一步",
+      "title": "把角色装进设备",
+      "desc": "Trace / Inhabit 生成的 SoulPod 角色档案，可以直接导入 Inhabit Device，让角色在桌面上离线陪伴。",
+      "cta": "查看 Inhabit Device"
+    },
+    "toSkill": {
+      "eyebrow": "上一步",
+      "title": "先获取角色档案",
+      "desc": "设备需要 SoulPod 角色档案才能工作。你可以用 Trace / Inhabit 从小说、剧本中提取一个角色。",
+      "cta": "查看 Trace / Inhabit"
     }
   },
   "footer": {

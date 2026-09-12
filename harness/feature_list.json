@@ -1,6 +1,6 @@
 {
   "project": "memory-series-site (Memory Series · Trace / Inhabit 展示站)",
-  "last_updated": "2026-08-29",
+  "last_updated": "2026-09-12",
   "rules": {
     "single_active_feature": true,
     "passing_requires_evidence": true,
@@ -364,6 +364,48 @@
         "2026-09-09: grep 确认 src/App.css 在 src 中无任何 import（仅 src/main.tsx import './index.css'），无任何元素使用 .logo/.card/.read-the-docs className——完全是 Vite 模板死代码；删除 src/App.css；build 通过（main hash index-DYXyFfqU.js 与 Session 021 完全一致，证明源码未受影响）；lint 0 错误 0 警告；lint:locales ✓。文件大小 -606 字节。"
       ],
       "notes": "决策：直接删除整个文件，因为零引用。零 UI 风险。"
+    },
+    {
+      "id": "split-001",
+      "priority": 1,
+      "area": "architecture",
+      "title": "单页拆分为双产品页：Trace/Inhabit SKILL + Memory · Inhabit Device",
+      "user_visible_behavior": "站点从单页变为两条路由。#/product/trace 只讲 SKILL（Hero+hub链接 / 简介 / 使用方式 / 角色卡 / 使用情景 / 桥接 / 通讯）；#/product/inhabit-device 只讲硬件（Hero / 完整上手向导 / 固件烧录+角色部署 / 角色卡 / 桥接 / 通讯）。共享 Header（含产品切换器）与 Footer。两页底部各有一张桥接卡互链。现有区块视觉与文案未改动，仅重排归属。",
+      "status": "passing",
+      "verification": [
+        "npm run build 通过",
+        "npm run lint 0 错误 0 警告",
+        "npm run lint:locales 通过",
+        "#/product/trace 渲染 SKILL 页，不含 flash/deploy 区块",
+        "#/product/inhabit-device 渲染硬件页，含 setup 向导 + flash + deploy",
+        "Header 产品切换器可在两页间跳转且高亮当前页",
+        "角色卡在两页都出现，副标题随 variant 变化"
+      ],
+      "evidence": [
+        "2026-09-12: 删除 src/pages/Product.tsx（717 行），新建 src/pages/TracePage.tsx + InhabitDevicePage.tsx；区块抽到 src/sections/*（Hero/Intro/Usage/Demo/Implementation/Contact/FlashDeployRow/Setup/CrossLink/shared）；共享骨架抽到 src/components/SiteHeader.tsx（产品切换器）+ SiteFooter.tsx；常量抽到 src/lib/motion.ts；src/lib/products.ts 加 PRODUCT_ROUTES；i18n zh/en 同步新增 productSwitch/device.hero/sections.setup/bridge/nav.anchors.{deploy,setup}。build（index-BbiuUVt2.js 483.92 kB）、lint 0 错误 0 警告、lint:locales ✓。2026-09-12 收尾：用户在浏览器实测两个页面（SKILL 页 + 硬件页）确认无问题。"
+      ],
+      "notes": "决策：用户明确定名硬件为 Memory · Inhabit Device；硬件页新增区块只做「完整上手向导」，设备规格表 / FAQ 排障 / 获取渠道三项用户暂不选（最小改动原则，吸取 flash-ui-001 翻车教训）。SoulPod 是两页的接口，桥接卡不可省略。"
+    },
+    {
+      "id": "showcase-001",
+      "priority": 2,
+      "area": "content",
+      "title": "硬件页新增产品影片区块（竖屏实拍视频）",
+      "user_visible_behavior": "Memory · Inhabit Device 页在 Hero 之后、上手向导之前新增「产品影片」区块：左侧文案（眉标/标题/引导语/静音提示）+ 右侧竖屏视频（720×1280，9:16，h-420/520px），视频外框带金色辉光呼应全局基调。默认静音自动循环播放（浏览器 autoplay 策略要求 muted），右下角浮动按钮可切换声音，开启声音时从 0s 重播。移动端上下堆叠、视频居中。",
+      "status": "passing",
+      "verification": [
+        "npm run build 通过（index-Cp38yVaE.js 487.07 kB）",
+        "npm run lint 0 错误 0 警告",
+        "npm run lint:locales 通过（9 top-level keys zh/en aligned）",
+        "dev server 上 /media/inhabit-device.mp4（684845B）与 /media/inhabit-device-poster.jpg（44021B）均返回 200",
+        "视频默认静音自动循环播放，封面为首帧（避免加载黑屏）",
+        "点击右下角按钮切换静音状态，开启声音时从 0s 重播",
+        "用户在浏览器实测确认无问题"
+      ],
+      "evidence": [
+        "2026-09-12: 源素材 F:/Pictures/TraceInhabit/Memory · Inhabit Device.mp4（720×1280 竖屏 / 10s / H.264+AAC / 2.9MB @2.3Mbps，内容为设备实拍：圆形吊坠屏显 Q 版角色）。ffmpeg CRF 30 重压 → public/media/inhabit-device.mp4 684KB（-76%，+faststart）；抽 1.5s 首帧 → public/media/inhabit-device-poster.jpg 44KB。新增 src/sections/ShowcaseSection.tsx，挂载于 src/pages/InhabitDevicePage.tsx（Hero 之后、SetupSection 之前）。i18n 新增 sections.showcase.{eyebrow,title,lead,hint,mute,unmute} 中英双语。public 资源用 import.meta.env.BASE_URL 拼接（vite base:'./'）。"
+      ],
+      "notes": "设计决策：竖屏素材不强行拉伸成 16:9，而是作为「设备屏幕」立置于区块右侧——竖屏在这里是优势不是缺陷。已知未处理（记为后续可选项，非 blocker）：prefers-reduced-motion 未响应（项目全局均无该处理）；无字幕/文字替代；移动端 684KB 自动播放对流量敏感用户不友好（可改点击加载）。ffmpeg 位于 G:/Memory-Series/Esp32S3/tools/microwakeword-xiayizhou/scripts/ffmpeg/bin。"
     }
   ]
 }

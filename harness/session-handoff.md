@@ -2,101 +2,108 @@
 
 ## 当前已验证
 
-- 现在明确可用的部分：`npm run build` 通过；`npm run lint` 0 错误 0 警告；`npm run lint:locales` 通过；`npm run dev` 可启动；远程 origin/main 与本地同步。
+- 现在明确可用的部分：`npm run build` 通过；`npm run lint` 0 错误 0 警告；`npm run lint:locales` 通过；`npm run dev` 可启动；**双路由页面结构**（split-001）与**硬件页产品影片区块**（showcase-001）均已由用户在浏览器实测确认无问题。
 - 本轮实际跑过的验证：
-    - `npm run build` ×2（cleanup-001 / ci-001 完成后 + clean rebuild 校验）
-    - `npm run lint` ×1（0 错误 0 警告）
-    - `npm run lint:locales` ×4（含反演 fail-pass 闭环 ×2）
-    - `git push origin main` 成功（2 次 retry，遭遇沙箱代理 502 后恢复）
-    - GitHub Actions run #90 自动触发并成功（commit 7f2d5bb，56s 完成）—— **ci-001 首次实测通过**
-    - https://memory-series.github.io/ → HTTP 200，主 bundle `index-mu4Dtlme.js`
-    - https://www.traceinhabit.cn/ → HTTP 200，主 bundle `index-DYXyFfqU.js`
+    - `npm run build`（tsc -b → 0；vite build → 0；main `index-Cp38yVaE.js` 487.07 kB / gzip 149.23 kB）——干净重建（先清空 dist）
+    - `npm run lint`（ESLint → 0 错误 0 警告）
+    - `npm run lint:locales`（9 top-level keys zh/en aligned）
+    - dev server（:5173）上 `/media/inhabit-device.mp4` 684845B / `-poster.jpg` 44021B 均 HTTP 200
+    - 用户浏览器实测两个页面，确认无问题
 
 ## 本轮改动
 
-- 本次会话（2026-09-09 late evening + late night）完成 2 项后端工程化债，零 UI 改动：
-    - **cleanup-001**（p2）：删除 src/App.css（grep 确认零引用，纯 Vite 模板死代码；606 字节）
-    - **ci-001**（p0）：.github/workflows/deploy-pages.yml 加 `Lint (ESLint)` + `Lint locales` 两个 step 在 `npm run build` 之前；同时 scripts/lint-locales.cjs REQUIRED map 补 `footer.links.{privacy,terms,contact}` 3 个 key
-- 累计本次完整长会话（下午 + 晚间 + 深夜）完成 **7 项后端工程化债**：
-    - perf-002 / infra-001 / i18n-002 / data-001 / ts-strict-001（Session 016-020，下午 + 晚间）
-    - cleanup-001 / ci-001（Session 022-024 + 本次推送，深夜）
+本次会话（2026-09-12 凌晨）完成 2 项工作，性质与往轮不同——**首次涉及可见 UI 与信息架构改动**：
+
+### split-001（P1，architecture）— 单页拆分为双产品页
+
+**背景**：原 `src/pages/Product.tsx`（717 行单页）把两个产品混在一条叙事线里——Trace/Inhabit SKILL（软件）与 ESP32-S3 硬件（固件烧录 + 角色部署）。读者从「提取人格」被要求「插 USB 烧固件」，心智模型断裂。
+
+- 删除 `src/pages/Product.tsx`；新建 `src/pages/TracePage.tsx` + `src/pages/InhabitDevicePage.tsx`
+- 区块抽到 `src/sections/*`：Hero / Intro / Usage / Demo / Implementation / Contact / FlashDeployRow / **Setup**(新) / **CrossLink**(新) / shared
+- 共享骨架抽到 `src/components/SiteHeader.tsx`（含产品切换器）+ `SiteFooter.tsx`
+- 常量抽到 `src/lib/motion.ts`（ease / fadeUp / scrollToAnchor）—— 为绕开 ESLint `react-refresh/only-export-components`
+- `src/lib/products.ts` 加 `PRODUCT_ROUTES`；`App.tsx` 双页路由，旧路径全部重定向到 `/product/trace`
+- 硬件页新增「完整上手向导」（SetupSection）；两页底部各一张桥接卡（SoulPod 是接口：SKILL 产出、硬件消费）
+- 角色卡两页都放，语义不同（SKILL=产出展示 / Device=可部署角色库）
+
+### showcase-001（P2，content）— 硬件页产品影片区块
+
+- 源素材 `F:/Pictures/TraceInhabit/Memory · Inhabit Device.mp4`（720×1280 竖屏 / 10s / H.264+AAC / 2.9MB）
+- ffmpeg CRF 30 重压 → `public/media/inhabit-device.mp4` **684KB（-76%）** + `+faststart`；抽 1.5s 首帧为 poster（44KB）
+- 新增 `src/sections/ShowcaseSection.tsx`，挂载于硬件页 Hero 之后、Setup 之前
+- 设计决策：竖屏素材不拉伸成 16:9，作为「设备屏幕」立置于区块右侧；金色辉光呼应基调；默认静音自动循环播放，右下角按钮切声音
 
 ### 完整改动清单
 
-**新增文件（4 个）**：
-- `src/lib/i18n-storage.ts`（i18n 持久化 helper）
-- `src/lib/schemas.ts`（zod LocaleSchema + ProductInfoSchema）
-- `src/components/ErrorBoundaryFallback.tsx`（降级 UI 函数组件）
-- `scripts/lint-locales.cjs`（纯 cjs CI gate）
+**新增文件**：
+- `src/pages/TracePage.tsx`、`src/pages/InhabitDevicePage.tsx`
+- `src/sections/`：`HeroSection` `IntroSection` `UsageSection` `DemoSection` `ImplementationSection` `ContactSection` `FlashDeployRow` `SetupSection` `CrossLinkSection` `ShowcaseSection` `shared`
+- `src/components/SiteHeader.tsx`、`src/components/SiteFooter.tsx`
+- `src/lib/motion.ts`
+- `public/media/inhabit-device.mp4`（684KB）、`public/media/inhabit-device-poster.jpg`（44KB）
 
-**删除文件（1 个）**：
-- `src/App.css`（cleanup-001）
+**删除文件**：
+- `src/pages/Product.tsx`（717 行，内容全部拆到 sections）
 
-**修改文件（14 个）**：
-- `vite.config.ts`（sourcemap 'hidden' + ANALYZE 钩子）
-- `tsconfig.app.json`（strict: false → true）
-- `package.json`（+1 devDependency rollup-plugin-visualizer + 1 script lint:locales）
-- `package-lock.json`（rollup-plugin-visualizer 依赖树 + 29 个新包）
-- `src/components/ErrorBoundary.tsx`（升级：name / fallback / onError props + componentDidCatch）
-- `src/i18n.ts`（lng: resolveInitialLng() + fallbackLng: 'en'）
-- `src/main.tsx`（DEV 时调用 assertLocalesAtBoot）
-- `src/pages/Product.tsx`（3 处 ErrorBoundary 包裹 + 语言按钮 persistLng + aria-pressed）
-- `src/locales/zh.json` + `src/locales/en.json`（新增 errorBoundary.degraded.{title,body,retry,reload}）
-- `.github/workflows/deploy-pages.yml`（ci-001 加 lint + lint:locales step）
-- `harness/claude-progress.md`（Session 016-025）
-- `harness/feature_list.json`（21 个功能，20 passing / 1 not_started）
+**修改文件**：
+- `src/App.tsx`（双页路由 + 旧路径重定向）
+- `src/lib/products.ts`（+ `PRODUCT_ROUTES`）
+- `src/locales/zh.json` + `en.json`（+ `productSwitch` `device.hero` `sections.setup` `sections.showcase` `sections.demo.cardMeta*` `bridge.*` `nav.anchors.{deploy,setup}`）
+- `harness/AGENTS.md`（页面结构描述修正 + lint/locales 命令现状）
+- `harness/claude-progress.md`（头部当前状态 + Session 026/027）
+- `harness/feature_list.json`（23 项：22 passing / 1 not_started）
 - `harness/session-handoff.md`（本文件）
 
 ## 仍损坏或未验证
 
 - 已知缺陷：无
 - 未验证路径：
-    - infra-001 的 ErrorBoundary 降级 UI 浏览器手动 throw 验证（build/lint/静态 + dev server 启动验证已通过，但浏览器交互式触发未做）
-    - ts-strict-001 其他 strict flag（`noUncheckedIndexedAccess` 等）按最小改动原则未开启，预演显示会暴露 6 处 CharacterDeploy / Product.tsx 字典访问错误
+    - **本机无浏览器自动化环境**（npm 网络极慢，playwright / agent-browser 装不动）——所有页面验证均依赖用户手动浏览器实测，本轮已确认通过
+    - infra-001 的 ErrorBoundary 降级 UI 浏览器手动 throw 验证仍缺
+    - ts-strict-001 其他 strict flag（`noUncheckedIndexedAccess` 等）按最小改动原则未开启
+    - showcase-001 的 `prefers-reduced-motion` / 字幕文字替代 / 移动端流量优化均未做（记为可选后续，非 blocker）
 - 下一轮会话需要注意的风险：
-    - **两站点 bundle hash 不一致**：GitHub Pages `index-mu4Dtlme.js`（Actions linux 平台 build）vs 京东云 `index-DYXyFfqU.js`（本地 Windows 平台 build）。原因：zod 同步加载在两个平台 tree-shake 行为略不同。功能一致但文件名不同。如需统一，未来可改 zod 为 dynamic import。
-    - npm audit 19 vulnerabilities（既有依赖，2 low / 9 moderate / 8 high，非本次引入）
-    - data-001 引入 zod 同步打包导致 main +59 kB（474.76 kB → gzip 145.56 kB），可后续 dynamic import 优化
-    - safe-delete shim 触发条件：单次删 >50 文件需确认。dist 构建产物已 50+ 文件，触发 vite emptyOutDir 与 dev server deps_temp 清理告警。绕过方式：先手动清空 dist 再 build
+    - **外部旧锚点失效**：`#flash` / `#deploy` 现只在硬件页。指向根域名的旧链接（如公众号文章）会被重定向到 SKILL 页并静默跳到页首。源码内已无硬编码锚点，风险只在外部
+    - **硬件页偏薄**：设备规格表 / FAQ 排障 / 获取渠道三项用户明确暂不选（Session 026 决策），硬件页目前是「影片 + 向导 + 烧录部署 + 角色卡」
+    - **Ardot 设计文件 `724413235736238` 已过时**——它是拆页前的单页版本，后续若要在 Ardot 里调 UI，需先同步成双页结构
+    - 两站点 bundle hash 可能不一致（Actions linux vs 本地 Windows tree-shake 差异），功能一致
+    - npm audit 19 vulnerabilities（既有依赖，非本轮引入）
+    - data-001 引入 zod 同步打包 main +59 kB，可后续 dynamic import 优化
+    - **bash 环境注意**：本机 Git Bash 的 coreutils（`ls`/`head`/`tail`/`dirname`）与 safe-delete shim 在部分会话中不可用；PowerShell 输出捕获也可能失效。可靠路径是用 Python 绝对路径调用 `subprocess` 跑 node 命令（本轮用 `.workbuddy/verify.py` 完成全量验证）
 
 ## 下一步最佳动作
 
 - **本次会话最高优先级未完成功能**：无业务功能阻塞。
-- **未 passing 工作项**：flash-002（WebSerial 烧录链路工程化）—— 第二次用户决策为"收回"（理由：核心业务工程化改动 + 实机验证成本高 + 用户已满意现有 UI 与功能）。保持 not_started。
+- **未 passing 工作项**：flash-002（WebSerial 烧录链路工程化）—— 用户两次决策"收回"。保持 not_started。
 - **可选后续工作**（按 ROI 排序）：
-    1. data-001 zod 体积优化（dynamic import，main -59 kB，P3）
-    2. ts-strict 渐进开启其他 flag（多次小 PR 推进，P3）
-    3. vitest 配置（未来 flash-002 启动前先加测试基建，P2）
-    4. App.css 之外的其他技术债（src/lib/ 边界模糊、shadcn/ui 50+ 全量引入等，按需清理）
-- **这一步中哪些东西不要动**：7 项 passing 后端工程的所有改动（不要因 git diff 而"清理"，它们是已验证的工程化债清理）；不要恢复 ts-strict-001 的 strict: false；不要撤回 data-001 的 zod 同步
+    1. 硬件页补区块：设备规格参数表 / FAQ 排障 / 获取渠道（P2，用户明确说要单独开一轮）
+    2. 同步 Ardot 设计文件为双页结构（P2，便于后续 UI 调整）
+    3. showcase 无障碍与流量优化：`prefers-reduced-motion`、字幕、点击加载（P3）
+    4. data-001 zod 体积优化（dynamic import，main -59 kB，P3）
+    5. vitest 配置（未来 flash-002 启动前先加测试基建，P2）
+- **这一步中哪些东西不要动**：split-001 的区块归属与路由结构（已实测通过）；showcase-001 的竖屏「设备屏幕」呈现方式（竖屏是优势不是缺陷，不要改成 16:9）；7 项 passing 后端工程的所有改动；不要恢复 ts-strict 的 `strict: false`
 
 ## 命令
 
-- 启动命令：`npm run dev`（localhost:5173 或 5274）
+- 启动命令：`npm run dev`（localhost:5173）
 - 验证命令：`npm run build`
 - 定向调试命令：`npm run lint`、`npm run lint:locales`
 - 体积分析命令：`ANALYZE=true npm run build`（生成 dist/stats.html）
 - 部署命令：见 `harness/docs/deployment.md`
-- GitHub Pages：自动（push 到 main 触发；现在含 lint gate，会拦截回归）
+- GitHub Pages：自动（push 到 main 触发；含 lint gate）
+- 京东云：`powershell -ExecutionPolicy Bypass -File scripts/deploy-jd.ps1`（需用户手动，沙箱拦截 SSH）
 
-## Git 状态（全部已推送）
+## Git 状态
 
 ```
-7f2d5bb docs(harness): sync progress log with Session 022-024  (本次收尾)
-413a44d ci: gate GitHub Pages deploy on npm run lint + lint:locales  (ci-001)
-a1ec036 chore(cleanup): remove unused src/App.css  (cleanup-001)
-807a27d docs(harness): sync progress log with Session 016-020 backend hardening  (Session 021)
-4ebdbe9 chore(tsconfig): enable TypeScript strict mode  (ts-strict-001)
-e65be72 feat(data): add locale schema validation + CI gate  (data-001)
-a2babef feat(i18n): persist language preference + symmetric fallback  (i18n-002)
-be794b6 feat(infra): add section-level error boundaries with i18n fallback  (infra-001)
-d2d9ad6 chore(perf): add sourcemap + visualizer for build observability  (perf-002)
+f094616 docs(harness): closeout Session 025 — git add + commit + push + deploy   (上一轮 HEAD)
 ```
+本轮 split-001 + showcase-001 + harness 登记待提交（见 Session 028）。
 
 ## 部署目标状态
 
 | 部署目标 | URL | 主 bundle hash | 状态 |
 |---|---|---|---|
-| **GitHub Pages** | https://memory-series.github.io/ | `index-mu4Dtlme.js` | ✅ Actions run #90 自动完成（56s）|
-| **京东云** | https://www.traceinhabit.cn/ | `index-DYXyFfqU.js` | ✅ 用户 PowerShell 手动跑 deploy-jd.ps1 完成 |
-| **本地 dist** | G:\Memory-Series\Memory-Series.github.io\dist | `index-DYXyFfqU.js` | ✅ 与京东云一致 |
+| **GitHub Pages** | https://memory-series.github.io/ | 待本轮 push 后确认 | 本轮推送后由 Actions 自动部署 |
+| **京东云** | https://www.traceinhabit.cn/ | 旧版（单页） | 用户要求**暂不同步**，留待另行处理 |
+| **本地 dist** | G:\Memory-Series\Memory-Series.github.io\dist | `index-Cp38yVaE.js` | ✅ 干净重建通过 |

@@ -7,7 +7,7 @@
 - 项目名：memory-series-site（Memory Series · Trace / Inhabit 展示站）
 - 技术栈：React 19 + TypeScript + Vite + Tailwind CSS v4 + shadcn/ui + framer-motion + wouter
 - 包管理器：npm（lockfile 为 `package-lock.json`）
-- 唯一页面：`src/pages/Product.tsx`（`/product/trace`，其余路由重定向到它）
+- 页面结构（2026-09-12 起，split-001）：双路由 —— `src/pages/TracePage.tsx`（`#/product/trace`，Trace/Inhabit SKILL）+ `src/pages/InhabitDevicePage.tsx`（`#/product/inhabit-device`，Memory · Inhabit Device 硬件）；其余路由重定向到 `/product/trace`。区块组件在 `src/sections/`，共享骨架为 `src/components/SiteHeader.tsx`（含产品切换器）/ `SiteFooter.tsx`。`src/pages/Product.tsx` 已于 split-001 删除
 - 双语文案：`src/locales/en.json` / `src/locales/zh.json`
 - 产品文案与结构：`src/lib/products.ts`
 - 历史文档（从仓库根目录迁移）：`harness/docs/`（见下方"文档索引"）
@@ -28,8 +28,9 @@
 ```bash
 npm run dev       # 启动 Vite dev server（localhost:5173）
 npm run build     # 标准验证：tsc -b && vite build（类型检查 + 生产构建）
-npm run lint      # ESLint 检查（存在 9 个既有的 shadcn/ui 规则错误，非 blocker）
+npm run lint      # ESLint 检查（当前 0 错误 0 警告；CI 已设为部署门禁）
 npm run preview   # 预览生产构建
+npm run lint:locales  # 中英文案键对齐 + 必填项校验（CI 门禁，纯 cjs 无 TS 依赖）
 ```
 
 注意：`init.sh` 是 bash 脚本，在 Windows cmd 下请用 Git Bash 运行，或直接按本项目命令手动执行。

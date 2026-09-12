@@ -4,12 +4,58 @@
 
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
-- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-08-21 通过
-- 当前最高优先级未完成功能：详见下方 Session 016 新增的 perf-002 / i18n-002 / infra-001（均 not_started）
+- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-12 通过（含 split-001 双页 + showcase-001 视频区块，main `index-Cp38yVaE.js` 487.07 kB）
+- 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
+- 当前最高优先级未完成功能：flash-002（WebSerial 烧录链路工程化 —— 用户两次决策"收回"，保持 not_started）
 - 当前 blocker：无。
-- 附加：`compositions/` 含 Trace/Inhabit 产品宣传视频组合（`index.html`），`trace-inhabit-promo.mp4` 已渲染（2.7MB，18.5s，1920×1080），未提交（见 .gitignore），视频不参与网页；网页已部署京东云 https://www.traceinhabit.cn/（HTTPS 200 已验证，WebSerial 烧录功能可用）
+- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。网页已部署京东云 https://www.traceinhabit.cn/（HTTPS 200 已验证，WebSerial 烧录功能可用）
 
 ## 会话记录
+
+### Session 026
+
+- 日期：2026-09-12
+- 本轮目标：用户提出——当前页面同时承载 Trace/Inhabit SKILL（软件）与 ESP32-S3 硬件（烧录/部署）两个产品，要求拆成两个产品页
+- 诊断结论：9 个区块归属清楚（Hero/简介/使用方式/角色卡/使用情景 → SKILL；固件烧录/角色部署 → 硬件；Header/通讯/Footer 共享）。核心问题不是内容多，而是叙事线断裂——读者从「提取人格」被要求「插 USB 烧固件」。SoulPod 是两页的接口：SKILL 产出、硬件消费
+- 已完成（split-001）：
+  - 删除 `src/pages/Product.tsx`（717 行），新建 `src/pages/TracePage.tsx` + `src/pages/InhabitDevicePage.tsx`
+  - 区块抽到 `src/sections/*`：Hero / Intro / Usage / Demo / Implementation / Contact / FlashDeployRow / Setup(新) / CrossLink(新) / shared
+  - 共享骨架抽到 `src/components/SiteHeader.tsx`（含产品切换器）+ `SiteFooter.tsx`
+  - 常量抽到 `src/lib/motion.ts`（ease / fadeUp / scrollToAnchor）
+  - `src/lib/products.ts` 加 `PRODUCT_ROUTES = { trace: "/product/trace", device: "/product/inhabit-device" }`
+  - `App.tsx` 路由改为双页，旧路径（`/products` `/vision` `/intro` `/principles` `/:rest*`）仍重定向到 `/product/trace`
+  - i18n 新增 `productSwitch.*` `device.hero.*` `sections.setup.*` `sections.demo.cardMetaSkill/cardMetaDevice` `bridge.toDevice.*` `bridge.toSkill.*`；`nav.anchors` 加 `deploy` / `setup`
+- 运行过的验证：`npm run build` 通过（main `index-BbiuUVt2.js` 483.92 kB）；`npm run lint` 0 错误 0 警告；`npm run lint:locales` ✓
+- 已记录证据：feature_list.json 的 split-001（passing）
+- 提交记录：无（用户约定：验证后再提交）
+- 更新过的文件或工件：见上（新增 2 页 + 10 个 section + 2 个共享组件 + motion.ts；删除 Product.tsx）+ `harness/feature_list.json`
+- 已知风险或未解决问题：
+  - **硬件页偏薄**：新增区块只做了「完整上手向导」，设备规格表 / FAQ 排障 / 获取渠道三项用户明确暂不选（最小改动原则，吸取 flash-ui-001 翻车教训）
+  - **外部旧锚点失效**：`#flash` / `#deploy` 现只在硬件页，指向根域名的旧链接会被重定向到 SKILL 页并静默跳到页首。源码内已无硬编码锚点，风险只存在于外部（公众号文章）
+  - Ardot 设计文件 `724413235736238` 为拆页前的单页版本，已过时
+- 下一步最佳动作：用户浏览器验证后提交；硬件页后续可补规格表 / FAQ / 获取渠道
+
+### Session 027
+
+- 日期：2026-09-12
+- 本轮目标：用户提供硬件产品宣传视频，要求放到 Inhabit Device 页
+- 素材：`F:/Pictures/TraceInhabit/Memory · Inhabit Device.mp4` —— 720×1280 竖屏 / 10s / H.264+AAC / 2.9MB @2.3Mbps，内容为设备实拍（圆形吊坠屏显 Q 版角色，暖色调）
+- 已完成（showcase-001）：
+  - ffmpeg CRF 30 重压 → `public/media/inhabit-device.mp4` **684KB（-76%）**，保留音轨，`+faststart` 支持边下边播
+  - 抽 1.5s 首帧 → `public/media/inhabit-device-poster.jpg`（44KB），避免加载黑屏
+  - 文件名去空格/中文，URL 安全
+  - 新增 `src/sections/ShowcaseSection.tsx`，挂载于 `InhabitDevicePage.tsx`（Hero 之后、SetupSection 之前）
+  - i18n 新增 `sections.showcase.{eyebrow,title,lead,hint,mute,unmute}` 中英双语
+  - public 资源用 `import.meta.env.BASE_URL` 拼接（vite `base: "./"`，与 FirmwareFlash 现有写法一致）
+- 设计决策：**竖屏素材不拉伸成 16:9**（会上下留黑边），而是作为「设备屏幕」立置于区块右侧（h-420/520px，9:16），金色 radial 辉光呼应全局基调。默认 `muted + autoplay + loop + playsInline`（浏览器 autoplay 策略要求 muted），右下角浮动按钮切声音并从 0s 重播
+- 运行过的验证：`npm run build` 通过（main `index-Cp38yVaE.js` 487.07 kB）；`npm run lint` 0 错误 0 警告；`npm run lint:locales` ✓（9 top-level keys 对齐）；dev server 上视频 684845B / poster 44021B 均 200
+- 已记录证据：feature_list.json 的 showcase-001（passing）
+- 提交记录：无（用户验证后统一提交）
+- 更新过的文件或工件：`public/media/`（新增 2 个媒体文件）、`src/sections/ShowcaseSection.tsx`（新增）、`src/pages/InhabitDevicePage.tsx`、`src/locales/zh.json` + `en.json`
+- 已知风险或未解决问题：
+  - 无浏览器截图验证（本机 npm 网络极慢，装不动 playwright / agent-browser），由用户在浏览器实测
+  - 未处理 `prefers-reduced-motion`（项目全局均无该处理）；无字幕/文字替代；移动端 684KB 自动播放对流量敏感用户不友好 —— 均记为后续可选项
+  - ffmpeg 位于 `G:/Memory-Series/Esp32S3/tools/microwakeword-xiayizhou/scripts/ffmpeg/bin`
 
 ### Session 016
 

@@ -4,15 +4,20 @@ import { Router, Route, Switch, Redirect } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import Product from "@/pages/Product";
+import TracePage from "@/pages/TracePage";
+import InhabitDevicePage from "@/pages/InhabitDevicePage";
+import { PRODUCT_ROUTES } from "@/lib/products";
 
 // Hash routing: only Trace/Inhabit product page is exposed; all other paths redirect here.
 function AppRouter() {
   return (
     <Router hook={useHashLocation}>
       <Switch>
-        <Route path="/product/trace">
-          <Product keyParam="trace" />
+        <Route path={PRODUCT_ROUTES.trace}>
+          <TracePage />
+        </Route>
+        <Route path={PRODUCT_ROUTES.device}>
+          <InhabitDevicePage />
         </Route>
         <Route path="/product/:key">
           <Redirect to="/product/trace" replace />
