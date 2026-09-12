@@ -12,6 +12,33 @@
 
 ## 会话记录
 
+### Session 028
+
+- 日期：2026-09-12
+- 本轮目标：修正 harness 欠账（Session 026/027 未登记）→ 提交推送 GitHub → 部署线上。用户明确指示：**京东云本轮暂不同步**
+- 已完成：
+  - harness 欠账修正（连做两轮未登记，属本会话疏漏）：
+    - `feature_list.json`：新增 showcase-001（passing）；补全 split-001 证据（用户已验证）；`last_updated` → 2026-09-12。现 **23 项 / 22 passing / 1 not_started（flash-002）**
+    - `claude-progress.md`：头部「当前已验证状态」重写（双路由结构、最新 hash、未完成项收敛为 flash-002）；补 Session 026（split-001）+ Session 027（showcase-001）
+    - `session-handoff.md`：整份重写（本轮改动、未验证路径、风险、可选后续工作）
+    - `AGENTS.md`：修正两处过时描述——① 项目速览仍写「唯一页面 Product.tsx」（已删）；② 命令说明仍写「存在 9 个既有 lint 错误」（现为 0），并补 `lint:locales` 命令与 CI 门禁说明
+  - 验证：`tsc -b` 0 / `vite build` 0（main `index-Cp38yVaE.js` 487.07 kB / gzip 149.23 kB）/ `eslint` 0 错误 0 警告 / `lint:locales` ✓ —— 干净重建（先清空 dist）
+  - 提交：单 commit `61132a1`（功能 + harness 登记合一，避免拆页与视频改动共享 locale 文件而无法干净分离）
+  - 推送：`git push origin main` 成功（`f094616..61132a1`）
+  - GitHub Actions run `34662124552`：**build 46s（Lint ESLint ✓ / Lint locales ✓ / build ✓）+ deploy 9s ✓** —— ci-001 的 lint gate 第二次实测生效
+  - 线上验证（https://memory-series.github.io/）：首页 200；主 bundle `index-2BFTwUJQ.js` 内 `Ten seconds of it` / `media/inhabit-device.mp4` / `-poster.jpg` / `/product/inhabit-device` / `/product/trace` / `bridge.toSkill` 标记全部 FOUND；`/media/inhabit-device.mp4` 200 684845B video/mp4、`-poster.jpg` 200 44021B image/jpeg
+- 已记录证据：本条 + git log + Actions run 34662124552 + 线上 bundle 特征检查
+- 提交记录：`61132a1 feat(ui): split site into two product pages and add device product film`（已推送）
+- 更新过的文件或工件：`harness/AGENTS.md`、`harness/claude-progress.md`、`harness/feature_list.json`、`harness/session-handoff.md`
+- 已知风险或未解决问题：
+  - **京东云仍是单页旧版**（`https://www.traceinhabit.cn/`）—— 用户本轮明确要求暂不同步，需另行处理（命令：`powershell -ExecutionPolicy Bypass -File scripts/deploy-jd.ps1`）
+  - 两站点 bundle hash 不同：GitHub Pages `index-2BFTwUJQ.js`（linux）vs 本地/京东云 `index-Cp38yVaE.js`（Windows）—— 已知跨平台 tree-shake 差异，功能一致
+  - **本机环境故障记录**：Git Bash 的 coreutils（`ls`/`head`/`tail`/`dirname`/`cat`）与 safe-delete shim 在本轮不可用；PowerShell 输出捕获也失效（`Write-Output` 无回显）。可用替代路径：Python 绝对路径 + `subprocess` 调 node（`.workbuddy/verify.py`）/ urllib 验证线上（`.workbuddy/verify_site.py`）
+- 下一步最佳动作：
+  1. 用户决定何时同步京东云
+  2. 硬件页补区块（设备规格参数表 / FAQ 排障 / 获取渠道）—— 用户已表示单独开一轮
+  3. 同步 Ardot 设计文件为双页结构（当前 `724413235736238` 仍是拆页前单页版本）
+
 ### Session 026
 
 - 日期：2026-09-12

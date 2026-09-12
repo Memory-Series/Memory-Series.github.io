@@ -9,6 +9,9 @@
     - `npm run lint:locales`（9 top-level keys zh/en aligned）
     - dev server（:5173）上 `/media/inhabit-device.mp4` 684845B / `-poster.jpg` 44021B 均 HTTP 200
     - 用户浏览器实测两个页面，确认无问题
+    - `git push origin main` 成功（`f094616..61132a1`）
+    - GitHub Actions run #34662124552：build 46s（Lint ESLint ✓ / Lint locales ✓ / build ✓）+ deploy 9s ✓
+    - 线上 https://memory-series.github.io/ → 200，主 bundle `index-2BFTwUJQ.js`，其内 showcase 文案 / 视频路径 / 双路由 / bridge key 全部 FOUND；`/media/inhabit-device.mp4` 200 684845B、`-poster.jpg` 200 44021B
 
 ## 本轮改动
 
@@ -93,17 +96,18 @@
 - GitHub Pages：自动（push 到 main 触发；含 lint gate）
 - 京东云：`powershell -ExecutionPolicy Bypass -File scripts/deploy-jd.ps1`（需用户手动，沙箱拦截 SSH）
 
-## Git 状态
+## Git 状态（已推送）
 
 ```
-f094616 docs(harness): closeout Session 025 — git add + commit + push + deploy   (上一轮 HEAD)
+61132a1 feat(ui): split site into two product pages and add device product film   (本轮，已推送 = origin/main)
+f094616 docs(harness): closeout Session 025 — git add + commit + push + deploy
 ```
-本轮 split-001 + showcase-001 + harness 登记待提交（见 Session 028）。
+工作区干净。
 
 ## 部署目标状态
 
 | 部署目标 | URL | 主 bundle hash | 状态 |
 |---|---|---|---|
-| **GitHub Pages** | https://memory-series.github.io/ | 待本轮 push 后确认 | 本轮推送后由 Actions 自动部署 |
-| **京东云** | https://www.traceinhabit.cn/ | 旧版（单页） | 用户要求**暂不同步**，留待另行处理 |
-| **本地 dist** | G:\Memory-Series\Memory-Series.github.io\dist | `index-Cp38yVaE.js` | ✅ 干净重建通过 |
+| **GitHub Pages** | https://memory-series.github.io/ | `index-2BFTwUJQ.js` | ✅ Actions run #34662124552（build 46s + deploy 9s）；线上 bundle 特征全 FOUND，媒体 200 |
+| **京东云** | https://www.traceinhabit.cn/ | `index-DYXyFfqU.js` | ⚠️ **仍是单页旧版**——用户本轮明确要求暂不同步；需另行 `powershell -ExecutionPolicy Bypass -File scripts/deploy-jd.ps1` |
+| **本地 dist** | G:\Memory-Series\Memory-Series.github.io\dist | `index-Cp38yVaE.js` | ✅ 干净重建通过（Windows 构建，与 Pages 的 linux hash 不同属已知差异） |
