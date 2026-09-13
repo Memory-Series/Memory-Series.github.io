@@ -25,7 +25,8 @@
       "flash": "Flash",
       "deploy": "Deploy",
       "setup": "Setup",
-      "assets": "Assets"
+      "assets": "Assets",
+      "faq": "FAQ"
     }
   },
   "device": {
@@ -207,6 +208,40 @@
         "fpsValue": "24 FPS",
         "limit": "Recommended size",
         "limitValue": "Boot animation ≤ 3 MB"
+      }
+    },
+    "faq": {
+      "eyebrow": "Troubleshooting",
+      "title": "If something goes wrong, start here.",
+      "lead": "The most common situations, in order. Most of them you can fix yourself.",
+      "items": {
+        "flashFail": {
+          "q": "Flashing fails, or stalls partway through",
+          "step1": "Use Chrome or Edge — Safari and Firefox do not support WebSerial and cannot flash the device.",
+          "step2": "Check that the address starts with https://. WebSerial only works over HTTPS; both of our sites already serve HTTPS.",
+          "step3": "Swap in a USB cable you know carries data. Plenty of cables charge only and cannot communicate.",
+          "step4": "Close anything else holding the serial port (serial monitors, Arduino IDE, PlatformIO), then try again."
+        },
+        "deviceNotDetected": {
+          "q": "\"Connect\" does nothing, or no port shows up",
+          "step1": "Unplug the device, plug it back in, reload the page, then click connect again.",
+          "step2": "Try a different USB port, ideally straight into the computer rather than through a hub or monitor passthrough.",
+          "step3": "On Windows, if the device shows as unrecognised, install the CP210x or CH34x USB-to-serial driver first.",
+          "step4": "Confirm your board is the Waveshare 1.85B (ESP32-S3) — the current firmware supports only this model."
+        },
+        "soulpodImport": {
+          "q": "I copied the SoulPod over, but the character does not appear",
+          "step1": "Make sure the zip is extracted — the device cannot read an archive directly.",
+          "step2": "Check there is no extra nesting level: you should have the character folder itself, not character/character/.",
+          "step3": "Place it at /sdcard/personas/<character>/ on the SD card, containing profile.json, config.json, memories and prompt.",
+          "step4": "Reinsert the SD card and restart the device — new characters load only after a reboot."
+        },
+        "bootAnimation": {
+          "q": "I replaced the boot animation, but nothing changed on startup",
+          "step1": "Match the path and filename exactly: /sdcard/system/boot/boot.eaf. The filename cannot be changed.",
+          "step2": "Use the original .eaf downloaded from the Assets section on this page — do not transcode or re-save it.",
+          "step3": "Restart the device after overwriting; the new animation only takes effect after a reboot."
+        }
       }
     }
   },
