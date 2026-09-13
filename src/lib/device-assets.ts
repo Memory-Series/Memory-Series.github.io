@@ -27,7 +27,16 @@ export const DEVICE_PATHS = {
  * Phase-1 guidance limits, surfaced in the UI so users can sanity-check a file
  * before copying it onto the card.
  */
-export const BOOT_EAF_SIZE_LIMIT = 3 * 1024 * 1024; // 3 MB
+/**
+ * Hard ceiling, not a stylistic preference: firmware reads at most
+ * `EMOTE_SD_BOOT_EAF_READ_MAX` (8 MB) and additionally needs ~256 KB of PSRAM
+ * headroom, so a boot animation above this simply will not load.
+ *
+ * 3 MB used to be quoted here as "the limit" — it is only the size of the
+ * reference file, and stating it as a ceiling understated what is actually
+ * possible.
+ */
+export const BOOT_EAF_SIZE_LIMIT = 8 * 1024 * 1024; // 8 MB
 export const BOOT_EAF_FPS = 24;
 export const DIALOGUE_BG_WIDTH = 412;
 export const DIALOGUE_BG_HEIGHT = 412;
@@ -84,12 +93,21 @@ export interface DialogueAssetEntry extends DeviceAssetEntry {
  * Boot animation — one build only.
  *
  * This is the production default: a starfield resolving into the
- * "恋与深空 / LOVE AND DEEPSPACE" wordmark, rendered at 280×280, 3.05 MB.
+ * "恋与深空 / LOVE AND DEEPSPACE" wordmark, 412×412 per frame, 211 frames at
+ * 24 FPS (~8.8 s), 2.91 MB on disk.
  *
- * A 1200×1200 high-resolution master also exists in the source material, but it
- * is ~6.2 MB — well over the recommended ceiling — and shipping it alongside the
- * default only invites confusion about which one belongs on the device. It is
- * deliberately not offered here.
+ * A 1200×1200 high-resolution master also exists in the source material. It is
+ * deliberately not offered — not because of size (it would still fit inside the
+ * 8 MB ceiling), but because shipping two boot animations side by side invites
+ * confusion about which one actually belongs on the device. One canonical
+ * default is clearer than a choice.
+ *
+ * Two earlier mistakes, corrected 2026-09-14 and recorded here so they do not
+ * come back:
+ *   - Resolution was listed as 280×280. That is the web preview thumbnail
+ *     (`boot-preview-default.png`); the real EAF frame is 412×412.
+ *   - The size ceiling was listed as 3 MB. That is the reference file's size,
+ *     not a limit. The firmware cap is 8 MB.
  *
  * Note: the original GIF exports read as completely black (a Lottie export
  * artifact). The preview below was generated from raw RGB565A8 frames instead
@@ -101,7 +119,9 @@ export const BOOT_ASSETS: DeviceAssetEntry[] = [
     id: "boot-default",
     labelKey: "bootDefault",
     previewPath: "assets/boot/boot-preview-default.png",
-    sourceSize: "280 × 280",
+    // Real EAF frame size, read from the file's frame header. The 280×280
+    // preview PNG next to it is only a web thumbnail.
+    sourceSize: "412 × 412",
     files: [
       {
         fileName: "boot.eaf",

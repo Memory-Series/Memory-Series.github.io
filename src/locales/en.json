@@ -192,13 +192,13 @@
       "bootGroupMeta": "Replaces /sdcard/system/boot/boot.eaf",
       "dialogueGroupTitle": "Dialogue bubble background",
       "dialogueGroupMeta": "Replaces /sdcard/personas/<character>/assets/ui/dialogue_bg.bin",
-      "boot": {
-        "bootDefault": "Default · 280p",
-        "dialogueBg": "Dialogue background"
-      },
-      "notes": {
-        "bootDefaultNote": "The production default — 3.05 MB, right around the recommended 3 MB ceiling. Recommended."
-      },
+  "boot": {
+    "bootDefault": "Default",
+    "dialogueBg": "Dialogue background"
+  },
+  "notes": {
+    "bootDefaultNote": "The production default — comfortably under the 8 MB ceiling. Recommended."
+  },
       "converter": {
         "eyebrow": "Custom asset",
         "title": "Upload an image, make a dialogue background",
@@ -222,14 +222,16 @@
         }
       },
       "spec": {
-        "format": "Boot format",
-        "formatValue": ".eaf (full-screen frame sequence, 24 FPS)",
-        "dialogueSize": "Bubble size",
-        "dialogueSizeValue": "412 × 412, RGB565A8, exactly 509,244 bytes",
-        "fps": "Frame rate",
-        "fpsValue": "24 FPS",
-        "limit": "Recommended size",
-        "limitValue": "Boot animation ≤ 3 MB"
+    "format": "Boot format",
+    "formatValue": ".eaf (full-screen frame sequence, 24 FPS)",
+    "bootSize": "Boot frame size",
+    "bootSizeValue": "412 × 412 per frame (reference file: 211 frames · ~8.8 s)",
+    "dialogueSize": "Bubble size",
+    "dialogueSizeValue": "412 × 412, RGB565A8, exactly 509,244 bytes",
+    "fps": "Frame rate",
+    "fpsValue": "24 FPS",
+    "limit": "Size limit",
+    "limitValue": "Boot animation ≤ 8 MB (firmware hard cap)"
       }
     },
     "faq": {
