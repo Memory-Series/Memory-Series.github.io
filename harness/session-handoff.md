@@ -4,7 +4,7 @@
 
 ## 当前已验证
 
-- 工作区：Session 036 的 a11y-001 + FAQ 改动与 harness 更新已提交并推送（见文末 Git 状态）。
+- 工作区干净，本地与 `origin/main` 完全同步（`6bebe4c`）。a11y-001 + FAQ 已提交、推送，并已发布到京东云与 GitHub Pages。
 - **32 项特性：25 passing / 5 not_started / 2 wont_do**（2026-09-13 盘点新增 backlog 后为 29 项，Session 036 两项转 passing，Session 037 两项转为 wont_do）。
 - 标准验证路径：`npm run build`（tsc -b → 0；vite build → 0）。当前构建 main `index-DkJ_lMkd.js` 517.08 kB（含 FAQ 区块后）。
 - 本轮（2026-09-13）跑过的验证：
@@ -108,13 +108,13 @@
 ## Git 状态（已推送）
 
 ```
-docs(harness): mark device-spec-003 and flash-002 as wont_do   (Session 037，本批最新)
+6bebe4c docs(harness): record September 13 release to GitHub Pages and JD Cloud   (Session 037 收尾)
+fb1c439 docs(harness): mark device-spec-003 and flash-002 as wont_do
 c05397b feat(device): add FAQ troubleshooting section to Inhabit Device page
 7f9299f feat(a11y): respect prefers-reduced-motion across the site
-9049656 feat(device): add asset library section to Inhabit Device page   (2026-09-13 00:21)
-61132a1 feat(ui): split site into two product pages and add device product film
+89349c1 docs(harness): fix Session 035 commit record lost to shell quoting
 ```
-工作区干净（本批三个提交已合入，均已推送 origin/main）。a11y-001 与 FAQ 两项已随本批提交。
+工作区干净，本地与 `origin/main` 完全同步（0/0）。a11y-001 与 FAQ 两项已随本批提交并发布。
 
 ## 部署目标状态
 
