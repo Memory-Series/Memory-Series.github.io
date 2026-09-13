@@ -25,7 +25,8 @@
       "flash": "烧录",
       "deploy": "部署",
       "setup": "上手",
-      "assets": "素材"
+      "assets": "素材",
+      "faq": "排障"
     }
   },
   "device": {
@@ -200,6 +201,40 @@
         "fpsValue": "24 FPS",
         "limit": "推荐体积上限",
         "limitValue": "开机动画 ≤ 3 MB"
+      }
+    },
+    "faq": {
+      "eyebrow": "排障",
+      "title": "出问题的时候，先看这里。",
+      "lead": "下面列的是最常见的几种情况。按顺序试一遍，多数都能自己解决。",
+      "items": {
+        "flashFail": {
+          "q": "烧录失败，或者卡在某个进度不动",
+          "step1": "确认你用的是 Chrome 或 Edge —— Safari、Firefox 不支持 WebSerial，无法烧录。",
+          "step2": "确认页面地址是 https:// 开头。WebSerial 只在 HTTPS 下可用，本站两个地址都已启用 HTTPS。",
+          "step3": "换一根确定能传数据的 USB 线，很多线只能充电、不能通信。",
+          "step4": "先关掉其他占用串口的软件（串口监视器、Arduino IDE、PlatformIO 等），再回来重试。"
+        },
+        "deviceNotDetected": {
+          "q": "点了「连接设备」没反应，或列表里没有端口",
+          "step1": "重新插拔设备，刷新页面后再点一次连接。",
+          "step2": "换一个 USB 口，尽量直连电脑，不要经过 USB 集线器或显示器扩展口。",
+          "step3": "Windows 若提示未识别的设备，先安装 CP210x 或 CH34x 的 USB 转串口驱动。",
+          "step4": "确认你的板子是微雪 1.85B（ESP32-S3）—— 当前固件仅支持这一款。"
+        },
+        "soulpodImport": {
+          "q": "SoulPod 放进去了，但设备上没有这个角色",
+          "step1": "确认 zip 已经解压 —— 设备无法直接读取压缩包。",
+          "step2": "确认没有多套一层目录：解压后应直接是角色文件夹，而不是「角色文件夹/角色文件夹/」。",
+          "step3": "确认放在 SD 卡的 /sdcard/personas/<角色名>/ 下，且含 profile.json / config.json / memories / prompt。",
+          "step4": "重新插入 SD 卡并重启设备，新角色在重启后才会加载。"
+        },
+        "bootAnimation": {
+          "q": "换了开机动画，但开机时没变",
+          "step1": "确认路径与文件名完全一致：/sdcard/system/boot/boot.eaf，文件名不能改。",
+          "step2": "确认用的是本页「素材库」下载的原始 .eaf 文件，没有经过转码或另存。",
+          "step3": "覆盖完成后必须重启设备，新的开机动画才会生效。"
+        }
       }
     }
   },
