@@ -6,13 +6,36 @@
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 a11y-001 reduced-motion + device-spec-001 FAQ + assets-003 对话底图转换器，main `index-BJb2NKRP.js` 530.64 kB）
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
-- 当前进行中功能：**无**。**33 项特性：26 passing / 5 not_started / 2 wont_do**；最新完成的 `assets-003`（浏览器端对话底图转换器）已 passing
+- 当前进行中功能：**无**。**35 项特性：27 passing / 6 not_started / 2 wont_do**；最新完成的 `assets-005`（素材库指标文案校正）已 passing
 - 当前 blocker：无
 - **用户已否决项（2026-09-13，wont_do，勿再提议/追问）**：`device-spec-003`（获取渠道 —— 用户原话「获取渠道不用做」）、`flash-002`（WebSerial 烧录链路工程化 —— 用户原话「这个 flash-002 也不要动」）。`backend-001`(vitest) 原本只是 flash-002 的回归网前置，该前置理由随之失效，现为「需用户单独拍板是否因测试基建自身价值而启动」，不得默认连带启动
 - **方向变更（2026-09-12）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
 - 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 与 GitHub Pages 均已发布至含 a11y-001 + FAQ + assets-003 的版本（2026-09-13）**：京东云 `index-BJb2NKRP.js`（530,635 B，MD5 与本地 dist 完全一致）；GitHub Pages `index-BuWiUEbm.js`（521,490 chars，linux 构建 hash 差异属已知平台差异）。两站均已校验：原 10/10 特征串命中 + 新增转换器文案命中；CSS 含 `prefers-reduced-motion`；6 个在售素材 MD5 一致、3 个已下架素材不可达；京东云另做真实浏览器转换器 E2E（上传 PNG → canvas 412×412 → 下载 509,244 B `dialogue_bg.bin`）
 
 ## 会话记录
+
+### Session 040
+
+- 日期：2026-09-14
+- 本轮目标：盘点剩余工作 + 完成 `assets-005`（素材库指标文案校正）
+- **用户指令**：`很好，下面需要实现的任务是什么` → 盘点后用户选择「先做零风险的」，即只做 `assets-005`
+- **盘点结果（35 项 / 27 passing / 6 not_started / 2 wont_do）**，按「能否立即动手」分三档：
+  - 第一档（无需用户提供任何东西）：`assets-005`（文案校正，线上就显示着错的）、`perf-003`（zod dynamic import，−59 kB）
+  - 第二档（需用户给内容）：`assets-002`（等素材）、`device-spec-002`（要真实硬件参数）、`a11y-002`（需字幕/文案决策）
+  - 第三档（需用户拍板）：`assets-004`（GIF→EAF，需实机验证）、`backend-001`（vitest，前置理由已失效）
+  - 用户就 `assets-004` 表示**实机验证不确定** → 本轮不启动，只做零风险项
+- **已完成：assets-005 → passing**
+  - `src/lib/device-assets.ts`：开机动画 `sourceSize` `280 × 280` → `412 × 412`；`BOOT_EAF_SIZE_LIMIT` 3 MB → **8 MB**（固件 `EMOTE_SD_BOOT_EAF_READ_MAX` 硬上限）；注释记录两处历史错误防止复发
+  - `zh.json` / `en.json`：卡片标题「默认款 · 280p」→「默认款」（分辨率交给规格 chip 显示，避免重复）；note 去掉写死的「3.05 MB」；规格表 `推荐体积上限 ≤ 3 MB` → `体积上限 ≤ 8 MB（固件硬上限）`；**新增**「开机动画帧尺寸 412 × 412 每帧（参考文件 211 帧 · 约 8.8 秒）」一行
+  - `DeviceAssetsSection.tsx`：规格表由 4 行扩为 5 行
+- **修正时发现的第三处错误（原先未登记）**：卡片 note 写「3.05 MB」（十进制），而 UI 的 `formatBytes()` 用二进制单位、实际显示「2.91 MB」——同一文件两个数字打架。改为不写死数字。
+- **一并澄清的口径**：删高清款的原始理由「超过 3 MB 上限」在 8 MB 口径下不成立（6.2 MB 放得下）；决策不变（用户原话「留了反而会造成误会」），但注释理由改为「两个开机动画并列会让人不知道该用哪个」
+- **验证**：tsc -b / eslint / lint:locales / vite build 全绿（main `index-BZjDMgIO.js` 531.26 kB，+0.62 kB 纯文案）；`.workbuddy/verify-assets-005.py` 真实浏览器双语渲染 —— 必备文案 4/4 命中、陈旧文案 4/4 消失（`280` / `≤ 3 MB` / `3.05 MB` / `推荐体积上限`）、控制台 0 error；规格表 5 行中英一致
+- 已记录证据：`feature_list.json` assets-005 evidence（4 条）+ 本条
+- 提交记录：`27ba06a fix(device): correct asset library specs to measured values`
+- 更新过的文件或工件：`src/lib/device-assets.ts`、`src/locales/zh.json`、`src/locales/en.json`、`src/sections/DeviceAssetsSection.tsx`、`harness/feature_list.json`、`harness/claude-progress.md`、`harness/session-handoff.md`
+- 已知风险或未解决问题：无
+- 下一步最佳动作：`perf-003`（零风险、无需用户提供内容）可立即启动；`assets-004` 待用户确认能否实机验证后再开
 
 ### Session 039
 

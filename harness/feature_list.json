@@ -618,14 +618,19 @@
       "area": "device",
       "title": "素材库指标文案校正（开机动画真实分辨率 412×412、上限 8 MB）",
       "user_visible_behavior": "素材库现有文案与实物不符处改为实测值：开机动画卡片由「默认款 · 280p」改为 412×412；「推荐体积上限 ≤ 3 MB」改为 EAF 硬上限 8 MB（并保留 3 MB 为「参考文件体积」而非上限）。",
-      "status": "not_started",
+      "status": "passing",
       "verification": [
         "开机动画卡片标注 412 × 412（与 .eaf 帧头实测一致）",
         "体积上限表述与 EMOTE_SD_BOOT_EAF_READ_MAX（8 MB）一致",
         "中英双语同步，lint:locales 通过；npm run build / lint 全绿"
       ],
-      "evidence": [],
-      "notes": "**2026-09-13 逆向固件时发现的既有错误**：\n- `public/assets/boot/boot-preview-default.png` 是 **280×280**，但那是网页预览缩略图；`boot-default.eaf` 的**真实帧尺寸是 412×412**（实测帧头 `width=412 height=412 blocks=52 block_height=8`，211 帧，24 FPS ≈ 8.79 s）。UI 上的 `sourceSize: \"280 × 280\"` 与 i18n 的「默认款 · 280p」均与实物不符。\n- EAF 硬上限为 8 MB（`EMOTE_SD_BOOT_EAF_READ_MAX`），文案里的「≤ 3 MB」是建议值而非上限。\n**为什么暂不在 assets-003 里顺手改**：属独立的内容修正，与转换器功能无耦合；按 harness「一次只做一个功能」原则单列，待用户确认后再动。\n"
+      "evidence": [
+        "2026-09-14：`.workbuddy/verify-assets-005.py` 真实浏览器渲染（zh + en 双语）—— 必备文案 4/4 命中，陈旧文案 4/4 不再出现（`280` / `≤ 3 MB` / `3.05 MB` / `推荐体积上限`），控制台 0 error",
+        "渲染后的规格表为 5 行，中英一致：开机动画帧尺寸 412 × 412 每帧（参考文件 211 帧 · 约 8.8 秒）；体积上限 开机动画 ≤ 8 MB（固件硬上限）",
+        "开机动画卡片 chip 由 `280 × 280` 改为 `412 × 412`（与 .eaf 帧头实测 width/height 一致）；标题保留「默认款」以免与 chip 重复显示分辨率",
+        "tsc -b / eslint / lint:locales / vite build 全绿；main `index-BZjDMgIO.js` 531.26 kB（较 assets-003 版 +0.62 kB，纯文案）"
+      ],
+      "notes": "**2026-09-13 逆向固件时发现的既有错误**（2026-09-14 已修正，Session 040）：\n- `public/assets/boot/boot-preview-default.png` 是 **280×280**，但那是网页预览缩略图；`boot-default.eaf` 的**真实帧尺寸是 412×412**（实测帧头 `width=412 height=412 blocks=52 block_height=8`，211 帧，24 FPS ≈ 8.79 s）。UI 上的 `sourceSize: \"280 × 280\"` 与 i18n 的「默认款 · 280p」均与实物不符。\n- EAF 硬上限为 8 MB（`EMOTE_SD_BOOT_EAF_READ_MAX`），文案里的「≤ 3 MB」是建议值而非上限。\n**为什么当时没在 assets-003 里顺手改**：属独立的内容修正，与转换器功能无耦合；按 harness「一次只做一个功能」原则单列。用户 2026-09-14 选择「先做零风险的」后启动本项。\n\n**修正时额外发现的第三处错误**：卡片 note 里写「3.05 MB」，但 UI 自己的 `formatBytes()` 用二进制单位、实际显示 `2.91 MB` —— 同一份文件的两个数字打架。已把 note 改为不写具体数字（卡片本来就显示了体积），避免文件变动后再次失准。\n\n**一并澄清的口径**：删除高清款（1200×1200 / ~6.2 MB）的**原始理由是「超过 3 MB 上限」**，在 8 MB 口径下这个理由不成立（6.2 MB 其实放得下）。决策本身不变——用户原话「留了反而会造成误会」——但注释里的理由已改写为「两个开机动画并列会让人不知道该用哪个」，不再用错误的体积理由支撑。\n"
     }
   ]
 }

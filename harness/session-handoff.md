@@ -1,12 +1,13 @@
 # 会话交接
 
-> 最后更新：2026-09-13（Session 034 收尾后全面重写 —— 此前内容停留在 Session 026/027 时代，已严重过期）
+> 最后更新：2026-09-14（Session 040 后更新 —— 完成 assets-005 素材库指标文案校正）
+> 历史：2026-09-13 Session 034 收尾后曾全面重写（此前内容停留在 Session 026/027 时代，已严重过期）
 
 ## 当前已验证
 
-- 工作区干净，本地与 `origin/main` 完全同步（`85ef8ec`）。a11y-001 + FAQ + assets-003（浏览器端对话底图转换器）已提交、推送。
-- **33 项特性：26 passing / 5 not_started / 2 wont_do**（最新完成 `assets-003`，拆分为 `assets-004` GIF→EAF 与 `assets-005` 文案校正）。
-- 标准验证路径：`npm run build`（tsc -b → 0；vite build → 0）。当前构建 main `index-BJb2NKRP.js` 530.64 kB（含对话底图转换器后 +13 kB）。
+- 工作区干净，本地与 `origin/main` 同步（`27ba06a`）。a11y-001 + FAQ + assets-003（对话底图转换器）+ assets-005（指标文案校正）已提交、推送；assets-005 **尚未部署到线上**。
+- **35 项特性：27 passing / 6 not_started / 2 wont_do**（最新完成 `assets-005` 素材库指标文案校正，Session 040）。
+- 标准验证路径：`npm run build`（tsc -b → 0；vite build → 0）。当前构建 main `index-BZjDMgIO.js` 531.26 kB（含 assets-005 文案校正后 +0.62 kB）。
 - 本轮（2026-09-13）跑过的验证：
     - `npm run lint:locales` exit 0（9 top-level keys zh/en aligned）
     - `tsc -b` exit 0
@@ -71,7 +72,7 @@
 |---|---|---|---|
 | `assets-002` | 2 | 素材库扩容：main.eaf + 其余 4 角色气泡底图 | **等素材** |
 | `assets-004` | 2 | 浏览器端 GIF → boot.eaf 开机动画转换器 | 格式可行但约束硬（固定 24 FPS、8 MB 上限、需色彩量化/压缩）；**需实机验证**，第二期 |
-| `assets-005` | 3 | 素材库指标文案校正 | 开机动画卡片「280p」→ 412×412；「推荐 ≤3 MB」→ 硬上限 8 MB |
+| `assets-005` | 3 | ~~素材库指标文案校正~~ | ✅ **2026-09-14 已完成 passing**（Session 040）：412×412 / 8 MB / 新增帧尺寸行 |
 | `device-spec-002` | 3 | 设备规格参数表 | 需用户提供真实硬件参数，不可编造 |
 | `a11y-002` | 3 | 视频字幕 + 移动端点击加载 | 涉及新文案与视频资源 |
 | `perf-003` | 3 | zod 改 dynamic import | main −59 kB |
@@ -88,7 +89,7 @@
 
 ### 建议启动顺序（已剔除 wont_do 项）
 
-1. `assets-004`（GIF→EAF，需用户确认愿意承担实机验证成本）或 `device-spec-002`（要参数）或 `assets-002`（要素材）—— 均需用户先提供内容或拍板；2. `a11y-002` / `perf-003` / `assets-005`（P3 优化/文案修正）；3. `backend-001`（仅当用户明确要测试基建时）。
+1. `perf-003`（P3，main −59 kB）—— **零风险、无需用户提供任何内容，可立即启动**；2. `assets-004`（GIF→EAF，**需用户确认能否实机验证**——2026-09-14 用户表示不确定，故暂缓）；3. `assets-002`（等素材）/ `device-spec-002`（要参数）—— 必须用户先给内容；4. `a11y-002` / `backend-001`（需用户拍板）。
 
 ## 命令
 
@@ -111,9 +112,13 @@
 ## Git 状态（已推送）
 
 ```
-85ef8ec docs(harness): mark assets-003 (dialogue background converter) as passing   (Session 039)
+27ba06a fix(device): correct asset library specs to measured values   (Session 040，assets-005)
+7272fc2 docs(harness): correct GitHub Pages bundle hash after deployment
+f3dcc2c docs(harness): record Session 039 deployment to JD Cloud and GitHub Pages
+cac29ad docs(harness): Session 039 handoff and progress
+85ef8ec docs(harness): mark assets-003 (dialogue background converter) as passing
 41b41b1 feat(device): add browser-side dialogue background converter
-6bebe4c docs(harness): record September 13 release to GitHub Pages and JD Cloud   (Session 037 收尾)
+```
 fb1c439 docs(harness): mark device-spec-003 and flash-002 as wont_do
 c05397b feat(device): add FAQ troubleshooting section to Inhabit Device page
 7f9299f feat(a11y): respect prefers-reduced-motion across the site
@@ -162,7 +167,7 @@ ssh -i ~/.ssh/id_rsa -o BatchMode=yes root@111.228.60.135 '
 
 1. 待用户拍板「待用户拍板（not_started）」表中的任一项 —— 其中 `assets-002`（等素材）与 `device-spec-002`（要真实硬件参数）必须用户先给内容才能动。
 2. **不要再提议 `flash-002` / `device-spec-003`**（wont_do）。
-3. 两站均已发布到含 a11y-001 + FAQ + assets-003 的版本（主 bundle `index-BJb2NKRP.js`）——**无需再部署**。日后有新改动时按 `harness/docs/deployment.md` 走。
+3. 两站已发布到含 a11y-001 + FAQ + assets-003 的版本（主 bundle `index-BJb2NKRP.js`）。**assets-005 的文案校正尚未部署** —— 本地 dist 主 bundle 已是 `index-BZjDMgIO.js`，要上线需再走一次部署（见 `harness/docs/deployment.md`）。
 4. Ardot 设计稿 `724413235736238` 仍是单页版，后续调 UI 前建议同步为双页结构。
 5. 确认公众号历史文章是否含根域名的 `#flash` / `#deploy` 旧链接。
-6. 唯一未完成的人工确认项：**默认偏好下（未开启「减少动态效果」）产品影片确实自动播放** —— headless chromium 无 H.264 解码，只能由真实浏览器人工确认。开启 reduced-motion 时视频不自动播放已验证。
+6. ~~唯一未完成的人工确认项：默认偏好下产品影片确实自动播放~~ —— **2026-09-13 已关闭**（用户明确不再跟进；reduced-motion 路径已自动验证「不自动播放」，默认路径属浏览器标准 `autoplay muted playsinline` 行为且用户已在线上看到播放；headless chromium 无 H.264 解码）。**不要再列为待办。**
