@@ -4,15 +4,38 @@
 
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
-- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 a11y-001 reduced-motion + device-spec-001 FAQ，main `index-DkJ_lMkd.js` 517.08 kB）
+- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 a11y-001 reduced-motion + device-spec-001 FAQ + assets-003 对话底图转换器，main `index-BJb2NKRP.js` 530.64 kB）
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
 - 当前进行中功能：**无**。**33 项特性：26 passing / 5 not_started / 2 wont_do**；最新完成的 `assets-003`（浏览器端对话底图转换器）已 passing
 - 当前 blocker：无
 - **用户已否决项（2026-09-13，wont_do，勿再提议/追问）**：`device-spec-003`（获取渠道 —— 用户原话「获取渠道不用做」）、`flash-002`（WebSerial 烧录链路工程化 —— 用户原话「这个 flash-002 也不要动」）。`backend-001`(vitest) 原本只是 flash-002 的回归网前置，该前置理由随之失效，现为「需用户单独拍板是否因测试基建自身价值而启动」，不得默认连带启动
 - **方向变更（2026-09-12）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
-- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 与 GitHub Pages 均已发布至含 a11y-001 + FAQ 的版本（2026-09-13）**：京东云 `index-DkJ_lMkd.js`（517,078 B，MD5 与本地 dist 完全一致）；GitHub Pages `index-Bjo4K4Lq.js`（515,530 B，linux 构建，hash 差异属已知平台差异）。两站均已校验：10/10 特征串命中（FAQ 中英文案、reducedMotion 标记、素材路径）、CSS 含 `prefers-reduced-motion`、6 个在售素材 MD5 一致、3 个已下架素材不可达
+- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 与 GitHub Pages 均已发布至含 a11y-001 + FAQ + assets-003 的版本（2026-09-13）**：京东云 `index-BJb2NKRP.js`（530,635 B，MD5 与本地 dist 完全一致）；GitHub Pages `index-BJb2NKRP.js`（同 hash，Actions 自动部署）。两站均已校验：原 10/10 特征串命中 + 新增转换器文案命中；CSS 含 `prefers-reduced-motion`；6 个在售素材 MD5 一致、3 个已下架素材不可达；京东云另做真实浏览器转换器 E2E（上传 PNG → canvas 412×412 → 下载 509,244 B `dialogue_bg.bin`）
 
 ## 会话记录
+
+### Session 039
+
+- 日期：2026-09-13
+- 本轮目标：完成并发布 `assets-003` 浏览器端对话底图转换器
+- **用户指令**：`可以，那就先做对话底图，请你针对这个对话底图无风险的先实现` → 之后 `可以请你同步到京东云网页`
+- 已完成：
+  - **实现**：`src/lib/dialogue-bg-encoder.ts`（浏览器本地把 RGBA → LVGL v8 RGB565A8 编码，含解码回放自校验）+ `DeviceAssetsSection.tsx` 新增「自制素材」卡片（角色选择 / 上传 / 原图 vs 设备预览 / SD 路径 / 下载）+ `zh/en` 文案
+  - **关键约束（来自固件源码与真实文件）**：目标尺寸 **412×412**，固定 509,244 B，12 字节头，RGB565 big-endian + alpha 平面；` dialogue_bg.bin` 路径 `/sdcard/personas/<角色>/assets/ui/dialogue_bg.bin`
+  - **编码器自校验**：encode → decode → re-encode **逐字节 0 diffs**
+  - **真实素材反解校验**：`xia-yizhou/dialogue_bg.bin` 解码后与原 `preview.png` 视觉一致（mean abs diff 2.14/255，纯 RGB565 量化误差）
+  - **本地 E2E**：Playwright 上传 PNG → canvas 412×412 → 下载 509,244 B
+  - **验证**：`tsc -b` / `eslint` / `lint:locales` / `vite build` 全绿；main `index-BJb2NKRP.js` 530.64 kB
+  - **提交并推送**：`41b41b1 feat(device): add browser-side dialogue background converter`、`85ef8ec docs(harness): mark assets-003 ... as passing`、`cac29ad docs(harness): Session 039 handoff and progress`
+- **发布（用户指令：「可以请你同步到京东云网页」）**：
+  - GitHub Pages：Actions 自动部署（后续 run success），主 bundle `index-BJb2NKRP.js` 同本地 dist
+  - 京东云：原生 ssh/scp 链路 —— 打包 dist（10,495,335 B / 68 entries）→ scp 上传 → **远端 md5sum `b7bf701b833d2b3755124f4e59316582` 与本机一致** → 备份 `/opt/memory-series.bak` → 替换 → `docker restart memory-series-nginx`（容器 Up）
+  - **线上字节级校验**：京东云 `index-BJb2NKRP.js` 530,635 B，MD5 `54b54f71420a53913bb4f7c6ec312b1d` 与本地 dist 一致；既有素材 6/6 字节一致；新增转换器文案命中
+  - **线上真实浏览器渲染**：上传 600×500 PNG → 设备预览 canvas 412×412 → 下载 `dialogue_bg.bin` 509,244 B → 头部 `magic=0x19 cf=0x0A 412×412 stride=824` 合规 → 控制台 0 error
+- 已记录证据：本条 + `harness/feature_list.json` assets-003 evidence + `.workbuddy/verify-live-render.py`
+- 更新过的文件或工件：`src/lib/dialogue-bg-encoder.ts`、`src/sections/DeviceAssetsSection.tsx`、`src/locales/zh.json`、`src/locales/en.json`、`harness/feature_list.json`、`harness/claude-progress.md`、`harness/session-handoff.md`
+- 已知风险或未解决问题：无
+- 下一步最佳动作：无待办。若继续推进，可选 `assets-004`（GIF→EAF，硬约束多、需实机验证）/ `assets-002`（等素材）/ `device-spec-002`（需真实硬件参数）/ `a11y-002` / `perf-003` / `backend-001`，均需用户先拍板
 
 ### Session 037
 
