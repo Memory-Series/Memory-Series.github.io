@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Router, Route, Switch, Redirect } from "wouter";
 import { useHashLocation } from "wouter/use-hash-location";
+import { MotionConfig } from "framer-motion";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import TracePage from "@/pages/TracePage";
@@ -49,10 +50,16 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
-        <TooltipProvider>
-          <Toaster />
-          <AppRouter />
-        </TooltipProvider>
+        {/* a11y-001: 跟随系统「减少动态效果」偏好。
+            "user" 会自动禁用 transform / layout 动画（位移、缩放），
+            但保留 opacity 淡入 —— 淡入不会引发前庭不适。
+            一处配置即覆盖全部 section 的入场动画，无需逐个改调用点。 */}
+        <MotionConfig reducedMotion="user">
+          <TooltipProvider>
+            <Toaster />
+            <AppRouter />
+          </TooltipProvider>
+        </MotionConfig>
       </ThemeProvider>
     </ErrorBoundary>
   );
