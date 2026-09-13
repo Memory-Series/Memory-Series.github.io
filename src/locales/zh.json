@@ -185,13 +185,13 @@
       "bootGroupMeta": "替换 /sdcard/system/boot/boot.eaf",
       "dialogueGroupTitle": "对话气泡底图",
       "dialogueGroupMeta": "替换 /sdcard/personas/<角色>/assets/ui/dialogue_bg.bin",
-      "boot": {
-        "bootDefault": "默认款 · 280p",
-        "dialogueBg": "对话气泡底图"
-      },
-      "notes": {
-        "bootDefaultNote": "产线默认版本，3.05 MB，在推荐的 3 MB 上限附近，优先推荐。"
-      },
+  "boot": {
+    "bootDefault": "默认款",
+    "dialogueBg": "对话气泡底图"
+  },
+  "notes": {
+    "bootDefaultNote": "产线默认版本，体积远低于 8 MB 上限，优先推荐。"
+  },
       "converter": {
         "eyebrow": "自制素材",
         "title": "上传图片，转成对话底图",
@@ -215,14 +215,16 @@
         }
       },
       "spec": {
-        "format": "开机动画格式",
-        "formatValue": ".eaf（全屏位图序列，24 FPS）",
-        "dialogueSize": "底图尺寸",
-        "dialogueSizeValue": "412 × 412，RGB565A8，固定 509,244 字节",
-        "fps": "帧率",
-        "fpsValue": "24 FPS",
-        "limit": "推荐体积上限",
-        "limitValue": "开机动画 ≤ 3 MB"
+    "format": "开机动画格式",
+    "formatValue": ".eaf（全屏位图序列，24 FPS）",
+    "bootSize": "开机动画帧尺寸",
+    "bootSizeValue": "412 × 412 每帧（参考文件 211 帧 · 约 8.8 秒）",
+    "dialogueSize": "底图尺寸",
+    "dialogueSizeValue": "412 × 412，RGB565A8，固定 509,244 字节",
+    "fps": "帧率",
+    "fpsValue": "24 FPS",
+    "limit": "体积上限",
+    "limitValue": "开机动画 ≤ 8 MB（固件硬上限）"
       }
     },
     "faq": {

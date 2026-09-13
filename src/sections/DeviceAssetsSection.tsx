@@ -253,6 +253,10 @@ export function DeviceAssetsSection() {
             <dd className="text-foreground/65">{t("sections.assets.spec.formatValue")}</dd>
           </div>
           <div className="flex gap-2">
+            <dt className="shrink-0 text-foreground/40">{t("sections.assets.spec.bootSize")}</dt>
+            <dd className="text-foreground/65">{t("sections.assets.spec.bootSizeValue")}</dd>
+          </div>
+          <div className="flex gap-2">
             <dt className="shrink-0 text-foreground/40">{t("sections.assets.spec.dialogueSize")}</dt>
             <dd className="text-foreground/65">{t("sections.assets.spec.dialogueSizeValue")}</dd>
           </div>
