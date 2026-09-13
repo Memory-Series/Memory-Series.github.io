@@ -4,17 +4,17 @@
 
 ## 当前已验证
 
-- 工作区干净，本地与 `origin/main` 完全同步（`6bebe4c`）。a11y-001 + FAQ 已提交、推送，并已发布到京东云与 GitHub Pages。
-- **32 项特性：25 passing / 5 not_started / 2 wont_do**（2026-09-13 盘点新增 backlog 后为 29 项，Session 036 两项转 passing，Session 037 两项转为 wont_do）。
-- 标准验证路径：`npm run build`（tsc -b → 0；vite build → 0）。当前构建 main `index-DkJ_lMkd.js` 517.08 kB（含 FAQ 区块后）。
+- 工作区干净，本地与 `origin/main` 完全同步（`85ef8ec`）。a11y-001 + FAQ + assets-003（浏览器端对话底图转换器）已提交、推送。
+- **33 项特性：26 passing / 5 not_started / 2 wont_do**（最新完成 `assets-003`，拆分为 `assets-004` GIF→EAF 与 `assets-005` 文案校正）。
+- 标准验证路径：`npm run build`（tsc -b → 0；vite build → 0）。当前构建 main `index-BJb2NKRP.js` 530.64 kB（含对话底图转换器后 +13 kB）。
 - 本轮（2026-09-13）跑过的验证：
     - `npm run lint:locales` exit 0（9 top-level keys zh/en aligned）
     - `tsc -b` exit 0
     - `vite build` exit 0
     - `npm run lint` exit 0（0 错误 0 警告）
-    - **字节一致性**：dist 下 6 个在售素材全部 200 且 MD5 与源文件逐一相符；已下架的 3 个文件线上 404
-    - **视觉验证**：Playwright 实测中英文两版，素材库区块结构断言为「开机动画 1 卡 + 对话气泡底图 2 卡」
-    - **线上复核**：京东云 bundle 与本地 dist 完全一致；GitHub Pages bundle 内 `boot-default.eaf` / `dialogue_bg.bin` / `xia-yizhou` / `qin-che` 全部命中，`boot-variant-02` 已消失，素材 URL 200 且体积正确
+    - **编码器自校验**：encode → decode → re-encode **逐字节 0 diffs**（509,244 B）
+    - **真实素材反解校验**：`xia-yizhou/dialogue_bg.bin` 解码后与原 `preview.png` 视觉一致，mean abs diff 2.14/255
+    - **Playwright E2E**：上传 PNG → canvas 设备预览 412×412 → 下载 `dialogue_bg.bin` = 509,244 B
 
 ## 页面结构（split-001，2026-09-12 起）
 
@@ -30,9 +30,10 @@
 
 ### 硬件页当前区块顺序
 
-影片 → 上手向导 → 基础烧录/角色部署 → 素材库 → 角色卡 → **排障 FAQ** → 通讯 → 桥接卡
+影片 → 上手向导 → 基础烧录/角色部署 → 素材库 → **自制对话底图** → 角色卡 → 排障 FAQ → 通讯 → 桥接卡
 
-导航锚点顺序：上手 / 烧录 / 素材 / 部署 / 角色 / **排障** / 通讯（与 DOM 一致）。
+导航锚点顺序：上手 / 烧录 / 素材 / 部署 / 角色 / 排障 / 通讯（与 DOM 一致）。
+- 注意：「自制对话底图」是 `id="assets"` 区块内部的子功能，不单独占一个导航锚点。
 
 ## 约束（写代码前必读）
 
@@ -69,6 +70,8 @@
 | ID | P | 标题 | 状态说明 |
 |---|---|---|---|
 | `assets-002` | 2 | 素材库扩容：main.eaf + 其余 4 角色气泡底图 | **等素材** |
+| `assets-004` | 2 | 浏览器端 GIF → boot.eaf 开机动画转换器 | 格式可行但约束硬（固定 24 FPS、8 MB 上限、需色彩量化/压缩）；**需实机验证**，第二期 |
+| `assets-005` | 3 | 素材库指标文案校正 | 开机动画卡片「280p」→ 412×412；「推荐 ≤3 MB」→ 硬上限 8 MB |
 | `device-spec-002` | 3 | 设备规格参数表 | 需用户提供真实硬件参数，不可编造 |
 | `a11y-002` | 3 | 视频字幕 + 移动端点击加载 | 涉及新文案与视频资源 |
 | `perf-003` | 3 | zod 改 dynamic import | main −59 kB |
@@ -85,7 +88,7 @@
 
 ### 建议启动顺序（已剔除 wont_do 项）
 
-1. `device-spec-002`（要参数）或 `assets-002`（要素材）—— 均需用户先提供内容；2. `a11y-002` / `perf-003`（P3 优化）；3. `backend-001`（仅当用户明确要测试基建时）。
+1. `assets-004`（GIF→EAF，需用户确认愿意承担实机验证成本）或 `device-spec-002`（要参数）或 `assets-002`（要素材）—— 均需用户先提供内容或拍板；2. `a11y-002` / `perf-003` / `assets-005`（P3 优化/文案修正）；3. `backend-001`（仅当用户明确要测试基建时）。
 
 ## 命令
 
@@ -108,21 +111,22 @@
 ## Git 状态（已推送）
 
 ```
+85ef8ec docs(harness): mark assets-003 (dialogue background converter) as passing   (Session 039)
+41b41b1 feat(device): add browser-side dialogue background converter
 6bebe4c docs(harness): record September 13 release to GitHub Pages and JD Cloud   (Session 037 收尾)
 fb1c439 docs(harness): mark device-spec-003 and flash-002 as wont_do
 c05397b feat(device): add FAQ troubleshooting section to Inhabit Device page
 7f9299f feat(a11y): respect prefers-reduced-motion across the site
-89349c1 docs(harness): fix Session 035 commit record lost to shell quoting
 ```
-工作区干净，本地与 `origin/main` 完全同步（0/0）。a11y-001 与 FAQ 两项已随本批提交并发布。
+工作区干净，本地与 `origin/main` 完全同步（0/0）。a11y-001、FAQ、assets-003 已随本批提交，**尚未部署到线上**。
 
 ## 部署目标状态
 
 | 部署目标 | URL | 主 bundle | 状态 |
 |---|---|---|---|
-| **京东云** | https://www.traceinhabit.cn/ | `index-DkJ_lMkd.js` | ✅ 与本地 dist 完全一致（517,078 B，MD5 `e50703a4f00398c5af749d07c054dcfe`）；素材 MD5 逐一比对通过 |
-| **GitHub Pages** | https://memory-series.github.io/ | `index-Bjo4K4Lq.js` | ✅ Actions run 34740596878 success；bundle 内容已验证含 FAQ 与 reduced-motion（hash 与本地不同属已知平台差异） |
-| **本地 dist** | `G:\Memory-Series\Memory-Series.github.io\dist` | `index-DkJ_lMkd.js` | ✅ 干净重建通过 |
+| **京东云** | https://www.traceinhabit.cn/ | `index-DkJ_lMkd.js` | ⚠️ 仍是旧版（Session 037 发布）；本机最新 dist 为 `index-BJb2NKRP.js`，待部署 |
+| **GitHub Pages** | https://memory-series.github.io/ | `index-Bjo4K4Lq.js` | ⚠️ 仍是旧版；本机最新 bundle 含对话底图转换器，待推送/部署 |
+| **本地 dist** | `G:\Memory-Series\Memory-Series.github.io\dist` | `index-BJb2NKRP.js` | ✅ 干净重建通过（530.64 kB，含 assets-003） |
 
 两站均通过线上校验（2026-09-13）：特征串 10/10、CSS 含 `prefers-reduced-motion`、素材 6/6 字节一致、已下架 3 文件不可达；京东云另做了真实浏览器渲染（`#faq` 四条目 + 展开步骤正常、控制台 0 error）。
 

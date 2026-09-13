@@ -6,7 +6,7 @@
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 a11y-001 reduced-motion + device-spec-001 FAQ，main `index-DkJ_lMkd.js` 517.08 kB）
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
-- 当前进行中功能：**无**。2026-09-13「必要项批次」完成两项：`a11y-001`（prefers-reduced-motion 全站响应）与 `device-spec-001`（硬件页 FAQ 排障）均 **passing**。**32 项特性：25 passing / 5 not_started / 2 wont_do**
+- 当前进行中功能：**无**。**33 项特性：26 passing / 5 not_started / 2 wont_do**；最新完成的 `assets-003`（浏览器端对话底图转换器）已 passing
 - 当前 blocker：无
 - **用户已否决项（2026-09-13，wont_do，勿再提议/追问）**：`device-spec-003`（获取渠道 —— 用户原话「获取渠道不用做」）、`flash-002`（WebSerial 烧录链路工程化 —— 用户原话「这个 flash-002 也不要动」）。`backend-001`(vitest) 原本只是 flash-002 的回归网前置，该前置理由随之失效，现为「需用户单独拍板是否因测试基建自身价值而启动」，不得默认连带启动
 - **方向变更（2026-09-12）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
@@ -647,4 +647,29 @@
 - 提交记录：9c423a5（与 Session 002 同一次提交）
 - 更新过的文件或工件：harness/ 下五个文件
 - 已知风险或未解决问题：无
+
+### Session 039
+
+- 日期：2026-09-13
+- 本轮目标：实现 `assets-003` 浏览器端「图片 → dialogue_bg.bin」转换器（用户可行性调研后指定先做对话底图）
+- **用户指令**：`可以，那就先做对话底图，请你针对这个对话底图无风险的先实现，还是和之前的一样：1.先根据harness进行调整，然后遵循harness进行开发`
+- 已依据 harness 完成 `assets-003` 从登记 → in_progress → **passing**
+- **已完成**：
+  - 开工前逆向调研：直接读取固件 `gfx_eaf_dec.c`、`convert_custom_bg.py`、`convert_png_to_gfx.py`、`lvgl_argb_c_to_gfx.py` 与真实素材二进制，确认 `dialogue_bg.bin` 布局 = 12B gfx 头 + 412×412 RGB565 BE 平面 + A8 alpha 平面，固定 509,244 B；分辨率为 412×412（纠正了此前错误记忆「280×280」）
+  - 实现 `src/lib/dialogue-bg-encoder.ts`：移植固件侧量化与打包逻辑，NEAREST 缩放以匹配官方工具链，编码器 + 解码器均为纯函数；生成后立刻解码画 canvas，实现自校验
+  - 实现 UI `src/sections/DeviceAssetsSection.tsx` 末尾新增 `DialogueBgConverter`：角色下拉（复用 `DIALOGUE_CHARACTERS` + 自定义选项）、拖拽/点击上传、源图与设备解码预览并排、SD 卡路径提示、一键下载 `dialogue_bg.bin`；i18n zh/en 文案
+  - 验证：
+    - `tsc -b` / `eslint .` / `lint:locales` / `vite build` 全绿（main `index-BJb2NKRP.js` 530.64 kB，+13 kB）
+    - 编码器 round-trip 自校验：encode → decode → re-encode **逐字节 0 diffs**
+    - 真实素材 `xia-yizhou/dialogue_bg.bin` 反解后与 `preview.png` 视觉一致，mean abs diff 2.14/255（纯 RGB565 量化误差）
+    - Playwright 端到端：上传 412×412 PNG → canvas 渲染 412×412 → 下载文件 **509,244 字节**
+- 运行过的验证：见本节 evidence
+- 已记录证据：`feature_list.json` assets-003 条目 evidence + 本条 + `.workbuddy/encoder-check.mjs` / `.workbuddy/converter-e2e.py` / `.workbuddy/converter-e2e.png`
+- 提交记录：`41b41b1` feat(device): add browser-side dialogue background converter；`85ef8ec` docs(harness): mark assets-003 (dialogue background converter) as passing
+- 更新过的文件或工件：`src/lib/dialogue-bg-encoder.ts`（新）、`src/sections/DeviceAssetsSection.tsx`、`src/locales/zh.json`、`src/locales/en.json`、`harness/feature_list.json`、`harness/claude-progress.md`
+- 已知风险或未解决问题：
+  - 转换器对非 412×412 源图使用 NEAREST 缩放，与固件侧通用工具链一致；若未来需要更高质量下采样，可另提供 bilinear 选项，但会改变字节结果
+  - 对话底图仍要求 1:1 方形输出；非方形输入会被 NEAREST 拉伸至 412×412（与通用工具链行为一致），UI 目前未做居中裁切/留白选项，后续可按需补充
+  - 自定义角色路径显示为 `/sdcard/personas/<character>/...`，不自动创建文件夹，需用户自行替换名称
+- 下一步最佳动作：等待用户决定是否部署到 GitHub/京东云；可选推进 `assets-004`（GIF→boot.eaf，风险更高，需实机验证）或 `assets-005`（文案校正 280p→412、3MB→8MB）
 - 下一步最佳动作：填充 usage-001 使用方式文案（中英两份）
