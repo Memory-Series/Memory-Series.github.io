@@ -569,6 +569,63 @@
       ],
       "notes": "2026-09-13 从原 `device-spec-001` 拆出。与 FAQ 同批盘点启动，一度**被用户内容阻塞**（需要真实入口：购买链接 / 联系方式 / 二维码 / 上架平台）。\n**用户最终决策（2026-09-13）**：`获取渠道不用做` —— 状态置 **wont_do**。今后不要再主动提议或追问入口。\n附记（不再作为行动依据）：本项原是全站唯一转化出口（实测站点无任何商业转化入口），若未来用户改变主意，需先拿到真实入口再动工。\n",
       "evidence": []
+    },
+    {
+      "id": "assets-003",
+      "priority": 1,
+      "area": "device",
+      "title": "硬件页「自制对话底图」：浏览器端图片 → dialogue_bg.bin 转换器",
+      "user_visible_behavior": "素材库区块在「对话气泡底图」分组之后新增「自己动手做一张」：用户拖入或选择本地图片（PNG/JPG/WebP/GIF 取首帧），浏览器本地实时转成设备可用的 dialogue_bg.bin。界面并排展示「源图」与「设备实际显示效果」（由生成的字节反解回放，即自校验），给出固定 509,244 字节体积与目标 SD 卡路径，一键下载。提供「裁切填满 / 完整留白」两种适配方式。全程在本地完成，不上传服务器。",
+      "status": "passing",
+      "verification": [
+        "格式层依据真实固件源码 + 真实在售 dialogue_bg.bin 反解：实现输出 12B 头 + RGB565 BE 平面 + A8 alpha 平面，固定 509,244 B；round-trip（encode → decode → re-encode）逐字节完全一致",
+        "解码真实素材 xia-yizhou/dialogue_bg.bin 后与原 preview.png 视觉一致，mean abs diff 2.14/255（纯 RGB565 量化误差），确认 BE 字节序与量化公式正确",
+        "生成文件头 12 字节恒为 19 0A 00 00 | 9C 01 9C 01 | 38 03 00 00，magic=0x19 / cf=0x0A / 412×412 / stride=824",
+        "解码回放预览与源图一致（自校验），并在界面上并排展示「原图」与「设备解码预览」",
+        "非图片文件 / 过大文件 / 解码失败给出友好提示，不崩溃",
+        "中英双语齐全，lint:locales 通过",
+        "npm run build / lint 全绿；不破坏既有素材库下载与 FAQ 区块",
+        "Playwright 端到端验证通过：上传 PNG → canvas 设备预览 412×412 → 下载 dialogue_bg.bin 为 509,244 B"
+      ],
+      "evidence": [
+        "encoder round-trip: 0 byte diffs over 509,244 B",
+        "real asset decode vs preview.png: max per-channel diff (0,7) / mean 2.14 on 0-255 scale",
+        "Playwright E2E: device canvas 412x412, downloaded file 509244 bytes, see .workbuddy/converter-e2e.png"
+      ],
+      "notes": "**起因（2026-09-13，用户指令）**：`先做对话底图，请你针对这个对话底图无风险的先实现`。用户原需求为「上传自定义 GIF 转成设备可用格式 + 上传图片转成对话底图」两个转换器，按可行性调研结论**分期**：本期只做对话底图（格式极简、长度恒定、可逐字节自校验 = 无风险），GIF→boot.eaf 拆到 `assets-004`。\n\n**格式权威依据（开工前逆向固件源码 + 反解真实素材，全部实测）**：\n- 目标路径 `/sdcard/personas/<角色>/assets/ui/dialogue_bg.bin`（`emote.c` 的 `EMOTE_DIALOGUE_BG_PATH_FMT`）。\n- 布局 = **12 字节 gfx 头 + 整块 RGB565 平面（412×412×2 = 339,488 B）+ 整块 A8 alpha 平面（412×412 = 169,744 B）**，合计 **509,244 B**；无压缩、无调色板。头三字为 LE uint32：`0x19 | (0x0A<<8)` / `w | (h<<16)` / `w*2`。\n- **字节序：16 位色值「高字节在前」（BE）**。依据有二：① 固件自带 `components/common/emote/scripts/convert_custom_bg.py` 注释 —— `LVGL v8 Binary RGB565 big-endian: [msb, lsb, alpha] -> gfx RGB565A8 planes. Opaque RGB565A8 is memcpy'd without swap in esp_emote_gfx; keep BE byte order for QSPI panels with data_endian=BIG`；② 本机反解实测：BE 与 `preview.png` 逐像素平均误差 2.28（纯 RGB565 量化误差），LE 为 80.82（画面全错）。\n- **量化方式为截断而非四舍五入**：官方 `convert_png_to_gfx.py` 用 `((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)`。本实现严格照抄，以便与固件侧产物字节对齐。\n- **alpha 原样直通**（不二值化）：`convert_custom_bg.py` 直通 alpha；`convert_png_to_gfx.py` 的 `a >= 128 ? 255 : 0` 是给二维码扫描用的特例，不适用于底图。实测两个在售底图 alpha 恒为 255。\n- 固件宽容度：`EMOTE_DIALOGUE_BG_MAX_BYTES = 12 + 412*412*3`，且 `emote_fit_dialogue_bg_to_panel()` 会对非面板原生尺寸做 center-crop / letterbox —— 即尺寸不苛求 412。本期仍固定输出 412×412（与在售素材一致、体积恒定可校验）。\n\n**已验证的解释器/工具**：`gfx_eaf_dec.c`（EAF 六种块编码 RLE/Huffman/JPEG/Heatshrink/RAW）、`convert_png_to_gfx.py`、`convert_custom_bg.py`、`lvgl_argb_c_to_gfx.py` 均在固件仓库内，可作后续参考。\n"
+    },
+    {
+      "id": "assets-004",
+      "priority": 2,
+      "area": "device",
+      "title": "硬件页「自制开机动画」：浏览器端 GIF → boot.eaf 转换器（第二期）",
+      "user_visible_behavior": "素材库新增开机动画自制入口：用户上传 GIF/图片序列，浏览器本地转成设备可用的 boot.eaf。因帧率固定与体积上限，界面须明确提示帧数、时长与体积。",
+      "status": "not_started",
+      "verification": [
+        "EAF 容器格式正确：magic 0x89/'EAF'、total_frames、checksum、帧表各字段与固件 `gfx_eaf_dec.c` 一致",
+        "帧数据能被固件接受的编码（RLE 优先），并通过**与逆向逻辑同源的内置解码器**回放自校验",
+        "frame size = 412×412，bit_depth 8（索引色）",
+        "体积 ≤ 8 MB（EMOTE_SD_BOOT_EAF_READ_MAX），并预留 PSRAM 余量",
+        "中英双语齐全，lint:locales 通过；npm run build / lint 全绿",
+        "实机插卡验证设备可正常播放（需用户配合）"
+      ],
+      "evidence": [],
+      "notes": "**2026-09-13 从用户原需求拆出（第二期）**。用户原话：「我想上传一个自定义的gif想转化成设备能用的」。可行性调研已完成，**结论是能做但不是「加个转换按钮」——需要写一个完整的编码器**。\n\n**硬约束（全部来自固件源码实测，非文档推测）**：\n- **帧率固定 24 FPS 且为编译期常量**（`EMOTE_SD_BOOT_ANIM_FPS`），**GIF 自带帧延迟被忽略**，时长只由帧数决定。\n- 只播一次并停在最后一帧（循环 GIF 会退化为一次性）。\n- 色深**必须 8 位索引色**（4bit 固件不支持）；需在浏览器端做色彩量化。\n- 帧尺寸 412×412；未压缩单帧 169,744 B → 参考文件 211 帧裸数据约 35 MB，**必须压缩**。现成 `boot-default.eaf` 靠 Huffman 压到约 4,816 B/帧（≈35:1）才落进 3.05 MB。\n- 上限 **8 MB**（`EMOTE_SD_BOOT_EAF_READ_MAX`），另需约 256 KB PSRAM 余量；代码注释里的「建议 ≤3MB」只是建议值。\n- 字节序无需网页端处理：palette 固定 BGRA，swap 由固件按面板 `data_endian` 运行时决定。\n\n**三条候选路线**：A. 索引色 + RLE（推荐，RLE 解码仅约 20 行、可完整复刻用于自校验）；B. JPEG 直通（浏览器原生 `toBlob('image/jpeg')`，实现最省、体积最小，但依赖固件 JPEG 解码对浏览器产物的兼容性，**只能实机验证**，且有损）；C. A + 纯色块 Huffman 特例（体积最低，工作量更高）。\n\n**主要风险不在格式而在验证闭环**：网页端生成的 EAF 无法在本机确认设备能否读。缓解方案 —— 网页端内置同源解码器，生成后立刻解码回放，把「格式自洽」100% 覆盖，只留「固件接受度」一层需实机验证。\n**依赖**：需用户确认可实机验证（插卡测试）。\n**backlog**：用户已表态先做 `assets-003`，本项尚未启动。\n"
+    },
+    {
+      "id": "assets-005",
+      "priority": 3,
+      "area": "device",
+      "title": "素材库指标文案校正（开机动画真实分辨率 412×412、上限 8 MB）",
+      "user_visible_behavior": "素材库现有文案与实物不符处改为实测值：开机动画卡片由「默认款 · 280p」改为 412×412；「推荐体积上限 ≤ 3 MB」改为 EAF 硬上限 8 MB（并保留 3 MB 为「参考文件体积」而非上限）。",
+      "status": "not_started",
+      "verification": [
+        "开机动画卡片标注 412 × 412（与 .eaf 帧头实测一致）",
+        "体积上限表述与 EMOTE_SD_BOOT_EAF_READ_MAX（8 MB）一致",
+        "中英双语同步，lint:locales 通过；npm run build / lint 全绿"
+      ],
+      "evidence": [],
+      "notes": "**2026-09-13 逆向固件时发现的既有错误**：\n- `public/assets/boot/boot-preview-default.png` 是 **280×280**，但那是网页预览缩略图；`boot-default.eaf` 的**真实帧尺寸是 412×412**（实测帧头 `width=412 height=412 blocks=52 block_height=8`，211 帧，24 FPS ≈ 8.79 s）。UI 上的 `sourceSize: \"280 × 280\"` 与 i18n 的「默认款 · 280p」均与实物不符。\n- EAF 硬上限为 8 MB（`EMOTE_SD_BOOT_EAF_READ_MAX`），文案里的「≤ 3 MB」是建议值而非上限。\n**为什么暂不在 assets-003 里顺手改**：属独立的内容修正，与转换器功能无耦合；按 harness「一次只做一个功能」原则单列，待用户确认后再动。\n"
     }
   ]
 }
