@@ -4,9 +4,9 @@
 
 ## 当前已验证
 
-- 工作区干净，本地与 `origin/main` 同为 `9049656`。
-- **29 项特性：23 passing / 6 not_started**（2026-09-13 盘点后新增 5 项 backlog 登记）。
-- 标准验证路径：`npm run build`（tsc -b → 0；vite build → 0）。当前构建 main `index-DMBt39Vx.js` 500.24 kB。
+- 工作区：Session 036 的 a11y-001 + FAQ 改动与 harness 更新已提交并推送（见文末 Git 状态）。
+- **32 项特性：25 passing / 5 not_started / 2 wont_do**（2026-09-13 盘点新增 backlog 后为 29 项，Session 036 两项转 passing，Session 037 两项转为 wont_do）。
+- 标准验证路径：`npm run build`（tsc -b → 0；vite build → 0）。当前构建 main `index-DkJ_lMkd.js` 517.08 kB（含 FAQ 区块后）。
 - 本轮（2026-09-13）跑过的验证：
     - `npm run lint:locales` exit 0（9 top-level keys zh/en aligned）
     - `tsc -b` exit 0
@@ -30,9 +30,9 @@
 
 ### 硬件页当前区块顺序
 
-影片 → 上手向导 → 基础烧录/角色部署 → **素材库** → 角色卡 → 通讯 → 桥接卡
+影片 → 上手向导 → 基础烧录/角色部署 → 素材库 → 角色卡 → **排障 FAQ** → 通讯 → 桥接卡
 
-导航锚点顺序：上手 / 烧录 / 素材 / 部署 / 角色 / 通讯（与 DOM 一致）。
+导航锚点顺序：上手 / 烧录 / 素材 / 部署 / 角色 / **排障** / 通讯（与 DOM 一致）。
 
 ## 约束（写代码前必读）
 
@@ -57,27 +57,35 @@
 ## 风险与已知问题
 
 - **外部旧锚点失效**：`#flash` / `#deploy` 现只在硬件页。指向根域名的旧链接（如公众号历史文章）会重定向到 SKILL 页并静默跳到页首。源码内已无硬编码锚点，风险只在外部。
-- **硬件页偏薄**：设备规格表 / FAQ 排障 / 获取渠道三项用户明确暂不选 → 已登记为 `device-spec-001`。
+- **硬件页内容补齐已部分完成**：FAQ 排障（2026-09-13，已完成 passing）；获取渠道用户决定**不做**（`device-spec-003` = wont_do，不要再追问入口）；设备规格表待定（`device-spec-002`，需真实硬件参数）。
 - **Ardot 设计文件 `724413235736238` 已过时** —— 它是拆页**之前**的单页版本。后续若要在此文件里调 UI，需先同步为双页结构。（设计资产，未登记为 feature。）
 - 两站点 bundle hash 可能不一致（GitHub Actions 是 linux，本地是 Windows，tree-shake 有差异），功能一致。
 - **Vite dev server 的 SPA fallback 会造成假阳性**：访问不存在的 `/assets/...` 会返回 `index.html` + **HTTP 200**。校验素材是否真的可达，必须同时看 `Content-Type` 与响应体 MD5，只看状态码会误判。
 
 ## 未做的工作（feature_list.json 是唯一事实来源）
 
+### 待用户拍板（not_started）
+
 | ID | P | 标题 | 状态说明 |
 |---|---|---|---|
-| `flash-002` | 1 | WebSerial 烧录链路工程化 | 用户两次决策收回。**其原始前置（perf-002 / data-001 / infra-001）已全部 passing，实为等待决策而非被阻塞** |
-| `device-spec-001` | 2 | 硬件页补区块：规格表 / FAQ / 获取渠道 | Session 026 用户明确暂不选，要单独开一轮 |
 | `assets-002` | 2 | 素材库扩容：main.eaf + 其余 4 角色气泡底图 | **等素材** |
-| `backend-001` | 2 | vitest 测试基建 | flash-002 前置 —— 状态机重构无回归网不应启动 |
-| `a11y-001` | 3 | 动效与视频无障碍 | prefers-reduced-motion / 字幕 / 点击加载 |
+| `device-spec-002` | 3 | 设备规格参数表 | 需用户提供真实硬件参数，不可编造 |
+| `a11y-002` | 3 | 视频字幕 + 移动端点击加载 | 涉及新文案与视频资源 |
 | `perf-003` | 3 | zod 改 dynamic import | main −59 kB |
+| `backend-001` | 2 | vitest 测试基建 | ⚠️ 原为 `flash-002` 的回归网前置，**该前置已失效**。是否因「测试基建自身价值」启动，需用户单独拍板，不得连带启动 |
 
-以上 6 项均为 `not_started`，notes 里标了 `**backlog**` 的是 2026-09-13 盘点时新登记的，**用户尚未拍板启动**。
+### 已否决（wont_do —— 不要启动，也不要再问）
 
-### 建议启动顺序
+| ID | P | 标题 | 用户决策 |
+|---|---|---|---|
+| `flash-002` | 1 | WebSerial 烧录链路工程化 | 2026-09-13 用户原话「这个 flash-002 也不要动」（第三次否决：016 未确认 / 024 收回 / 037 不动） |
+| `device-spec-003` | 2 | 硬件页获取渠道区块 | 2026-09-13 用户原话「获取渠道不用做」 |
 
-1. `backend-001`（补回归网）→ 2. `flash-002`（高风险改动，有网才动）→ 3. `device-spec-001`（硬件页内容补齐）→ 4. `assets-002`（等素材）→ 5/6. `a11y-001` / `perf-003`（P3 优化）
+`wont_do` 是 2026-09-13 新增的状态（见 `feature_list.json` 的 `status_legend`）：表示用户已明确决定不做，**不是被阻塞、也不是没排上**。
+
+### 建议启动顺序（已剔除 wont_do 项）
+
+1. `device-spec-002`（要参数）或 `assets-002`（要素材）—— 均需用户先提供内容；2. `a11y-002` / `perf-003`（P3 优化）；3. `backend-001`（仅当用户明确要测试基建时）。
 
 ## 命令
 
@@ -100,10 +108,13 @@
 ## Git 状态（已推送）
 
 ```
-9049656 feat(device): add asset library section to Inhabit Device page   (2026-09-13 00:21，origin/main)
+docs(harness): mark device-spec-003 and flash-002 as wont_do   (Session 037，本批最新)
+c05397b feat(device): add FAQ troubleshooting section to Inhabit Device page
+7f9299f feat(a11y): respect prefers-reduced-motion across the site
+9049656 feat(device): add asset library section to Inhabit Device page   (2026-09-13 00:21)
 61132a1 feat(ui): split site into two product pages and add device product film
 ```
-工作区干净。
+工作区干净（本批三个提交已合入，均已推送 origin/main）。a11y-001 与 FAQ 两项已随本批提交。
 
 ## 部署目标状态
 
@@ -137,7 +148,8 @@ ssh -i ~/.ssh/id_rsa -o BatchMode=yes root@111.228.60.135 '
 
 ## 下一步
 
-1. 待用户拍板是否启动上表 6 项中的任一项。
-2. 若要动 `flash-002`，先做 `backend-001`（vitest）。
-3. Ardot 设计稿 `724413235736238` 仍是单页版，后续调 UI 前建议同步为双页结构。
-4. 确认公众号历史文章是否含根域名的 `#flash` / `#deploy` 旧链接。
+1. 待用户拍板「待用户拍板（not_started）」表中的任一项 —— 其中 `assets-002`（等素材）与 `device-spec-002`（要真实硬件参数）必须用户先给内容才能动。
+2. **不要再提议 `flash-002` / `device-spec-003`**（wont_do）。
+3. 京东云与 GitHub Pages 目前仍是 `9049656` 一代的产物（主 bundle `index-DMBt39Vx.js`），本批 a11y + FAQ 改动**尚未发布**；要上线再走一次部署（见 `harness/docs/deployment.md`）。
+4. Ardot 设计稿 `724413235736238` 仍是单页版，后续调 UI 前建议同步为双页结构。
+5. 确认公众号历史文章是否含根域名的 `#flash` / `#deploy` 旧链接。

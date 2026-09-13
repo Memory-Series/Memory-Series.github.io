@@ -10,7 +10,8 @@
     "not_started": "功能还没开始做。",
     "in_progress": "这个功能是当前唯一正在进行的任务。",
     "blocked": "因为已记录的阻塞问题，当前无法继续推进。",
-    "passing": "要求的验证已经通过，并且证据已经记录。"
+    "passing": "要求的验证已经通过，并且证据已经记录。",
+    "wont_do": "用户已明确决定不做（不是被阻塞，也不是没排上）。除非用户改口，不要启动、不要再次询问。"
   },
   "features": [
     {
@@ -302,7 +303,7 @@
       "area": "flash",
       "title": "WebSerial 烧录链路工程化（状态机 + 错误 i18n + 设备确认）",
       "user_visible_behavior": "烧录失败时显示当前阶段（连接/初始化/Stub/擦除/写入/校验）与中文错误提示；选中错设备有二次确认。",
-      "status": "not_started",
+      "status": "wont_do",
       "verification": [
         "抽取 src/hooks/use-webserial-session.ts 共享连接/console 解析逻辑。",
         "FirmwareFlash 状态机显式化（typed state union 或 xstate 二选一）。",
@@ -310,7 +311,7 @@
         "npm run build 通过；实机烧录成功（用户验证）；选中错设备的二次确认 UI 出现。"
       ],
       "evidence": [],
-      "notes": "高风险：会动核心业务逻辑。\n**状态更新（2026-09-13 盘点）**：notes 原写「建议在 perf-002 / data-001 / infra-001 之后再启动」，这三项现已全部 passing，**前置条件实际已满足**，本项是「等待决策」而非「被阻塞」。\n历史：Session 016 用户尚未确认是否启动；其后用户两次决策「收回」，保持 not_started。\n建议：启动前先补 vitest 测试基建（见 backend-001），否则状态机重构无回归网。"
+      "notes": "高风险：会动核心业务逻辑。\n**用户最终决策（2026-09-13）**：`这个flash-002也不要动` —— 状态置 **wont_do**。今后不要再主动提议启动本项，也不要把它放进「建议启动顺序」。\n历史（供参考，勿据此重启）：Session 016 未确认、Session 024 用户收回、Session 036 盘点时仍列为待决策；其旧前置 perf-002 / data-001 / infra-001 现已全部 passing（即「等待决策」而非「被阻塞」）；曾建议先补 vitest（backend-001）再动本项，该建议随本决策一并作废。\n现状可接受：FirmwareFlash / CharacterDeploy 已有 typed state union 与进度/错误显示，实机烧录已由用户验证成功；工程化重构属锦上添花，收益不足以抵改动与实机验证成本。"
     },
     {
       "id": "ts-strict-001",
@@ -438,18 +439,21 @@
       "id": "device-spec-001",
       "priority": 2,
       "area": "device",
-      "title": "硬件页补区块：设备规格参数表 / FAQ 排障 / 获取渠道",
-      "user_visible_behavior": "硬件页在「影片 + 上手向导 + 烧录部署 + 素材库 + 角色卡」之外，再补三块：设备规格参数表（ESP32-S3 / 屏幕 / 音频 / 存储等）、常见故障排查 FAQ、以及购买/获取渠道。",
-      "status": "not_started",
+      "title": "硬件页 FAQ 排障区块",
+      "user_visible_behavior": "硬件页在角色卡之后新增「排障」区块（id=faq，导航锚点同步）：4 条常见问题手风琴，覆盖烧录失败 / 设备无法识别 / SoulPod 导入失败 / 开机动画不生效，每条给出按序可执行的自查步骤。中英双语。",
+      "status": "passing",
       "verification": [
-        "设备规格参数表数据与 UI 落地，中英双语齐全",
-        "FAQ 至少覆盖：烧录失败、设备无法识别、SoulPod 导入失败、开机动画不生效",
-        "获取渠道区块给出明确入口（链接或二维码）",
+        "FAQ 覆盖：烧录失败、设备无法识别、SoulPod 导入失败、开机动画不生效",
+        "每条 FAQ 给出可执行的具体排查步骤（非泛泛而谈）",
+        "中英双语齐全，lint:locales 通过",
+        "视觉风格与既有区块一致（Cinematic Tech-Noir 基调）",
         "npm run build / lint / lint:locales 全绿",
         "用户在浏览器实测确认"
       ],
-      "evidence": [],
-      "notes": "来源：Session 026 拆页时用户明确保留 ——「设备规格表 / FAQ 排障 / 获取渠道」三项**暂不选**，要单独开一轮。\n现状：硬件页因此偏薄，目前只有「影片 + 上手向导 + 烧录部署 + 素材库 + 角色卡」。\n**backlog**：2026-09-13 盘点时从 session-handoff 的「可选后续工作」正式登记进 feature_list（此前只存在于 handoff，feature_list 中查不到）。**用户尚未拍板启动**，启动前需单独确认。"
+      "evidence": [
+        "2026-09-13 实现并验证（FAQ 部分；获取渠道拆至 device-spec-003）。实现：① `src/lib/device-faq.ts` —— 4 条目 + 步骤数常量（非组件常量按项目约束放 lib）；② `src/sections/DeviceFaqSection.tsx` —— 手风琴区块（复用 shadcn Accordion），金色序号 01–04，步骤圆点列表，自带 max-w-6xl 容器；③ 挂载于硬件页 DemoSection 之后、跨链卡之前，导航锚点「排障/FAQ」插入 demo 与 contact 之间；④ zh/en 文案新增 sections.faq.*（4 条 × q + 3–4 步骤）与 nav.anchors.faq。\n**内容纪律**：只写本仓库已实测或固件侧已确认的事实 —— WebSerial 需 Chrome/Edge + HTTPS（烧录组件文案与部署文档均有记载）、SoulPod 目录结构（/sdcard/personas/<角色>/ + profile.json 等，flash 区块文案已有）、开机动画路径 /sdcard/system/boot/boot.eaf 且需重启（assets-001 实测规范）。未推测任何未经确认的硬件细节（如 BOOT 键位）。\n验证：lint:locales exit 0（9 top-level keys 对齐）；tsc -b exit 0；eslint exit 0（0/0）；vite build exit 0（main index-DkJ_lMkd.js 517.08 kB，较 500.24 kB 增加 16.84 kB，为新区块 + Accordion 组件）；Playwright 截图中英文两版，4 条目渲染正确、展开项步骤完整、风格与既有区块一致。"
+      ],
+      "notes": "来源：Session 026 拆页时用户明确保留，2026-09-13 按「必要/非必要」盘点启动。\n**2026-09-13 拆分**：原 device-spec-001 = FAQ + 获取渠道 + 规格表。按价值与依赖拆为：\n- `device-spec-001`（本项）：FAQ 排障 —— **已完成 passing**。\n- `device-spec-003`：获取渠道 —— **2026-09-13 用户决定不做（wont_do）**，不要再追问入口。\n- `device-spec-002`：设备规格参数表 —— 可选，需真实参数。\n**为什么必要（实测依据）**：全仓检索确认站点无任何商业转化出口，硬件页只能「教你用」；FAQ 直接降低支持成本（烧录/识别/导入/动画四类问题目前只能一对一答复）。\n"
     },
     {
       "id": "assets-002",
@@ -472,17 +476,22 @@
       "id": "a11y-001",
       "priority": 3,
       "area": "a11y",
-      "title": "动效与视频无障碍：prefers-reduced-motion / 字幕 / 点击加载",
-      "user_visible_behavior": "全站响应用户的「减少动态效果」系统偏好；产品影片提供字幕或文字替代；移动端改为点击加载而非自动下载视频。",
-      "status": "not_started",
+      "title": "减少动效偏好：prefers-reduced-motion 全站响应",
+      "user_visible_behavior": "系统开启「减少动态效果」后：入场动画只保留淡入、不再有位移；视频不自动播放（保留手动播放入口）；锚点跳转改为瞬时定位而非平滑滚动；CSS 层面的动画与过渡一并停用。用户无需任何设置，跟随系统偏好自动生效。",
+      "status": "passing",
       "verification": [
-        "全局处理 prefers-reduced-motion（视频默认暂停、入场动画降级）",
-        "视频提供字幕轨道或页面文字替代",
-        "移动端视频改为点击加载，避免自动消耗流量",
-        "npm run build / lint 全绿"
+        "所有 framer-motion 入场动画在 reduce 偏好下无位移（transform 被禁用，保留 opacity）",
+        "开启 reduce 后产品影片不自动播放，poster 可见，仍可手动点击播放",
+        "锚点跳转（顶部导航 / 页内链接）在 reduce 下为瞬时定位，无平滑滚动",
+        "全局 CSS 在 reduce 下停用 animation / transition / scroll-behavior: smooth",
+        "关闭 reduce 时原有动效完全不变（回归验证）",
+        "npm run build / lint / lint:locales 全绿",
+        "Playwright 分别以 reduce / no-preference 两种偏好截图对比确认"
       ],
-      "evidence": [],
-      "notes": "来源：showcase-001（硬件页产品影片）引入首个持续运动元素时记下的未处理项，全项目均未处理。\nsession-handoff 明确记为「后续可选项，非 blocker」。\n**backlog**：2026-09-13 盘点时从 session-handoff 的「可选后续工作」正式登记进 feature_list（此前只存在于 handoff，feature_list 中查不到）。**用户尚未拍板启动**，启动前需单独确认。"
+      "evidence": [
+        "2026-09-13 实现并验证。四处改动：① `src/App.tsx` 在 ThemeProvider 内包 `<MotionConfig reducedMotion=\"user\">` —— framer-motion 官方机制，一处配置即覆盖全部 10 个 section 的 fadeUp 与 Hero/Demo 的自定义动画（禁用 transform 位移、保留 opacity 淡入），避免了逐个改 12 处调用点；② `src/index.css` 在 @layer base 内加 `@media (prefers-reduced-motion: reduce)` 全局块，animation/transition 置 0.01ms（用 0.01ms 而非 none，避免依赖 animationend 的组件停在中间态）并强制 scroll-behavior: auto；③ `src/lib/motion.ts` 的 scrollToAnchor 读 matchMedia，reduce 时 behavior 由 smooth 改 auto；④ `src/sections/ShowcaseSection.tsx` 用 `useReducedMotion()`，autoPlay={!reduceMotion}。\n**验证（Playwright 双偏好对比，真实跑过）**：reduce / no-preference 两组各启一个 context —— matchMedia 分别为 true/false；CSS scroll-behavior 分别为 auto/smooth；**入场 translateY 过渡中间帧数 reduce=0、默认=19**（16→0，reduce 瞬时到位、默认 0.75s 平滑插值），两种偏好终值均归位 0（无回归）；锚点跳转耗时 123ms vs 797ms；视频 autoplay 属性 reduce 下为 None、默认下存在。\n**排错**：首版验证误把「未入视口 section 停在 initial y:16」当作失败 —— 该状态在两种偏好下都正常存在，reduce 只影响动画过程不影响 initial 静态值，故改为 rAF 高频采样统计过渡中间帧。\n**环境限制（如实记录）**：Playwright 自带 chromium 为开源版，`canPlayType('video/mp4; codecs=avc1')` 返回 unsupported（WebM 为 probably），故 `inhabit-device.mp4` 在本环境 readyState 恒为 0，**「默认偏好下视频确实自动播放」这一条无法自动验证，需真实浏览器人工确认**；autoplay 属性的正确性已自动验证。\n构建验证：lint:locales / tsc -b / eslint 全 exit 0，vite build 通过。本次不新增文案，无 i18n 影响。"
+      ],
+      "notes": "来源：showcase-001（硬件页产品影片）引入首个持续运动元素时记下的未处理项。\n**2026-09-13 拆分**：原 a11y-001 包含三项，价值与成本差异过大，拆为：\n- `a11y-001`（本项，P3→实为低成本基线）：prefers-reduced-motion。改动集中在 App.tsx / index.css / motion.ts / ShowcaseSection，**不新增文案**，无 i18n 影响。\n- `a11y-002`（新，P3）：视频字幕 / 移动端点击加载。涉及新文案与视频资源，另行评估。\n**为什么算必要**：已实测 `src/` 下 prefers-reduced-motion **零命中**，而站点有 10 个 section 的 fadeUp 位移入场 + 自动播放视频 + 全局 scroll-behavior: smooth，对前庭敏感用户是真实不适源；且无障碍是《无障碍环境建设法》后网站应有的基线。\n**实现要点**：用 framer-motion 官方 `<MotionConfig reducedMotion=\"user\">` 一行覆盖全部 motion 动画（自动禁用 transform、保留 opacity），避免逐个改 10 个 section 的 fadeUp 调用点；其余三处（CSS、scrollToAnchor、视频 autoPlay）单独处理。\n"
     },
     {
       "id": "perf-003",
@@ -512,7 +521,54 @@
         "CI（.github/workflows/deploy-pages.yml）加 test gate 或单列 job"
       ],
       "evidence": [],
-      "notes": "来源：session-handoff「可选后续工作」第 5 项。\n**flash-002 的前置** —— WebSerial 状态机重构属高风险改动，无回归网不应启动。\n**backlog**：2026-09-13 盘点时从 session-handoff 的「可选后续工作」正式登记进 feature_list（此前只存在于 handoff，feature_list 中查不到）。**用户尚未拍板启动**，启动前需单独确认。"
+      "notes": "来源：session-handoff「可选后续工作」第 5 项。\n**前置关系已失效（2026-09-13）**：本项原本只是 `flash-002`（WebSerial 状态机重构）的回归网前置，而 flash-002 已被用户定为 **wont_do**，因此「为重构铺路」这个理由不再成立。\n**当前状态：not_started，需用户单独拍板是否因「测试基建本身有价值」而启动** —— 不要默认启动，也不要因为 flash-002 而连带启动。\n**backlog**：2026-09-13 盘点时从 session-handoff 的「可选后续工作」正式登记进 feature_list（此前只存在于 handoff，feature_list 中查不到）。"
+    },
+    {
+      "id": "a11y-002",
+      "priority": 3,
+      "area": "a11y",
+      "title": "视频字幕与移动端点击加载",
+      "user_visible_behavior": "产品影片提供字幕轨道或页面文字替代；移动端改为点击加载视频而非自动下载，避免消耗流量。",
+      "status": "not_started",
+      "verification": [
+        "视频提供字幕轨道或页面文字替代",
+        "移动端视频改为点击加载",
+        "npm run build / lint 全绿"
+      ],
+      "notes": "2026-09-13 从原 `a11y-001` 拆出。原条目把「减少动效 / 字幕 / 点击加载」混在一起，其中 reduced-motion 成本极低且属无障碍基线（已归入 a11y-001 优先做），字幕与点击加载涉及新文案、视频资源（字幕文件）与加载策略改动，成本与不确定性都更高，故拆出延后。\n**backlog**：用户尚未拍板启动。\n",
+      "evidence": []
+    },
+    {
+      "id": "device-spec-002",
+      "priority": 3,
+      "area": "device",
+      "title": "硬件页补区块：设备规格参数表",
+      "user_visible_behavior": "硬件页新增设备规格参数表（主控 ESP32-S3 / 屏幕 / 音频 / 存储 / 接口等）。",
+      "status": "not_started",
+      "verification": [
+        "规格参数与真实硬件一致（需用户确认数据）",
+        "中英双语齐全",
+        "npm run build / lint / lint:locales 全绿"
+      ],
+      "notes": "2026-09-13 从原 `device-spec-001` 拆出。硬件爱好者关注，但普通用户转化率低，价值中等，故排在 FAQ 与获取渠道之后。\n**依赖**：需用户提供真实硬件参数（不可编造）。\n**backlog**：用户尚未拍板启动。\n",
+      "evidence": []
+    },
+    {
+      "id": "device-spec-003",
+      "priority": 2,
+      "area": "device",
+      "title": "硬件页获取渠道区块",
+      "user_visible_behavior": "硬件页新增获取渠道区块，给出购买或获取设备的明确入口（链接或二维码），补上站点唯一的转化出口。",
+      "status": "wont_do",
+      "verification": [
+        "获取渠道区块给出明确入口（链接或二维码）",
+        "中英双语齐全，lint:locales 通过",
+        "视觉风格与既有区块一致",
+        "npm run build / lint / lint:locales 全绿",
+        "用户确认入口内容真实有效"
+      ],
+      "notes": "2026-09-13 从原 `device-spec-001` 拆出。与 FAQ 同批盘点启动，一度**被用户内容阻塞**（需要真实入口：购买链接 / 联系方式 / 二维码 / 上架平台）。\n**用户最终决策（2026-09-13）**：`获取渠道不用做` —— 状态置 **wont_do**。今后不要再主动提议或追问入口。\n附记（不再作为行动依据）：本项原是全站唯一转化出口（实测站点无任何商业转化入口），若未来用户改变主意，需先拿到真实入口再动工。\n",
+      "evidence": []
     }
   ]
 }

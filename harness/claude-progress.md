@@ -6,12 +6,62 @@
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 assets-001 素材库区块定版，main `index-DMBt39Vx.js` 500.24 kB）
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
-- 当前进行中功能：**无**。`assets-001`（硬件页「素材库」区块）已由用户浏览器实测确认，状态 **passing**。**29 项特性：23 passing / 6 not_started**（2026-09-13 盘点后新增 5 项 backlog 登记，见 `session-handoff.md` 表）
-- 当前 blocker：无。`flash-002` 用户两次决策"收回"，保持 not_started；且其 notes 原写的前置项（perf-002 / data-001 / infra-001）现已全部 passing，故它是**等待决策**而非被阻塞。
+- 当前进行中功能：**无**。2026-09-13「必要项批次」完成两项：`a11y-001`（prefers-reduced-motion 全站响应）与 `device-spec-001`（硬件页 FAQ 排障）均 **passing**。**32 项特性：25 passing / 5 not_started / 2 wont_do**
+- 当前 blocker：无
+- **用户已否决项（2026-09-13，wont_do，勿再提议/追问）**：`device-spec-003`（获取渠道 —— 用户原话「获取渠道不用做」）、`flash-002`（WebSerial 烧录链路工程化 —— 用户原话「这个 flash-002 也不要动」）。`backend-001`(vitest) 原本只是 flash-002 的回归网前置，该前置理由随之失效，现为「需用户单独拍板是否因测试基建自身价值而启动」，不得默认连带启动
 - **方向变更（2026-09-12）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
 - 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 已于 2026-09-13 同步至 `9049656`**（`index-DMBt39Vx.js`，与本地 dist 完全一致；素材 MD5 逐一比对通过）。GitHub Pages 同步为 `index-D3Romjt0.js`（linux 构建，hash 差异属已知平台差异），bundle 内容已验证含素材库；WebSerial 烧录功能依赖浏览器安全上下文，HTTPS 下可用
 
 ## 会话记录
+
+### Session 037
+
+- 日期：2026-09-13
+- 本轮目标：落实用户对「必要项批次」剩余两项的裁决 —— 只改 harness，不动代码
+- **用户指令**：`1.获取渠道不用做；2.这个flash-002也不要动`
+- 已完成（harness 三处 + 一次收尾提交）：
+  - **`status_legend` 新增 `wont_do`**：定义「用户已明确决定不做（不是被阻塞，也不是没排上）。除非用户改口，不要启动、不要再次询问」——此前只有 not_started/in_progress/blocked/passing 四态，用户否决项只能滞留在 not_started，导致每轮盘点都被当成「待启动」反复追问
+  - **`device-spec-003`（获取渠道）not_started → wont_do**：notes 记录用户原话与决策日期，并删除原「被用户内容阻塞」表述（阻塞 ≠ 不做，会误导后续会话继续要入口）
+  - **`flash-002`（WebSerial 烧录链路工程化）not_started → wont_do**：notes 记录第三次否决（Session 016 未确认 / 024 收回 / 037 明确不动），并写明「曾建议先补 backend-001 再动本项，该建议随本决策一并作废」
+  - **`backend-001`（vitest）notes 改写**：前置关系失效 —— 它原本只是 flash-002 的回归网前置，现改为「需用户单独拍板是否因测试基建自身价值而启动」，避免被连带启动
+  - **`device-spec-001` notes 同步**：`device-spec-003` 条目标为 wont_do 并注明「不要再追问入口」
+  - **收尾提交并推送**：把 Session 036 遗留未提交的 a11y-001 + FAQ 代码与 harness 更新一并提交、推送 origin/main
+- 运行过的验证：`feature_list.json` 用 Python json.load 校验合法，统计 **32 项 / 25 passing / 5 not_started / 2 wont_do**
+- 已记录证据：本条 + `feature_list.json` 对应条目 notes
+- 提交记录：本轮三个提交（按主题记录，hash 见 `git log`）：`feat(a11y): respect prefers-reduced-motion across the site` / `feat(device): add FAQ troubleshooting section to Inhabit Device page` / `docs(harness): mark device-spec-003 and flash-002 as wont_do`，已推送 origin/main
+- 更新过的文件或工件：`harness/feature_list.json`、`harness/claude-progress.md`、`harness/session-handoff.md`
+- 已知风险或未解决问题：
+  - `backend-001` 去留存疑（用户本轮未提），已按「不默认启动」处理，等待用户单独表态
+  - Session 036 遗留的两条人工确认项仍未完成：①「默认偏好下产品影片确实自动播放」需真实浏览器确认（headless chromium 无 H.264）；② FAQ 区块的中英视觉效果待用户在浏览器过目
+- 下一步最佳动作：无待办。若用户要继续推进，可选 `assets-002`（等素材）/ `device-spec-002`（需真实硬件参数）/ `a11y-002` / `perf-003` / `backend-001`，均需用户先拍板
+
+### Session 036
+
+- 日期：2026-09-13
+- 本轮目标：执行「必要项批次」—— 用户确认后启动必要项：① FAQ 排障（+获取渠道，被内容阻塞）② prefers-reduced-motion ③ flash-002（配套 backend-001）
+- **用户指令**：`可以，请你现在请你先做必要做的，其他的可以暂时不做。请你开始前遵循harness，然后开始动手修改`
+- **先拆后做**：开工前先把两个混合条目按价值/依赖拆准（`a11y-001` 缩为 reduced-motion、拆出 `a11y-002`；`device-spec-001` 拆出 `device-spec-002` 规格表与 `device-spec-003` 获取渠道），feature_list 29 → 32 项
+- **已完成 ①：a11y-001 → passing**
+  - 实现四处：`App.tsx` 包 `<MotionConfig reducedMotion="user">`（一处配置覆盖全部 10 个 section 的 fadeUp + Hero/Demo 自定义动画）；`index.css` 加全局 `@media (prefers-reduced-motion: reduce)`（animation/transition 置 0.01ms 而非 none，避免 animationend 依赖停在中间态；scroll-behavior 强制 auto）；`motion.ts` 的 scrollToAnchor 读 matchMedia；`ShowcaseSection` 用 `useReducedMotion()` 控制 autoPlay
+  - 验证（Playwright 双偏好对比）：**入场过渡中间帧 reduce=0 / 默认=19**；scroll-behavior auto/smooth；锚点跳转 123ms/797ms；视频 autoplay 属性正确切换
+  - 排错记录：首版验证误把「未入视口 section 停在 initial y:16」当失败 —— reduce 只影响动画过程不影响 initial 静态值，改为 rAF 高频采样统计中间帧
+  - 环境限制（如实记录）：Playwright chromium 无 H.264 解码（canPlayType 返 unsupported），「默认偏好下视频确实播放」无法自动验证，需真实浏览器人工确认；autoplay 属性正确性已验证
+- **已完成 ②：device-spec-001（FAQ）→ passing**
+  - 实现：`src/lib/device-faq.ts`（常量）+ `src/sections/DeviceFaqSection.tsx`（shadcn Accordion 手风琴，金色序号 01–04）+ 挂载硬件页（DemoSection 之后）+ 导航锚点「排障」+ zh/en 文案
+  - 内容纪律：只写仓库已实测/固件侧已确认的事实（WebSerial 需 Chrome/Edge+HTTPS、SoulPod 目录结构、boot.eaf 路径与重启生效），未推测硬件细节（如 BOOT 键位）
+  - 验证：lint:locales / tsc / eslint / build 全 exit 0（main `index-DkJ_lMkd.js` 517.08 kB，+16.84 kB）；Playwright 截图中英文两版渲染正确
+- **未完成（本轮有意不做）**：
+  - `device-spec-003` 获取渠道：**被用户内容阻塞**，需要用户提供真实入口（购买链接/联系方式/二维码），已询问
+  - `backend-001` + `flash-002`：高风险重构（动烧录核心链路）+ 需实机验证，且用户曾两次收回 flash-002。本轮收尾时向用户确认是否启动，不擅自开
+- 运行过的验证：开工前基础验证全绿（起点健康）；两项各自全量验证（见上）
+- 已记录证据：`feature_list.json` a11y-001 / device-spec-001 两条 evidence + 本条
+- 提交记录：随 Session 037 一并提交（用户先裁决了 remaining 两项，本批一口气落盘）
+- 更新过的文件或工件：`src/App.tsx`、`src/index.css`、`src/lib/motion.ts`、`src/sections/ShowcaseSection.tsx`、`src/lib/device-faq.ts`（新）、`src/sections/DeviceFaqSection.tsx`（新）、`src/pages/InhabitDevicePage.tsx`、`src/locales/zh.json`、`src/locales/en.json`、`harness/feature_list.json`、`harness/claude-progress.md`
+- 已知风险或未解决问题：
+  - 「默认偏好下视频自动播放」需用户真实浏览器确认（本机 headless 无 H.264）
+  - FAQ 第二条步骤 3 写了 CP210x/CH34x 驱动 —— 基于 ESP32 常见桥接芯片的通用建议，未在真实 1.85B 板上复现「未识别设备」场景；若固件侧确认板子走原生 USB-CDC，可考虑删掉这条
+  - FAQ 内容整体未经真实故障场景复现（由实测事实 + 通用排障逻辑构成）
+- 下一步最佳动作：① 用户提供获取渠道入口 → 做 device-spec-003；② 用户拍板是否启动 backend-001 → flash-002；③ 用户浏览器确认 FAQ 与 reduced-motion 后提交
 
 ### Session 035
 
