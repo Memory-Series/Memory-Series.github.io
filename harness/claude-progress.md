@@ -4,13 +4,13 @@
 
 - 仓库根目录：G:\Memory-Series\Memory-Series.github.io（Git 仓库，origin = github.com/Memory-Series/Memory-Series.github.io）
 - 标准启动路径：`npm run dev` → http://localhost:5173/
-- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 assets-001 素材库区块定版，main `index-DMBt39Vx.js` 500.24 kB）
+- 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 a11y-001 reduced-motion + device-spec-001 FAQ，main `index-DkJ_lMkd.js` 517.08 kB）
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
 - 当前进行中功能：**无**。2026-09-13「必要项批次」完成两项：`a11y-001`（prefers-reduced-motion 全站响应）与 `device-spec-001`（硬件页 FAQ 排障）均 **passing**。**32 项特性：25 passing / 5 not_started / 2 wont_do**
 - 当前 blocker：无
 - **用户已否决项（2026-09-13，wont_do，勿再提议/追问）**：`device-spec-003`（获取渠道 —— 用户原话「获取渠道不用做」）、`flash-002`（WebSerial 烧录链路工程化 —— 用户原话「这个 flash-002 也不要动」）。`backend-001`(vitest) 原本只是 flash-002 的回归网前置，该前置理由随之失效，现为「需用户单独拍板是否因测试基建自身价值而启动」，不得默认连带启动
 - **方向变更（2026-09-12）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
-- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 已于 2026-09-13 同步至 `9049656`**（`index-DMBt39Vx.js`，与本地 dist 完全一致；素材 MD5 逐一比对通过）。GitHub Pages 同步为 `index-D3Romjt0.js`（linux 构建，hash 差异属已知平台差异），bundle 内容已验证含素材库；WebSerial 烧录功能依赖浏览器安全上下文，HTTPS 下可用
+- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 与 GitHub Pages 均已发布至含 a11y-001 + FAQ 的版本（2026-09-13）**：京东云 `index-DkJ_lMkd.js`（517,078 B，MD5 与本地 dist 完全一致）；GitHub Pages `index-Bjo4K4Lq.js`（515,530 B，linux 构建，hash 差异属已知平台差异）。两站均已校验：10/10 特征串命中（FAQ 中英文案、reducedMotion 标记、素材路径）、CSS 含 `prefers-reduced-motion`、6 个在售素材 MD5 一致、3 个已下架素材不可达
 
 ## 会话记录
 
@@ -26,8 +26,15 @@
   - **`backend-001`（vitest）notes 改写**：前置关系失效 —— 它原本只是 flash-002 的回归网前置，现改为「需用户单独拍板是否因测试基建自身价值而启动」，避免被连带启动
   - **`device-spec-001` notes 同步**：`device-spec-003` 条目标为 wont_do 并注明「不要再追问入口」
   - **收尾提交并推送**：把 Session 036 遗留未提交的 a11y-001 + FAQ 代码与 harness 更新一并提交、推送 origin/main
-- 运行过的验证：`feature_list.json` 用 Python json.load 校验合法，统计 **32 项 / 25 passing / 5 not_started / 2 wont_do**
-- 已记录证据：本条 + `feature_list.json` 对应条目 notes
+- 运行过的验证：`feature_list.json` 用 Python json.load 校验合法，统计 **32 项 / 25 passing / 5 not_started / 2 wont_do**；提交前重跑 lint:locales / tsc -b / eslint / vite build 全 exit 0
+- **发布（用户指令：「请你推送到github和京东云网页」）**：
+  - GitHub：推送后 Actions run `34740596878` 自动触发并 **success**（1m1s，含 lint gate），Pages 已更新
+  - 京东云：原生 ssh/scp 链路 —— 打包 dist（10,477,230 B / 68 entries）→ scp 上传 → **远端 md5sum `6ea9d876591db4abc44bb2bb3c262ae7` 与本机一致** → 备份 `/opt/memory-series.bak` → 替换 → `docker restart memory-series-nginx`（容器 Up）
+  - **线上字节级校验（两站）**：首页 200 引用新 bundle；京东云主 bundle 517,078 B 且 MD5 与本地 dist 完全一致；**特征串 10/10 命中**（中英 FAQ 四问、`reducedMotion`、`/sdcard/system/boot/boot.eaf`、`assets/ui/dialogue_bg.bin`、`inhabit-device.mp4`）；CSS 含 `prefers-reduced-motion`；素材 6/6 字节一致；已下架 3 文件 3/3 不可达
+  - **真实浏览器渲染确认（京东云 `#/product/inhabit-device`）**：`#faq` 区块存在、标题命中、四条目齐全、展开首条后 4 个步骤全部可见、**控制台 0 error**；点击导航「排障」正确滚动至 FAQ 区块（scrollY 0 → 4670，区块距视口顶 112px）
+  - 排错记录：首轮校验把 `faq-en-q1` 写成了臆测文案（「Flashing failed, or it stalls on one step」），实际为「Flashing fails, or stalls partway through」→ 属校验脚本自身笔误，修正后 10/10 命中，**非线上缺陷**
+  - 另注：导航锚点条（含「排障」）本就只出现在页面顶部随页滚动、非 sticky，此为既有设计，非本次改动引入
+- 已记录证据：本条 + `feature_list.json` 对应条目 notes + 上述构建/线上/渲染校验
 - 提交记录：本轮三个提交（按主题记录，hash 见 `git log`）：`feat(a11y): respect prefers-reduced-motion across the site` / `feat(device): add FAQ troubleshooting section to Inhabit Device page` / `docs(harness): mark device-spec-003 and flash-002 as wont_do`，已推送 origin/main
 - 更新过的文件或工件：`harness/feature_list.json`、`harness/claude-progress.md`、`harness/session-handoff.md`
 - 已知风险或未解决问题：

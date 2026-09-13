@@ -120,9 +120,13 @@ c05397b feat(device): add FAQ troubleshooting section to Inhabit Device page
 
 | 部署目标 | URL | 主 bundle | 状态 |
 |---|---|---|---|
-| **京东云** | https://www.traceinhabit.cn/ | `index-DMBt39Vx.js` | ✅ 与本地 dist 完全一致；素材 MD5 逐一比对通过 |
-| **GitHub Pages** | https://memory-series.github.io/ | `index-D3Romjt0.js` | ✅ 自动部署；bundle 内容已验证含素材库，素材 URL 200 且体积正确（hash 与本地不同属已知平台差异） |
-| **本地 dist** | `G:\Memory-Series\Memory-Series.github.io\dist` | `index-DMBt39Vx.js` | ✅ 干净重建通过 |
+| **京东云** | https://www.traceinhabit.cn/ | `index-DkJ_lMkd.js` | ✅ 与本地 dist 完全一致（517,078 B，MD5 `e50703a4f00398c5af749d07c054dcfe`）；素材 MD5 逐一比对通过 |
+| **GitHub Pages** | https://memory-series.github.io/ | `index-Bjo4K4Lq.js` | ✅ Actions run 34740596878 success；bundle 内容已验证含 FAQ 与 reduced-motion（hash 与本地不同属已知平台差异） |
+| **本地 dist** | `G:\Memory-Series\Memory-Series.github.io\dist` | `index-DkJ_lMkd.js` | ✅ 干净重建通过 |
+
+两站均通过线上校验（2026-09-13）：特征串 10/10、CSS 含 `prefers-reduced-motion`、素材 6/6 字节一致、已下架 3 文件不可达；京东云另做了真实浏览器渲染（`#faq` 四条目 + 展开步骤正常、控制台 0 error）。
+
+校验脚本（本机、已被 .gitignore 忽略）：`.workbuddy/verify-live.py`（字节与特征串）、`.workbuddy/verify-live-render.py`（真实渲染 + 截图）、`.workbuddy/verify-nav-anchors.py`（锚点跳转）、`.workbuddy/verify-nav-bar.py`（锚点条显示时机）。
 
 ## 京东云部署方式（实测，2026-09-13 二次验证）
 
@@ -150,6 +154,7 @@ ssh -i ~/.ssh/id_rsa -o BatchMode=yes root@111.228.60.135 '
 
 1. 待用户拍板「待用户拍板（not_started）」表中的任一项 —— 其中 `assets-002`（等素材）与 `device-spec-002`（要真实硬件参数）必须用户先给内容才能动。
 2. **不要再提议 `flash-002` / `device-spec-003`**（wont_do）。
-3. 京东云与 GitHub Pages 目前仍是 `9049656` 一代的产物（主 bundle `index-DMBt39Vx.js`），本批 a11y + FAQ 改动**尚未发布**；要上线再走一次部署（见 `harness/docs/deployment.md`）。
+3. 两站均已发布到含 a11y-001 + FAQ 的版本（京东云 `index-DkJ_lMkd.js` / Pages `index-Bjo4K4Lq.js`）——**无需再部署**。日后有新改动时按 `harness/docs/deployment.md` 走。
 4. Ardot 设计稿 `724413235736238` 仍是单页版，后续调 UI 前建议同步为双页结构。
 5. 确认公众号历史文章是否含根域名的 `#flash` / `#deploy` 旧链接。
+6. 唯一未完成的人工确认项：**默认偏好下（未开启「减少动态效果」）产品影片确实自动播放** —— headless chromium 无 H.264 解码，只能由真实浏览器人工确认。开启 reduced-motion 时视频不自动播放已验证。
