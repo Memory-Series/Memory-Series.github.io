@@ -8,6 +8,16 @@ export const fadeUp = {
   viewport: { once: true, margin: "-60px" },
 } as const;
 
+/**
+ * Scroll to a section anchor.
+ *
+ * a11y-001: honours the OS "reduce motion" preference — when the user has asked
+ * for less motion, jump straight to the target instead of smooth-scrolling.
+ * (The global `scroll-behavior` is handled in index.css; this covers the JS path.)
+ */
 export function scrollToAnchor(sectionId: string) {
-  document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const target = document.getElementById(sectionId);
+  if (!target) return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 }

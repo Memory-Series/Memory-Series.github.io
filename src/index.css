@@ -114,6 +114,20 @@ Memory Series Visual System (file reminder)
     scroll-behavior: smooth;
   }
 
+  /* a11y-001: 尊重系统「减少动态效果」偏好。
+     用 0.01ms 而非 none，是为了让依赖 animationend / transitionend 的
+     组件逻辑仍能正常触发（直接置 none 会导致部分 UI 停在中间态）。 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: "Noto Sans SC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",

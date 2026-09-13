@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Volume2, VolumeX } from "lucide-react";
 
@@ -13,6 +13,9 @@ export function ShowcaseSection() {
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
+  // a11y-001: 开启「减少动态效果」时不自动播放，停在封面帧。
+  // 用户点击音量按钮仍可手动播放。更完善的点击加载由 a11y-002 处理。
+  const reduceMotion = useReducedMotion();
 
   const toggleMuted = () => {
     const video = videoRef.current;
@@ -56,7 +59,7 @@ export function ShowcaseSection() {
               className="h-[420px] w-auto object-cover md:h-[520px]"
               src={VIDEO_URL}
               poster={POSTER_URL}
-              autoPlay
+              autoPlay={!reduceMotion}
               loop
               muted
               playsInline
