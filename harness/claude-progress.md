@@ -6,12 +6,34 @@
 - 标准启动路径：`npm run dev` → http://localhost:5173/
 - 标准验证路径：`npm run build`（tsc -b && vite build）——2026-09-13 通过（含 assets-001 素材库区块定版，main `index-DMBt39Vx.js` 500.24 kB）
 - 页面结构（2026-09-12 起，split-001）：**双路由** —— `#/product/trace`（Trace/Inhabit SKILL）+ `#/product/inhabit-device`（Memory · Inhabit Device），共享 `SiteHeader`（含产品切换器）/ `SiteFooter`；`src/pages/Product.tsx` 已删除，区块拆到 `src/sections/*`。旧路由全部重定向到 `/product/trace`
-- 当前进行中功能：**无**。`assets-001`（硬件页「素材库」区块）已由用户浏览器实测确认，状态 **passing**。全部 24 项特性中 23 passing，唯一未开始项为 `flash-002`（用户两次决策收回，保持 not_started）
-- 当前 blocker：无。flash-002 用户两次决策"收回"，保持 not_started。
-- **方向变更（2026-09-10）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
-- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 已于 Session 029 同步为双页新版**（`index-Cp38yVaE.js`，HTTPS 200，媒体 200）；WebSerial 烧录功能依赖浏览器安全上下文，HTTPS 下可用
+- 当前进行中功能：**无**。`assets-001`（硬件页「素材库」区块）已由用户浏览器实测确认，状态 **passing**。**29 项特性：23 passing / 6 not_started**（2026-09-13 盘点后新增 5 项 backlog 登记，见 `session-handoff.md` 表）
+- 当前 blocker：无。`flash-002` 用户两次决策"收回"，保持 not_started；且其 notes 原写的前置项（perf-002 / data-001 / infra-001）现已全部 passing，故它是**等待决策**而非被阻塞。
+- **方向变更（2026-09-12）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
+- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 已于 2026-09-13 同步至 `9049656`**（`index-DMBt39Vx.js`，与本地 dist 完全一致；素材 MD5 逐一比对通过）。GitHub Pages 同步为 `index-D3Romjt0.js`（linux 构建，hash 差异属已知平台差异），bundle 内容已验证含素材库；WebSerial 烧录功能依赖浏览器安全上下文，HTTPS 下可用
 
 ## 会话记录
+
+### Session 035
+
+- 日期：2026-09-13
+- 本轮目标：harness 盘点与纠错 —— 用户要求「补齐、修正错误，确保 harness 与实际项目进度、代码统一」
+- **用户指令**：`可以，请你帮我补齐，修正错误，确保harness与实际项目进度、代码是统一的`
+- **盘点结论**：24 项 → 23 passing / 1 not_started；工作区干净，本地与 origin/main 同为 `9049656`；两站线上均已带 assets-001 内容
+- 已完成：
+  - **日期纠错（以 git 提交时间为据）**：`61132a1`（split-001）落 2026-09-12 08:33，`9049656`（assets-001）落 2026-09-13 00:21 → Session 032/033 的日期由 2026-09-10 改为 **2026-09-12**（二者依赖 09-12 的 split-001 产物，不可能更早）；进度日志头部的「方向变更（2026-09-10）」与 `feature_list.json` assets-001 的 3 条 evidence 前缀、notes 中的方向变更日期、归档文档的作废横幅日期同步改为 09-12 / 09-13
+  - **补全 Session 034 的提交记录**：占位符 `（本轮提交）` → `9049656 feat(device): add asset library section to Inhabit Device page`（14 文件，+1051 −10）
+  - **backlog 正式登记进 feature_list**（此前只存在于 session-handoff，feature_list 查不到）：新增 `device-spec-001`(P2)、`assets-002`(P2)、`backend-001`(P2)、`a11y-001`(P3)、`perf-003`(P3)，均为 not_started 且 notes 标注 `**backlog**` + 「用户尚未拍板启动」。total 24 → **29**
+  - **`flash-002` notes 更新**：原文「建议在 perf-002 / data-001 / infra-001 之后再启动」——这三项已全部 passing，前置实际已满足，改写为「等待决策而非被阻塞」，并建议启动前先做 `backend-001`
+  - **`session-handoff.md` 全面重写**：此前停留在 Session 026/027 时代（Git 状态写 `61132a1`、部署表写旧 hash `index-Cp38yVaE.js`、完全没提 assets-001）。现补齐：29 项特性统计、硬件页区块顺序、写代码前必读约束、素材格式权威值、6 项未做工作表 + 建议启动顺序、本机环境坑、部署目标状态表、实测 ssh/scp 部署链路
+  - **`docs/deployment.md` 修正**：京东云部署由不可用的 `deploy-jd.ps1`（依赖未安装的 Posh-SSH）改为已二次验证的原生 ssh/scp 链路；补 bundle hash 平台差异说明、素材库 6 文件 MD5 校验清单、已下架素材 404 校验、301 属正常的说明
+- 运行过的验证：本轮**无代码改动**，仅 harness 文档；线上复核两站 bundle 与素材（见 Session 034）
+- 已记录证据：`feature_list.json` 各条目 notes、本条会话记录、`session-handoff.md`、`docs/deployment.md`
+- 提交记录：（待用户确认后提交）
+- 更新过的文件或工件：`harness/claude-progress.md`、`harness/feature_list.json`、`harness/session-handoff.md`（重写）、`harness/docs/deployment.md`、`harness/docs/archive/device-info-api-requirements.md`（横幅日期）
+- 已知风险或未解决问题：
+  - 5 项新登记 backlog 未经用户拍板，若不需要可整条删除（notes 里均有 `**backlog**` 标记便于检索）
+  - `device-info-api-requirements.md` 归档文档的内文日期未逐一核对，仅修正了顶部作废横幅
+- 下一步最佳动作：等待用户对 5 项 backlog 的去留拍板；确认后提交本轮 harness 文档更新
 
 ### Session 034
 
@@ -25,7 +47,7 @@
   - 发布：GitHub（main 分支推送，GitHub Pages 自动构建）+ 京东云 https://www.traceinhabit.cn/（上传 `dist/`）
 - 运行过的验证：见 Session 033（构建 / lint / 字节一致性 / 双语言视觉），本轮无代码改动，仅状态与文档收尾
 - 已记录证据：本条 + `feature_list.json` assets-001 收尾 evidence
-- 提交记录：（本轮提交）
+- 提交记录：`9049656 feat(device): add asset library section to Inhabit Device page`（14 文件，+1051 −10），已推送 origin/main
 - 更新过的文件或工件：`harness/feature_list.json`、`harness/claude-progress.md`
 - 已知风险或未解决问题：
   - `flash-002`（WebSerial 烧录链路工程化）保持 not_started，用户两次决策收回
@@ -34,7 +56,7 @@
 
 ### Session 033
 
-- 日期：2026-09-10
+- 日期：2026-09-12
 - 本轮目标：执行用户对素材库的两点收敛指令 —— ① 删除高清款（"留了反而会造成误会"）；② 删除无素材角色的占位卡（"暂时只列有素材的角色"）
 - **用户决策**：
   - `高清款的就不要留了，留了反而会造成误会`
@@ -64,7 +86,7 @@
 
 ### Session 032
 
-- 日期：2026-09-10
+- 日期：2026-09-12
 - 本轮目标：执行用户新方向 —— 硬件页新增「素材库」区块（网页端提供可用下载素材 + 告知 SD 卡落位），一期只做「开机动画 + 对话气泡底图」两类
 - **用户决策（方向变更）**：
   - 不再从设备读信息 → 改为**纯网页端提供素材 + 告知放置位置**（绕开 CORS / 混合内容，零固件改动）
