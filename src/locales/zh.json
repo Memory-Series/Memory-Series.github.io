@@ -192,6 +192,28 @@
       "notes": {
         "bootDefaultNote": "产线默认版本，3.05 MB，在推荐的 3 MB 上限附近，优先推荐。"
       },
+      "converter": {
+        "eyebrow": "自制素材",
+        "title": "上传图片，转成对话底图",
+        "lead": "选择角色、上传 PNG 或 JPG，浏览器本地处理为设备能读取的 dialogue_bg.bin（412×412 RGB565A8，509,244 字节），直接放到对应角色的 assets/ui/ 目录即可。",
+        "dropHint": "拖拽图片到这里，或点击选择文件",
+        "dropHintActive": "松开上传",
+        "chooseFile": "选择图片",
+        "sourceTitle": "原图",
+        "devicePreviewTitle": "设备解码预览",
+        "targetRole": "目标角色",
+        "customRole": "自定义角色",
+        "download": "下载 dialogue_bg.bin",
+        "fileNameLabel": "文件名",
+        "pathLabel": "设备路径",
+        "sizeLabel": "大小",
+        "error": {
+          "noImage": "请选择一张图片。",
+          "tooBig": "图片体积过大，请压缩后再试。",
+          "decode": "解码预览失败：{{message}}",
+          "encode": "编码失败：{{message}}"
+        }
+      },
       "spec": {
         "format": "开机动画格式",
         "formatValue": ".eaf（全屏位图序列，24 FPS）",

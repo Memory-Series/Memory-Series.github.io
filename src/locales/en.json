@@ -199,6 +199,28 @@
       "notes": {
         "bootDefaultNote": "The production default — 3.05 MB, right around the recommended 3 MB ceiling. Recommended."
       },
+      "converter": {
+        "eyebrow": "Custom asset",
+        "title": "Upload an image, make a dialogue background",
+        "lead": "Pick a character, upload a PNG or JPG, and convert it locally in the browser to dialogue_bg.bin (412×412 RGB565A8, exactly 509,244 bytes). Drop it into that character's assets/ui/ folder.",
+        "dropHint": "Drag an image here, or click to choose a file",
+        "dropHintActive": "Drop to upload",
+        "chooseFile": "Choose image",
+        "sourceTitle": "Source",
+        "devicePreviewTitle": "Device decoded preview",
+        "targetRole": "Target character",
+        "customRole": "Custom character",
+        "download": "Download dialogue_bg.bin",
+        "fileNameLabel": "File name",
+        "pathLabel": "Device path",
+        "sizeLabel": "Size",
+        "error": {
+          "noImage": "Please select an image.",
+          "tooBig": "Image is too large. Compress it and try again.",
+          "decode": "Decode preview failed: {{message}}",
+          "encode": "Encoding failed: {{message}}"
+        }
+      },
       "spec": {
         "format": "Boot format",
         "formatValue": ".eaf (full-screen frame sequence, 24 FPS)",
