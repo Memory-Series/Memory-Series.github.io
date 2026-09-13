@@ -125,7 +125,7 @@ c05397b feat(device): add FAQ troubleshooting section to Inhabit Device page
 | 部署目标 | URL | 主 bundle | 状态 |
 |---|---|---|---|
 | **京东云** | https://www.traceinhabit.cn/ | `index-BJb2NKRP.js` | ✅ 与本地 dist 完全一致（530,635 B，MD5 `54b54f71420a53913bb4f7c6ec312b1d`）；对话底图转换器真实浏览器 E2E 通过 |
-| **GitHub Pages** | https://memory-series.github.io/ | `index-BJb2NKRP.js` | ✅ Actions 已自动部署；bundle 内容已验证含转换器文案 |
+| **GitHub Pages** | https://memory-series.github.io/ | `index-BuWiUEbm.js` | ✅ Actions 自动部署；bundle 内容已验证含转换器文案（hash 与本地不同属已知平台差异） |
 | **本地 dist** | `G:\Memory-Series\Memory-Series.github.io\dist` | `index-BJb2NKRP.js` | ✅ 干净重建通过（530.64 kB，含 assets-003） |
 
 线上校验（2026-09-13）：

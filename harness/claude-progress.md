@@ -10,7 +10,7 @@
 - 当前 blocker：无
 - **用户已否决项（2026-09-13，wont_do，勿再提议/追问）**：`device-spec-003`（获取渠道 —— 用户原话「获取渠道不用做」）、`flash-002`（WebSerial 烧录链路工程化 —— 用户原话「这个 flash-002 也不要动」）。`backend-001`(vitest) 原本只是 flash-002 的回归网前置，该前置理由随之失效，现为「需用户单独拍板是否因测试基建自身价值而启动」，不得默认连带启动
 - **方向变更（2026-09-12）**：原 `device-info-001`（固件侧 CORS）+ `device-info-002`（网页端设备信息面板）**已整体作废**。用户决定不再从设备读取信息，改为纯网页端「提供素材 + 告知放置位置」——彻底绕开跨源 / 混合内容难题，**零固件改动**。旧需求书 `harness/docs/device-info-api-requirements.md` 随之作废（仅"素材格式规范""SD 目录结构"两节仍有参考价值）
-- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 与 GitHub Pages 均已发布至含 a11y-001 + FAQ + assets-003 的版本（2026-09-13）**：京东云 `index-BJb2NKRP.js`（530,635 B，MD5 与本地 dist 完全一致）；GitHub Pages `index-BJb2NKRP.js`（同 hash，Actions 自动部署）。两站均已校验：原 10/10 特征串命中 + 新增转换器文案命中；CSS 含 `prefers-reduced-motion`；6 个在售素材 MD5 一致、3 个已下架素材不可达；京东云另做真实浏览器转换器 E2E（上传 PNG → canvas 412×412 → 下载 509,244 B `dialogue_bg.bin`）
+- 附加：`compositions/` 现只剩 `index.html` 素材工程（`trace-inhabit-promo.mp4` 已不在仓库，见 .gitignore）；2026-09-12 起硬件页启用实拍宣传视频 `public/media/inhabit-device.mp4`（684KB，含 poster）。**京东云 https://www.traceinhabit.cn/ 与 GitHub Pages 均已发布至含 a11y-001 + FAQ + assets-003 的版本（2026-09-13）**：京东云 `index-BJb2NKRP.js`（530,635 B，MD5 与本地 dist 完全一致）；GitHub Pages `index-BuWiUEbm.js`（521,490 chars，linux 构建 hash 差异属已知平台差异）。两站均已校验：原 10/10 特征串命中 + 新增转换器文案命中；CSS 含 `prefers-reduced-motion`；6 个在售素材 MD5 一致、3 个已下架素材不可达；京东云另做真实浏览器转换器 E2E（上传 PNG → canvas 412×412 → 下载 509,244 B `dialogue_bg.bin`）
 
 ## 会话记录
 
