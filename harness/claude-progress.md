@@ -28,7 +28,7 @@
   - **`docs/deployment.md` 修正**：京东云部署由不可用的 `deploy-jd.ps1`（依赖未安装的 Posh-SSH）改为已二次验证的原生 ssh/scp 链路；补 bundle hash 平台差异说明、素材库 6 文件 MD5 校验清单、已下架素材 404 校验、301 属正常的说明
 - 运行过的验证：本轮**无代码改动**，仅 harness 文档；线上复核两站 bundle 与素材（见 Session 034）
 - 已记录证据：`feature_list.json` 各条目 notes、本条会话记录、`session-handoff.md`、`docs/deployment.md`
-- 提交记录：（待用户确认后提交）
+- 提交记录：（6 文件，+300 −137，纯文档）
 - 更新过的文件或工件：`harness/claude-progress.md`、`harness/feature_list.json`、`harness/session-handoff.md`（重写）、`harness/docs/deployment.md`、`harness/docs/archive/device-info-api-requirements.md`（横幅日期）
 - 已知风险或未解决问题：
   - 5 项新登记 backlog 未经用户拍板，若不需要可整条删除（notes 里均有 `**backlog**` 标记便于检索）
