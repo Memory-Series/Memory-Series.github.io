@@ -22,6 +22,9 @@ dist-ssr
 compositions/*.mp4
 compositions/snapshots/
 
+# Deployment archives (hand-built from dist/ for the JD Cloud upload)
+*.tar.gz
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
