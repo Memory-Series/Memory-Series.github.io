@@ -5,18 +5,18 @@ import { cn } from "@/lib/utils";
 import { DialogueBgConverter } from "./DialogueBgConverter";
 
 /**
- * Loaded on demand.
+ * Split into its own chunk.
  *
- * The frame encoder, the GIF pipeline and the ZIP writer together add ~20 kB
- * that only matters once someone actually opens this tool — and the initial
- * bundle sits close to Vite's 500 kB warning threshold. Nothing above the fold
- * depends on it, so it stays behind the second tab.
+ * The frame encoder, the GIF pipeline and the ZIP writer together add ~20 kB,
+ * and the initial bundle sits close to Vite's 500 kB warning threshold. The
+ * chunk is fetched when this panel mounts on the device page — the only place
+ * it is ever used — and stays cached after that.
  */
 const MainAnimConverter = lazy(() =>
   import("./MainAnimConverter").then((m) => ({ default: m.MainAnimConverter })),
 );
 
-type Mode = "dialogue" | "mainAnim";
+type Mode = "mainAnim" | "dialogue";
 
 /**
  * The "DIY assets" panel.
@@ -25,32 +25,28 @@ type Mode = "dialogue" | "mainAnim";
  * each one repeated the same eyebrow, the same card chrome and the same
  * title-then-lead shape — which read as one block duplicated. They now share a
  * single heading and switch through a segmented control, so the eyebrow appears
- * once, the two targets sit side by side, and only one tool is expanded at a
- * time.
+ * once and only one tool is expanded at a time.
+ *
+ * The animation tool leads and is open by default: on the device it is the
+ * screen you look at first, so it is the one people come here to change.
  */
 export function SelfMadeAssets() {
   const { t } = useTranslation();
-  const [mode, setMode] = useState<Mode>("dialogue");
-  // Once the animation tool has been opened it stays mounted: flipping between
-  // the two must not throw away an uploaded file. Until then its chunk is never
-  // requested.
-  const [openedMainAnim, setOpenedMainAnim] = useState(false);
+  const [mode, setMode] = useState<Mode>("mainAnim");
 
-  const select = (next: Mode) => {
-    setMode(next);
-    if (next === "mainAnim") setOpenedMainAnim(true);
-  };
-
+  // Both panels stay mounted and are toggled with `hidden` rather than being
+  // unmounted: flipping between the two must not throw away a file that has
+  // already been picked.
   const tabs: { id: Mode; label: string; meta: string }[] = [
-    {
-      id: "dialogue",
-      label: t("sections.assets.selfMade.tabDialogue"),
-      meta: t("sections.assets.selfMade.tabDialogueMeta"),
-    },
     {
       id: "mainAnim",
       label: t("sections.assets.selfMade.tabMainAnim"),
       meta: t("sections.assets.selfMade.tabMainAnimMeta"),
+    },
+    {
+      id: "dialogue",
+      label: t("sections.assets.selfMade.tabDialogue"),
+      meta: t("sections.assets.selfMade.tabDialogueMeta"),
     },
   ];
 
@@ -78,7 +74,7 @@ export function SelfMadeAssets() {
               role="tab"
               aria-selected={active}
               aria-controls={`selfmade-panel-${tab.id}`}
-              onClick={() => select(tab.id)}
+              onClick={() => setMode(tab.id)}
               className={cn(
                 // Both targets stay equally present — only the selected one
                 // takes the gold accent, the other keeps a readable outline.
@@ -105,6 +101,21 @@ export function SelfMadeAssets() {
 
       <div className="mt-6 border-t border-border/50 pt-6">
         <div
+          id="selfmade-panel-mainAnim"
+          role="tabpanel"
+          aria-labelledby="selfmade-tab-mainAnim"
+          hidden={mode !== "mainAnim"}
+        >
+          <Suspense
+            fallback={
+              <div className="h-44 rounded-xl border border-border/40 bg-background/20" aria-hidden />
+            }
+          >
+            <MainAnimConverter />
+          </Suspense>
+        </div>
+
+        <div
           id="selfmade-panel-dialogue"
           role="tabpanel"
           aria-labelledby="selfmade-tab-dialogue"
@@ -112,26 +123,6 @@ export function SelfMadeAssets() {
         >
           <DialogueBgConverter />
         </div>
-
-        {openedMainAnim && (
-          <div
-            id="selfmade-panel-mainAnim"
-            role="tabpanel"
-            aria-labelledby="selfmade-tab-mainAnim"
-            hidden={mode !== "mainAnim"}
-          >
-            <Suspense
-              fallback={
-                <div
-                  className="h-44 rounded-xl border border-border/40 bg-background/20"
-                  aria-hidden
-                />
-              }
-            >
-              <MainAnimConverter />
-            </Suspense>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -195,10 +195,10 @@
       "selfMade": {
         "eyebrow": "自制素材",
         "lead": "上传自己的图片或动图，浏览器本地转成设备能直接读取的二进制文件 —— 不联网、不上传，文件不会离开这台设备。",
+                "tabMainAnim": "主屏动画",
+        "tabMainAnimMeta": "frame_NNN.bin",
         "tabDialogue": "对话底图",
-        "tabDialogueMeta": "dialogue_bg.bin",
-        "tabMainAnim": "主屏动画",
-        "tabMainAnimMeta": "frame_NNN.bin"
+        "tabDialogueMeta": "dialogue_bg.bin"
       },
       "converter": {
         "lead": "选择角色、上传 PNG 或 JPG，浏览器本地处理为设备能读取的 dialogue_bg.bin（412×412 RGB565A8，509,244 字节），直接放到对应角色的 assets/ui/ 目录即可。",

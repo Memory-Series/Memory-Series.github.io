@@ -202,10 +202,10 @@
       "selfMade": {
         "eyebrow": "DIY assets",
         "lead": "Turn your own images and animations into the binary files the device reads directly — converted locally in your browser, so nothing is ever uploaded.",
+                "tabMainAnim": "Main-screen animation",
+        "tabMainAnimMeta": "frame_NNN.bin",
         "tabDialogue": "Dialogue background",
-        "tabDialogueMeta": "dialogue_bg.bin",
-        "tabMainAnim": "Main-screen animation",
-        "tabMainAnimMeta": "frame_NNN.bin"
+        "tabDialogueMeta": "dialogue_bg.bin"
       },
       "converter": {
         "lead": "Pick a character, upload a PNG or JPG, and convert it locally in the browser to dialogue_bg.bin (412×412 RGB565A8, exactly 509,244 bytes). Drop it into that character's assets/ui/ folder.",
