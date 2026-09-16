@@ -214,6 +214,49 @@
           "encode": "编码失败：{{message}}"
         }
       },
+      "mainAnim": {
+        "eyebrow": "自制素材",
+        "title": "上传 GIF，转成主屏动画",
+        "lead": "选择角色、上传 GIF 或单张图片，浏览器本地逐帧转成设备能读取的 frame_000.bin / frame_001.bin …，连同 use_slide_frames 标记文件一起打包下载。设备按固定 24 FPS 循环播放，预览由生成的字节反解回放，所见即所得。",
+        "targetRole": "目标角色",
+        "frameLimit": "导出帧数",
+        "limitFrames": "{{count}} 帧（约 {{seconds}} 秒）",
+        "limitAll": "全部（最多 {{max}} 帧）",
+        "dropHint": "拖拽 GIF 或图片到这里，或点击选择文件",
+        "dropHintActive": "松开上传",
+        "chooseFile": "选择文件",
+        "converting": "正在转换 {{done}} / {{total}} 帧…",
+        "previewTitle": "设备播放预览",
+        "previewEmpty": "上传后在此预览",
+        "statsSource": "源文件",
+        "statsExport": "导出",
+        "statsPerFrame": "单帧体积",
+        "statsTotal": "总体积",
+        "sourceAnimated": "{{count}} 帧 · {{width}}×{{height}}",
+        "sourceStill": "单张图片 · {{width}}×{{height}}",
+        "exportFrames": "{{count}} 帧",
+        "exportDuration": "约 {{seconds}} 秒",
+        "sourceTiming": "源文件自带 {{source}} 秒时长，但设备固定按 {{fps}} FPS 播放，实际会变成 {{device}} 秒。",
+        "budget": {
+          "ok": "全部 {{frames}} 帧都能预载进设备内存，播放最流畅。",
+          "streaming": "帧数超过内存预载上限（约 {{frames}} 帧），设备会改为从 SD 卡边读边播；卡速偏慢时可能出现轻微掉帧。",
+          "tooManyFrames": "超过固件上限 {{max}} 帧，设备会静默丢弃多出的帧。请减少导出帧数。",
+          "frameTooLarge": "单帧 {{size}} 超过固件能读取的上限，设备将无法加载。"
+        },
+        "checkOk": "格式自检通过：{{count}} 帧往返一致。",
+        "checkFail": "格式自检异常：{{total}} 帧中有 {{count}} 帧往返不一致，请勿使用。",
+        "markerNote": "压缩包内含 {{marker}} 标记文件，请一并放入目标目录 —— 缺少它时，设备会优先播放已有的 main.eaf 而不读取帧序列。",
+        "download": "下载帧序列（.zip）",
+        "zipping": "打包中…",
+        "unsupportedBrowser": "当前浏览器不支持动图逐帧解码，GIF 无法拆分。请改用 Chrome 或 Edge；单张图片（PNG / JPG）不受影响。",
+        "error": {
+          "unsupportedType": "请选择 GIF、PNG、JPG、WebP 或 AVIF 图片。",
+          "tooBig": "文件体积过大（超过 30 MB），请先压缩。",
+          "animationUnsupported": "当前浏览器不支持 GIF 逐帧解码，请改用 Chrome / Edge 打开本页。",
+          "decodeFailed": "解码失败：{{message}}",
+          "aborted": "已取消。"
+        }
+      },
       "spec": {
     "format": "开机动画格式",
     "formatValue": ".eaf（全屏位图序列，24 FPS）",
@@ -221,6 +264,8 @@
     "bootSizeValue": "412 × 412 每帧（参考文件 211 帧 · 约 8.8 秒）",
     "dialogueSize": "底图尺寸",
     "dialogueSizeValue": "412 × 412，RGB565A8，固定 509,244 字节",
+        "mainAnimSize": "主屏动画帧尺寸",
+        "mainAnimSizeValue": "360 × 360 每帧（原生面板尺寸，RGB565A8，388,812 字节）",
     "fps": "帧率",
     "fpsValue": "24 FPS",
     "limit": "体积上限",

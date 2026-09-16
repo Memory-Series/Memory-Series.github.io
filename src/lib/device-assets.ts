@@ -21,6 +21,17 @@ export const DEVICE_PATHS = {
   /** Dialogue bubble background, per character. */
   dialogueBg: (characterKey: string) =>
     `/sdcard/personas/${characterKey}/assets/ui/dialogue_bg.bin`,
+  /**
+   * Main-screen animation frames, per character.
+   *
+   * This is the first entry in the firmware's own candidate list
+   * (`emote_sd_main_build_frame_dir_candidates`), which tries directories in
+   * order and takes the first one containing `.bin` files — so it is both the
+   * documented legacy location and the compile-time default. Putting frames
+   * here avoids depending on any of the fallbacks.
+   */
+  mainAnim: (characterKey: string) =>
+    `/sdcard/personas/${characterKey}/assets/gif/main/bin`,
 } as const;
 
 /**

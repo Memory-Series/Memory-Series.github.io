@@ -1,7 +1,16 @@
-import { useCallback, useMemo, useRef, useState, type ChangeEvent, type DragEvent } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type DragEvent,
+} from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { AlertCircle, Check, Copy, Download, Loader2, Upload } from "lucide-react";
+import { AlertCircle, Download, Loader2, Upload } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { fadeUp } from "@/lib/motion";
@@ -18,50 +27,19 @@ import {
 } from "@/lib/device-assets";
 import { decodeDialogueBg, DIALOGUE_BG_SIZE, encodeDialogueBg } from "@/lib/dialogue-bg-encoder";
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
-import { SectionEyebrow } from "./shared";
+import { PathLine, SectionEyebrow } from "./shared";
 
-/* ------------------------------------------------------------------ */
-/* Copy-to-clipboard path line                                         */
-/* ------------------------------------------------------------------ */
-
-function PathLine({ path }: { path: string }) {
-  const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
-
-  async function handleCopy() {
-    try {
-      await navigator.clipboard.writeText(path);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
-    } catch {
-      setCopied(false);
-    }
-  }
-
-  return (
-    <div className="mt-3 flex items-center gap-2 rounded-lg border border-border/50 bg-background/40 px-2.5 py-1.5">
-      <code
-        className="min-w-0 flex-1 truncate font-mono text-[10px] leading-4 text-foreground/60"
-        title={path}
-      >
-        {path}
-      </code>
-      <button
-        type="button"
-        onClick={handleCopy}
-        aria-label={t("sections.assets.copyPath")}
-        title={t("sections.assets.copyPath")}
-        className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-foreground/45 transition-colors hover:bg-foreground/10 hover:text-foreground/80"
-      >
-        {copied ? (
-          <Check className="h-3 w-3 text-[oklch(0.78_0.12_75)]" aria-hidden />
-        ) : (
-          <Copy className="h-3 w-3" aria-hidden />
-        )}
-      </button>
-    </div>
-  );
-}
+/**
+ * Loaded on demand.
+ *
+ * The frame encoder, the GIF pipeline and the ZIP writer together add ~28 kB
+ * that only matters once someone actually opens this tool — and the initial
+ * bundle was already within a hair of Vite's 500 kB warning threshold. Nothing
+ * above the fold depends on it.
+ */
+const MainAnimConverter = lazy(() =>
+  import("./MainAnimConverter").then((m) => ({ default: m.MainAnimConverter })),
+);
 
 /* ------------------------------------------------------------------ */
 /* Download button                                                     */
@@ -246,6 +224,18 @@ export function DeviceAssetsSection() {
         {/* 自制对话底图 */}
         <DialogueBgConverter />
 
+        {/* 自制主屏动画 */}
+        <Suspense
+          fallback={
+            <div
+              className="mt-14 h-44 rounded-2xl border border-border/50 bg-card/30"
+              aria-hidden
+            />
+          }
+        >
+          <MainAnimConverter />
+        </Suspense>
+
         {/* 格式规范 */}
         <dl className="mt-10 grid grid-cols-1 gap-x-8 gap-y-2 border-t border-border/40 pt-6 text-[11px] leading-5 sm:grid-cols-2">
           <div className="flex gap-2">
@@ -259,6 +249,10 @@ export function DeviceAssetsSection() {
           <div className="flex gap-2">
             <dt className="shrink-0 text-foreground/40">{t("sections.assets.spec.dialogueSize")}</dt>
             <dd className="text-foreground/65">{t("sections.assets.spec.dialogueSizeValue")}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="shrink-0 text-foreground/40">{t("sections.assets.spec.mainAnimSize")}</dt>
+            <dd className="text-foreground/65">{t("sections.assets.spec.mainAnimSizeValue")}</dd>
           </div>
           <div className="flex gap-2">
             <dt className="shrink-0 text-foreground/40">{t("sections.assets.spec.fps")}</dt>
