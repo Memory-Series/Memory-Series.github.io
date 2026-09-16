@@ -227,14 +227,8 @@ export function MainAnimConverter() {
   };
 
   return (
-    <div className="mt-14 rounded-2xl border border-border/50 bg-card/30 p-4 backdrop-blur sm:p-6">
-      <span className="font-[Manrope] text-[11px] font-semibold tracking-[0.16em] text-[oklch(0.78_0.12_75)]">
-        {t("sections.assets.mainAnim.eyebrow")}
-      </span>
-      <h3 className="mt-2 font-[Manrope] text-lg font-semibold tracking-[-0.02em] text-foreground">
-        {t("sections.assets.mainAnim.title")}
-      </h3>
-      <p className="mt-2 max-w-2xl text-pretty text-sm leading-7 text-foreground/75">
+    <div>
+      <p className="max-w-2xl text-pretty text-sm leading-7 text-foreground/75">
         {t("sections.assets.mainAnim.lead")}
       </p>
 

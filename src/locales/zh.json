@@ -192,9 +192,15 @@
   "notes": {
     "bootDefaultNote": "产线默认版本，体积远低于 8 MB 上限，优先推荐。"
   },
-      "converter": {
+      "selfMade": {
         "eyebrow": "自制素材",
-        "title": "上传图片，转成对话底图",
+        "lead": "上传自己的图片或动图，浏览器本地转成设备能直接读取的二进制文件 —— 不联网、不上传，文件不会离开这台设备。",
+        "tabDialogue": "对话底图",
+        "tabDialogueMeta": "dialogue_bg.bin",
+        "tabMainAnim": "主屏动画",
+        "tabMainAnimMeta": "frame_NNN.bin"
+      },
+      "converter": {
         "lead": "选择角色、上传 PNG 或 JPG，浏览器本地处理为设备能读取的 dialogue_bg.bin（412×412 RGB565A8，509,244 字节），直接放到对应角色的 assets/ui/ 目录即可。",
         "dropHint": "拖拽图片到这里，或点击选择文件",
         "dropHintActive": "松开上传",
@@ -215,8 +221,6 @@
         }
       },
       "mainAnim": {
-        "eyebrow": "自制素材",
-        "title": "上传 GIF，转成主屏动画",
         "lead": "选择角色、上传 GIF 或单张图片，浏览器本地逐帧转成设备能读取的 frame_000.bin / frame_001.bin …，连同 use_slide_frames 标记文件一起打包下载。设备按固定 24 FPS 循环播放，预览由生成的字节反解回放，所见即所得。",
         "targetRole": "目标角色",
         "frameLimit": "导出帧数",
