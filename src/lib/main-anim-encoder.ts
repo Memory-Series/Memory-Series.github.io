@@ -222,7 +222,7 @@ export function encodeMainAnimFrame(
   const src =
     width === size && height === size
       ? rgba
-      : resample(rgba, width, height, size, size);
+      : resampleRgba(rgba, width, height, size, size);
 
   const out = new ArrayBuffer(expectedMainAnimFrameBytes(size));
   const view = new DataView(out);
@@ -376,7 +376,7 @@ function rgbToRgb565(r: number, g: number, b: number): number {
  * result. Upscaling falls back to nearest-neighbour, which is fine because the
  * target is a fixed small square and large upscales are rare in practice.
  */
-function resample(
+export function resampleRgba(
   src: Uint8ClampedArray,
   sw: number,
   sh: number,

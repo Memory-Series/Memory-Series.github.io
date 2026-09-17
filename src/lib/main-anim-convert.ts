@@ -98,13 +98,22 @@ interface Decoder {
   close(): void;
 }
 
-interface FrameRead {
+export interface FrameRead {
   width: number;
   height: number;
   rgba: Uint8ClampedArray;
   /** Frame delay in seconds, when the container reports one. */
   durationSeconds: number | null;
 }
+
+/**
+ * Called once per decoded frame. May be async — encoders that hand off to the
+ * browser (JPEG, for instance) need to await.
+ */
+export type DecodeVisitor = (
+  read: FrameRead,
+  info: { index: number; sampledIndex: number; total: number },
+) => void | Promise<void>;
 
 /** Whether the browser exposes the animated-image decoding API. */
 export function supportsAnimatedDecoding(): boolean {
@@ -262,13 +271,51 @@ export function sampleIndices(total: number, max: number): number[] {
 /* Entry point                                                         */
 /* ------------------------------------------------------------------ */
 
-export async function convertToDeviceFrames(
+/**
+ * Everything learned about a source file while walking its frames.
+ *
+ * Returned separately from any encoded output so more than one encoder can sit
+ * on top of the same decode pass — the main-screen exporter packs frames into
+ * `frame_NNN.bin` buffers, the boot-animation exporter packs them into a single
+ * EAF container, and both report the same source facts.
+ */
+export interface DecodeSummary {
+  /** Source pixel dimensions (before resampling). */
+  sourceWidth: number;
+  sourceHeight: number;
+  /** Frames present in the source file. */
+  sourceFrameCount: number;
+  /** Indices taken from the source, ascending. */
+  sampledIndices: number[];
+  animated: boolean;
+  /**
+   * Sum of the source's own frame delays in seconds — only available when every
+   * frame was decoded (i.e. nothing was sampled away), otherwise `null`.
+   *
+   * Worth showing when present: the device ignores these delays entirely and
+   * always plays at 24 FPS, so the user should see how the timing will change.
+   */
+  sourceDurationSeconds: number | null;
+}
+
+/**
+ * Walk an uploaded animation frame by frame, handing each decoded frame to
+ * `visit`.
+ *
+ * Frames are decoded **one at a time** and dropped as soon as `visit` returns:
+ * peak memory is roughly one full-size RGBA buffer rather than
+ * `frameCount × fullSizeRGBA`. A 1000×1000 source with 120 frames would
+ * otherwise hold ~480 MB of pixels at once.
+ */
+export async function decodeAnimationFrames(
   file: File,
   options: ConvertOptions = {},
-): Promise<ConvertResult> {
-  const started = performance.now();
-  const size = options.size ?? MAIN_ANIM_SIZE;
-  const maxFrames = Math.max(1, Math.min(options.maxFrames ?? MAIN_ANIM_MAX_FRAMES, MAIN_ANIM_MAX_FRAMES));
+  visit: DecodeVisitor,
+): Promise<DecodeSummary> {
+  const maxFrames = Math.max(
+    1,
+    Math.min(options.maxFrames ?? MAIN_ANIM_MAX_FRAMES, MAIN_ANIM_MAX_FRAMES),
+  );
 
   if (file.type && !SUPPORTED_TYPES.has(file.type)) {
     throw new ConvertError("unsupportedType", file.type);
@@ -282,12 +329,12 @@ export async function convertToDeviceFrames(
     throw new ConvertError("animationUnsupported");
   }
 
-  const decoder =
-    supportsAnimatedDecoding() ? await openImageDecoder(file) : await openBitmapDecoder(file);
+  const decoder = supportsAnimatedDecoding()
+    ? await openImageDecoder(file)
+    : await openBitmapDecoder(file);
 
   const canvas = document.createElement("canvas");
   const indices = sampleIndices(decoder.frameCount, maxFrames);
-  const frames: ArrayBuffer[] = [];
 
   let sourceWidth = 0;
   let sourceHeight = 0;
@@ -306,12 +353,7 @@ export async function convertToDeviceFrames(
       if (read.durationSeconds === null) durationComplete = false;
       else durationTotal += read.durationSeconds;
 
-      frames.push(
-        encodeMainAnimFrame(read.rgba, read.width, read.height, {
-          size,
-          alpha: options.alpha,
-        }),
-      );
+      await visit(read, { index: i, sampledIndex: indices[i]!, total: indices.length });
 
       options.onProgress?.(i + 1, indices.length);
       await yieldToUi();
@@ -323,15 +365,34 @@ export async function convertToDeviceFrames(
   const decodedAll = indices.length === decoder.frameCount;
 
   return {
-    frames,
     sourceWidth,
     sourceHeight,
     sourceFrameCount: decoder.frameCount,
     sampledIndices: indices,
     animated: decoder.frameCount > 1,
-    sourceDurationSeconds: decodedAll && durationComplete && durationTotal > 0 ? durationTotal : null,
-    elapsedMs: performance.now() - started,
+    sourceDurationSeconds:
+      decodedAll && durationComplete && durationTotal > 0 ? durationTotal : null,
   };
+}
+
+export async function convertToDeviceFrames(
+  file: File,
+  options: ConvertOptions = {},
+): Promise<ConvertResult> {
+  const started = performance.now();
+  const size = options.size ?? MAIN_ANIM_SIZE;
+  const frames: ArrayBuffer[] = [];
+
+  const summary = await decodeAnimationFrames(file, options, (read) => {
+    frames.push(
+      encodeMainAnimFrame(read.rgba, read.width, read.height, {
+        size,
+        alpha: options.alpha,
+      }),
+    );
+  });
+
+  return { frames, ...summary, elapsedMs: performance.now() - started };
 }
 
 /**
