@@ -49,6 +49,7 @@
  */
 
 import { BOOT_EAF_FPS, BOOT_EAF_SIZE_LIMIT } from "./device-assets";
+import { toBlobPart } from "./bytes";
 import { resampleRgba } from "./main-anim-encoder";
 
 /* ------------------------------------------------------------------ */
@@ -761,7 +762,7 @@ async function decodeJpegToRgb(
   width: number,
   height: number,
 ): Promise<Uint8Array> {
-  const blob = new Blob([payload], { type: "image/jpeg" });
+  const blob = new Blob([toBlobPart(payload)], { type: "image/jpeg" });
   const bitmap = await createImageBitmap(blob);
   try {
     const canvas = getScratchCanvas();

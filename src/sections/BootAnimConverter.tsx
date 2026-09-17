@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { toBlobPart } from "@/lib/bytes";
 import { downloadBlob } from "@/lib/soulpod";
 import { DEVICE_PATHS, formatBytes } from "@/lib/device-assets";
 import {
@@ -268,7 +269,10 @@ export function BootAnimConverter() {
 
   function handleDownload() {
     if (!result) return;
-    downloadBlob(new Blob([result.bytes], { type: "application/octet-stream" }), "boot.eaf");
+    downloadBlob(
+      new Blob([toBlobPart(result.bytes)], { type: "application/octet-stream" }),
+      "boot.eaf",
+    );
   }
 
   const frameLimitLabel = (value: number): string =>
