@@ -75,7 +75,7 @@ export function SelfMadeAssets() {
   ];
 
   return (
-    <div className="mt-14 rounded-2xl border border-border/50 bg-card/30 p-4 backdrop-blur sm:p-6">
+    <div className="mt-10 rounded-2xl border border-border/50 bg-card/30 p-4 backdrop-blur sm:p-5">
       <span className="font-[Manrope] text-[11px] font-semibold tracking-[0.16em] text-[oklch(0.78_0.12_75)]">
         {t("sections.assets.selfMade.eyebrow")}
       </span>
@@ -92,7 +92,7 @@ export function SelfMadeAssets() {
       <div
         role="tablist"
         aria-label={t("sections.assets.selfMade.eyebrow")}
-        className="mt-5 grid grid-cols-1 gap-2.5 sm:flex sm:flex-wrap"
+        className="mt-4 grid grid-cols-1 gap-2 sm:flex sm:flex-wrap"
       >
         {tabs.map((tab) => {
           const active = mode === tab.id;
@@ -129,7 +129,7 @@ export function SelfMadeAssets() {
         })}
       </div>
 
-      <div className="mt-6 border-t border-border/50 pt-6">
+      <div className="mt-5 border-t border-border/50 pt-5">
         {opened.includes("bootAnim") && (
           <div
             id="selfmade-panel-bootAnim"

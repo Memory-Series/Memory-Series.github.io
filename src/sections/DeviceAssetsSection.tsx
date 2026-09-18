@@ -66,12 +66,34 @@ function AssetDownload({ file }: { file: DeviceAssetFile }) {
 /* Entry card                                                          */
 /* ------------------------------------------------------------------ */
 
-function AssetCard({ entry, title }: { entry: DeviceAssetEntry; title: string }) {
+function AssetCard({
+  entry,
+  title,
+  kind,
+  className,
+}: {
+  entry: DeviceAssetEntry;
+  title: string;
+  /**
+   * Which slot the file replaces.
+   *
+   * This used to be a group heading sitting above the card. The cards are now
+   * one grid instead of two stacked groups, so the label moved down onto the
+   * card — same information, one less layer of vertical chrome.
+   */
+  kind: string;
+  className?: string;
+}) {
   const { t } = useTranslation();
   const primary = entry.files[0];
 
   return (
-    <div className="relative flex flex-col rounded-2xl border border-border/50 bg-card/30 p-4 backdrop-blur">
+    <div
+      className={cn(
+        "relative flex flex-col rounded-2xl border border-border/50 bg-card/30 p-4 backdrop-blur",
+        className
+      )}
+    >
       {/* 预览：素材本身多为深色星空，给一块略亮的垫底以免看起来是空卡 */}
       <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl border border-border/40 bg-[oklch(0.21_0.02_262)]">
         {entry.previewPath ? (
@@ -100,6 +122,9 @@ function AssetCard({ entry, title }: { entry: DeviceAssetEntry; title: string })
       </div>
 
       <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span className="rounded-full border border-border/70 bg-background/25 px-2 py-px text-[10px] leading-4 text-foreground/55">
+          {kind}
+        </span>
         <span className="font-mono text-[10px] text-foreground/35">{entry.sourceSize}</span>
       </div>
 
@@ -154,54 +179,44 @@ export function DeviceAssetsSection() {
           </span>
         </div>
 
-        {/* 开机动画 */}
-        <div className="mt-10">
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="font-[Manrope] text-lg font-semibold tracking-[-0.02em] text-foreground">
-              {t("sections.assets.bootGroupTitle")}
-            </h3>
-            <code className="font-mono text-[10px] text-foreground/45">
-              {t("sections.assets.bootGroupMeta")}
-            </code>
-          </div>
-          {/* 一期只有默认款，用受限宽度避免单卡被拉成整行留白 */}
-          <div className="mt-4 grid max-w-sm grid-cols-1 items-start gap-4">
-            {BOOT_ASSETS.map((entry) => (
-              <AssetCard
-                key={entry.id}
-                entry={entry}
-                title={t(`sections.assets.boot.${entry.labelKey}`)}
-              />
-            ))}
-          </div>
-        </div>
+        {/*
+          Ready-made assets share one grid.
 
-        {/* 对话气泡底图 */}
-        <div className="mt-12">
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-            <h3 className="font-[Manrope] text-lg font-semibold tracking-[-0.02em] text-foreground">
-              {t("sections.assets.dialogueGroupTitle")}
-            </h3>
-            <code className="font-mono text-[10px] text-foreground/45">
-              {t("sections.assets.dialogueGroupMeta")}
-            </code>
-          </div>
-          <div className="mt-4 grid grid-cols-1 items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {DIALOGUE_CHARACTERS.map((character) => (
-              <AssetCard
-                key={character.key}
-                entry={character.entry}
-                title={isZh ? character.name : character.enName}
-              />
-            ))}
-          </div>
+          They used to be two headed groups stacked on top of each other, which
+          spent two headings and two layers of vertical spacing on three cards
+          — and the headings' target paths duplicated each card's own PathLine.
+          The type label now sits on the card, so the grid holds all three.
+
+          Mobile keeps two columns: the boot card spans the full row (it is the
+          only one with a note, and it is the one most people want), and the two
+          dialogue backgrounds sit side by side instead of eating a second
+          screen.
+        */}
+        <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4">
+          {BOOT_ASSETS.map((entry) => (
+            <AssetCard
+              key={entry.id}
+              className="col-span-2 lg:col-span-1"
+              entry={entry}
+              title={t(`sections.assets.boot.${entry.labelKey}`)}
+              kind={t("sections.assets.bootGroupTitle")}
+            />
+          ))}
+          {DIALOGUE_CHARACTERS.map((character) => (
+            <AssetCard
+              key={character.key}
+              entry={character.entry}
+              title={isZh ? character.name : character.enName}
+              kind={t("sections.assets.dialogueGroupTitle")}
+            />
+          ))}
         </div>
 
         {/* 自制素材：对话底图 / 主屏动画（同一面板内的两个模式） */}
         <SelfMadeAssets />
 
         {/* 格式规范 */}
-        <dl className="mt-10 grid grid-cols-1 gap-x-8 gap-y-2 border-t border-border/40 pt-6 text-[11px] leading-5 sm:grid-cols-2">
+        <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-2 border-t border-border/40 pt-6 text-[11px] leading-5 sm:grid-cols-2 lg:grid-cols-3">
           <div className="flex gap-2">
             <dt className="shrink-0 text-foreground/40">{t("sections.assets.spec.format")}</dt>
             <dd className="text-foreground/65">{t("sections.assets.spec.formatValue")}</dd>
