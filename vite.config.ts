@@ -5,7 +5,9 @@ import { defineConfig, type PluginOption } from "vite";
 import { visualizer } from "rollup-plugin-visualizer";
 
 // perf-002: 构建产物可观测性
-// - sourcemap: "hidden" 生产保留 .map 用于排查，不在 JS 末尾注入 sourceMappingURL
+// - sourcemap: 关闭。曾用 "hidden"（保留 .map 用于排查），但 .map 会被原样拷进
+//   dist/ 并发布到线上 —— 实测 https://www.traceinhabit.cn/assets/index-*.js.map
+//   可直接下载，等于完整前端源码公开。安全优先，改为不产出 .map。
 // - ANALYZE=true 时生成 dist/stats.html（gz/brotli 双口径），默认关闭，不影响日常 build
 const analyzePlugins: PluginOption[] =
   process.env.ANALYZE === "true"
@@ -38,7 +40,7 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
-    sourcemap: "hidden",
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {

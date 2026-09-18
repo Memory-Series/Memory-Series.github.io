@@ -18,6 +18,16 @@ dist-ssr
 # Local agent memory / tooling data
 .workbuddy/
 
+# Internal working archives — MUST NOT be published.
+# harness/ carries the server host, deploy topology and other operational detail;
+# .screenshots/ and compositions/ are local build/production assets.
+harness/
+.screenshots/
+compositions/
+
+# Deploy tooling that hard-codes the production host — keep local only.
+scripts/deploy-jd.ps1
+
 # Render artifacts
 compositions/*.mp4
 compositions/snapshots/
