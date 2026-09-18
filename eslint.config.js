@@ -6,7 +6,10 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // `.workbuddy` holds local tooling and scratch copies (gitignored). It can contain
+  // .ts/.tsx files — a throwaway clone under it once made `npm run lint` fail on
+  // duplicated source that CI never sees. Keep it out of lint entirely.
+  globalIgnores(['dist', '.workbuddy']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
