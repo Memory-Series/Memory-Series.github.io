@@ -1,0 +1,19 @@
+{
+  // backend-001 —— 测试代码单独一个 project。
+  //
+  // 为什么不把 `tests/` 并进 `tsconfig.app.json`：那个 project 描述的是"要打进
+  // 浏览器包里的代码"，它的类型环境是纯浏览器（`types: ["vite/client"]`）。
+  // 测试代码不是产物的一部分，混进去会让「主包该有什么类型」这件事变模糊。
+  // 单独一份、再由根 tsconfig 引用，`tsc -b` 一样会检查它 —— 门禁不削弱。
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    // node 供测试运行器自身的类型；vite/client 不能少 ——
+    // 被测试的源码里有 `import.meta.env`（`device-assets.ts`）。
+    "types": ["node", "vite/client"],
+    // 测试代码比产品代码更需要这两条：留下的变量/参数往往就是写错了。
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["tests"]
+}

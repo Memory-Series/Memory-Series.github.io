@@ -30,4 +30,18 @@ export default defineConfig([
       'react-hooks/purity': 'off',
     },
   },
+  {
+    // chat-002 —— 服务端（`server/**`）与部署脚本是 node 侧 ESM。
+    // 上面那段只覆盖 `**/*.{ts,tsx}`，这些 `.mjs` 此前**完全不在 lint 范围内**：
+    // 服务端刻意不加编译步骤（零依赖、node 直接跑），于是"用了没定义的变量"
+    // 这类错误只能靠 lint 和测试兜，缺了 lint 就只剩测试 —— 而测试不覆盖的分支
+    // 正是最容易写错的地方。
+    files: ['server/**/*.mjs', 'scripts/**/*.mjs'],
+    extends: [js.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2023,
+      sourceType: 'module',
+      globals: globals.node,
+    },
+  },
 ])

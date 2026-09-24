@@ -8,6 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:locales": "node scripts/lint-locales.cjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "personas": "node scripts/build-chat-personas.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

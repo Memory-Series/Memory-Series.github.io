@@ -67,6 +67,10 @@
       "cardMetaSkill": "Trace / Inhabit 角色卡 · {{enName}}",
       "cardMetaDevice": "可部署到设备 · {{enName}}"
     },
+    "chat": {
+      "launch": "聊聊",
+      "launchAria": "与{{name}}聊聊"
+    },
     "setup": {
       "eyebrow": "上手",
       "title": "完整上手向导",

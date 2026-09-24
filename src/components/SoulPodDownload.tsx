@@ -10,9 +10,15 @@ interface SoulPodDownloadProps {
   characterName: string;
   /** Compact variant for inline use inside cards. */
   compact?: boolean;
+  /**
+   * `solid`（默认）= 实心金色，全站**主行动**的语言（角色卡上的「部署 SoulPod」）。
+   * `outline` = 金色描边，给"同一屏里已经有一个实心主行动"的场景用：对话抽屉把唯一的
+   * 实心金色名额留给发送键（design-web-chat.md §4），页脚的下载退成次行动。
+   */
+  appearance?: "solid" | "outline";
 }
 
-export function SoulPodDownload({ characterName, compact }: SoulPodDownloadProps) {
+export function SoulPodDownload({ characterName, compact, appearance = "solid" }: SoulPodDownloadProps) {
   const { t } = useTranslation();
   const [packing, setPacking] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -64,7 +70,9 @@ export function SoulPodDownload({ characterName, compact }: SoulPodDownloadProps
         disabled={packing}
         className={cn(
           "pointer-events-auto inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-medium transition-colors",
-          "bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)] hover:bg-[oklch(0.82_0.12_75)]",
+          appearance === "solid"
+            ? "bg-[oklch(0.78_0.12_75)] text-[oklch(0.16_0.03_262)] hover:bg-[oklch(0.82_0.12_75)]"
+            : "border border-[oklch(0.78_0.12_75/0.6)] text-[oklch(0.78_0.12_75)] hover:border-[oklch(0.78_0.12_75/0.9)] hover:bg-[oklch(0.78_0.12_75/0.1)]",
           "disabled:cursor-wait disabled:opacity-70"
         )}
         aria-label={`下载${characterName}SoulPod`}

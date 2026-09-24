@@ -66,6 +66,15 @@ function buildSchemas(zod: ZodModule) {
         eyebrow: z.string(),
         title: z.string(),
       }),
+      // chat-001: only the main-bundle launch button's two keys live here. The
+      // drawer's own copy — short labels as well as the notice/terms prose —
+      // is in src/lib/chat-copy.ts so it ships with the lazy drawer chunk.
+      chat: z
+        .object({
+          launch: z.string(),
+          launchAria: z.string(),
+        })
+        .passthrough(),
       usage: z.object({
         eyebrow: z.string(),
         title: z.string(),

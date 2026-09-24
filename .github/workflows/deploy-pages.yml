@@ -36,6 +36,13 @@ jobs:
       - name: Lint locales
         run: npm run lint:locales
 
+      # backend-001: unit-test gate. The covered modules are pure logic whose
+      # regressions are invisible in the browser until a user hits the exact
+      # path (chat request shape, device byte budgets), so they must not reach
+      # a deploy. Runs before build: failing tests stop the pipeline here.
+      - name: Unit tests
+        run: npm test
+
       - run: npm run build
 
       - uses: actions/upload-pages-artifact@v3

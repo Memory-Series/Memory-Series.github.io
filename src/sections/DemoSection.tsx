@@ -16,6 +16,7 @@ import traceDemoDianaAudio from "@/assets/demo/trace-inhabit/戴安娜/休!戴�
 import traceDemoQinCheAudio from "@/assets/demo/trace-inhabit/秦彻/这不算什么，记住保持好你的风范.mp3";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { ChatLaunchButton } from "@/components/ChatLaunchButton";
 import { SoulPodDownload } from "@/components/SoulPodDownload";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -237,9 +238,16 @@ export function DemoSection({ variant = "skill" }: DemoSectionProps) {
                             </span>
                           ))}
                         </div>
-                        <div className="pt-0.5">
+                        <div className="flex flex-wrap items-center gap-2 pt-0.5">
                           <ErrorBoundary name="soulpod-card">
                             <SoulPodDownload characterName={item.title} />
+                          </ErrorBoundary>
+                          <ErrorBoundary name="chat-launch">
+                            <ChatLaunchButton
+                              characterName={item.title}
+                              enName={item.enName}
+                              avatarSrc={item.image}
+                            />
                           </ErrorBoundary>
                         </div>
                       </div>

@@ -66,6 +66,15 @@ const REQUIRED = {
   "sections.usage.steps": true,
   "sections.flash.eyebrow": true,
   "sections.flash.title": true,
+  // chat-001: only the two keys the **main-bundle** launch button reads live in
+  // the locales. Everything else the drawer shows — short labels as well as the
+  // long notice/terms prose — is in src/lib/chat-copy.ts, so it ships with the
+  // lazy drawer chunk instead of the main bundle.
+  // Consequence: this gate no longer covers those strings. chat-copy.ts keeps
+  // zh/en side by side and declares `en` as `typeof zh`, so a missing or extra
+  // key is a *compile* error — stricter than this existence check.
+  "sections.chat.launch": true,
+  "sections.chat.launchAria": true,
   "footer.links.privacy": true,
   "footer.links.terms": true,
   "footer.links.contact": true,

@@ -74,6 +74,10 @@
       "cardMetaSkill": "Trace / Inhabit character card · {{enName}}",
       "cardMetaDevice": "Deployable to device · {{enName}}"
     },
+    "chat": {
+      "launch": "Chat",
+      "launchAria": "Chat with {{name}}"
+    },
     "setup": {
       "eyebrow": "Setup",
       "title": "Full setup guide",

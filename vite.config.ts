@@ -37,6 +37,13 @@ export default defineConfig({
   ],
   resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
   base: "./",
+  // dev-only. `@radix-ui/react-dialog` is reached only through the lazily
+  // imported chat drawer, so the startup scan misses it; dev then discovers it
+  // at runtime and re-runs the optimizer, which has to delete the previous
+  // deps_temp dir — on this machine the safe-delete shim blocks that bulk
+  // delete (184 files > threshold) and vite dies mid-session. Listing it here
+  // makes the first optimization pass complete, so no re-optimization happens.
+  optimizeDeps: { include: ["@radix-ui/react-dialog"] },
   build: {
     outDir: "dist",
     emptyOutDir: true,
