@@ -16,8 +16,10 @@ import traceDemoDianaAudio from "@/assets/demo/trace-inhabit/戴安娜/休!戴�
 import traceDemoQinCheAudio from "@/assets/demo/trace-inhabit/秦彻/这不算什么，记住保持好你的风范.mp3";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { ChatDrawerHost } from "@/components/ChatDrawerHost";
 import { ChatLaunchButton } from "@/components/ChatLaunchButton";
 import { SoulPodDownload } from "@/components/SoulPodDownload";
+import type { ChatDrawerRequest } from "@/lib/chat-drawer-loader";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { fadeUp } from "@/lib/motion";
@@ -88,6 +90,9 @@ export function DemoSection({ variant = "skill" }: DemoSectionProps) {
   const [focusedDemoCard, setFocusedDemoCard] = useState<string | null>(null);
   const [playingDemoCard, setPlayingDemoCard] = useState<string | null>(null);
   const [demoPage, setDemoPage] = useState(0);
+  // 抽屉宿主挂在区块这一层：卡片失焦（onMouseLeave）不会把「打开意图」一起带走。
+  const [chatRequest, setChatRequest] = useState<ChatDrawerRequest | null>(null);
+  const [chatOpen, setChatOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioCardRef = useRef<string | null>(null);
 
@@ -107,6 +112,13 @@ export function DemoSection({ variant = "skill" }: DemoSectionProps) {
       stopCurrentAudio();
     }
     setFocusedDemoCard(title);
+  };
+
+  // 「聊聊」被点：记住要聊谁 + 打开抽屉。请求留在 state 里不清空，
+  // 卡片失焦、抽屉关闭都不会把它带走 —— 这是 Session 056 修的那条竞态。
+  const handleChatLaunch = (request: ChatDrawerRequest) => {
+    setChatRequest(request);
+    setChatOpen(true);
   };
 
   const toggleDemoAudio = async (title: string) => {
@@ -247,6 +259,7 @@ export function DemoSection({ variant = "skill" }: DemoSectionProps) {
                               characterName={item.title}
                               enName={item.enName}
                               avatarSrc={item.image}
+                              onLaunch={handleChatLaunch}
                             />
                           </ErrorBoundary>
                         </div>
@@ -282,6 +295,8 @@ export function DemoSection({ variant = "skill" }: DemoSectionProps) {
             </div>
           )}
         </Card>
+        {/* 抽屉宿主放在 Card 之外：不受卡片翻页/动画影响，也不会随卡片失焦卸载 */}
+        <ChatDrawerHost request={chatRequest} open={chatOpen} onOpenChange={setChatOpen} />
       </motion.section>
     </section>
   );
