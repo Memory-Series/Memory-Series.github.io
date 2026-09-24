@@ -28,6 +28,17 @@ compositions/
 # Deploy tooling that hard-codes the production host — keep local only.
 scripts/deploy-jd.ps1
 
+# Chat server (C1 thin proxy) — see harness/docs/spec-chat-server.md §7.3
+# personas/ is synthesized at deploy time from the sibling Trace-Inhabit repo:
+# keeping a copy here would re-publish third-party prompt text in a public repo
+# AND silently go stale whenever the source is updated.
+server/personas/
+# Runtime counters (daily circuit-breaker). Never in the repo.
+server/state/
+# Secrets. The MiniMax key and the IP hash salt live only in the server's .env.
+.env
+.env.*
+
 # Render artifacts
 compositions/*.mp4
 compositions/snapshots/

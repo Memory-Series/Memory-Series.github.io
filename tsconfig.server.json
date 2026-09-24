@@ -1,0 +1,31 @@
+{
+  // chat-002 —— 服务端源码单独一个 project。
+  //
+  // 为什么服务端是 `.mjs` 而不是 `.ts`：它零 npm 依赖、由 node 直接执行、
+  // 不进浏览器构建，容器跑在只读根 FS 下 —— 为它加一层编译步骤，
+  // 换来的是"每次改一行都要重新构建镜像"。所以不编译。
+  //
+  // 但不编译不等于不管类型：`allowJs` + `checkJs` 让 `tsc -b` 直接检查
+  // JSDoc 注释表达的类型，于是服务端与前端共用同一道类型门禁，
+  // 且**没有任何构建产物**掺进来。
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.server.tsbuildinfo",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+    "noEmit": true,
+    "strict": true,
+    "allowJs": true,
+    "checkJs": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    // 与 tsconfig.app.json 保持一致的两个开关：JSDoc 覆盖率不可能一上来就百分之百，
+    // 把"缺注解"当成错误会逼出大量 `: any` —— 那比不写更糟。
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["server/**/*.mjs", "scripts/build-chat-personas.mjs"]
+}
