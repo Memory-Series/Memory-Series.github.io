@@ -29,11 +29,34 @@ export const DEFAULTS = {
   CHAT_UPSTREAM_TIMEOUT_MS: 20000,
   CHAT_STATE_DIR: "/app/state",
   MINIMAX_API_BASE: "https://api.minimaxi.com/v1",
+
+  // ---- chat-003：语音合成（TTS）。与对话**完全独立**的一组开关与限额 ----
+  //
+  // 为什么独立：TTS 按**字符**计费、对话按 token 计费，两者的成本曲线与故障形态
+  // 都不一样。紧急时可能需要「保住对话、先关语音」（或反之），共用一个开关会让
+  // 这个选择变得不可能。
+  TTS_ENABLED: true,
+  TTS_MAX_CHARS: 200,
+  TTS_IP_WINDOW_MAX: 10,
+  TTS_IP_WINDOW_SEC: 300,
+  TTS_IP_DAILY_MAX: 60,
+  TTS_DAILY_MAX: 300,
+  // 比对话的 20000 更长：合成音频比生成文本慢。
+  TTS_UPSTREAM_TIMEOUT_MS: 30000,
+  // 注意 `TTS_MODEL` 不在这里 —— 它是必填项，但**不是致命配置**，见 REQUIRED_KEYS 的注释。
 };
 
 /**
  * 必填项。缺一个就不启动 —— 这三个都是「缺了会静默地用错东西」的类型：
  * 没 Key 会 401、没模型名会猜一个、没盐会让 IP 哈希可被彩虹表还原。
+ *
+ * `TTS_MODEL` **刻意不在这里**：它不属于上面那一类。缺了它不会"用错东西"，
+ * 只会"干不了这件事"。而放进这个列表的代价是 —— 一次普通的镜像升级若忘了补
+ * 新变量，会连**对话**一起打不起来。用可用性换一句更早的报错不划算。
+ *
+ * 因此 `loadConfig` 只把它读成空串；由入口记一条 `tts_model_missing` 告警、
+ * 由 `/api/tts` 回 `503 disabled`。**功能可见地关着，不是静默降级** ——
+ * 这与本文件"不许静默用默认值跑起来"的初衷一致。
  */
 export const REQUIRED_KEYS = ["MINIMAX_API_KEY", "MINIMAX_MODEL", "CHAT_IP_SALT"];
 
@@ -128,6 +151,14 @@ export function parseOrigins(raw) {
  * @property {string} apiBase
  * @property {string} model
  * @property {string} ipSalt
+ * @property {boolean} ttsEnabled
+ * @property {string} ttsModel     空串 = 未配置 → TTS 判为不可用（503），**不影响对话**
+ * @property {number} ttsMaxChars  单次合成长度上限（超出截断，与对话同口径）
+ * @property {number} ttsIpWindowMax
+ * @property {number} ttsIpWindowSec
+ * @property {number} ttsIpDailyMax
+ * @property {number} ttsDailyMax
+ * @property {number} ttsUpstreamTimeoutMs
  */
 
 /**
@@ -163,6 +194,14 @@ export function loadConfig(env = process.env) {
     apiBase: (env.MINIMAX_API_BASE || DEFAULTS.MINIMAX_API_BASE).replace(/\/+$/, ""),
     model: env.MINIMAX_MODEL || "",
     ipSalt: env.CHAT_IP_SALT || "",
+    ttsEnabled: readBool(env, "TTS_ENABLED", DEFAULTS.TTS_ENABLED),
+    ttsModel: env.TTS_MODEL || "",
+    ttsMaxChars: readInt(env, "TTS_MAX_CHARS", DEFAULTS.TTS_MAX_CHARS, errors),
+    ttsIpWindowMax: readInt(env, "TTS_IP_WINDOW_MAX", DEFAULTS.TTS_IP_WINDOW_MAX, errors),
+    ttsIpWindowSec: readInt(env, "TTS_IP_WINDOW_SEC", DEFAULTS.TTS_IP_WINDOW_SEC, errors),
+    ttsIpDailyMax: readInt(env, "TTS_IP_DAILY_MAX", DEFAULTS.TTS_IP_DAILY_MAX, errors),
+    ttsDailyMax: readInt(env, "TTS_DAILY_MAX", DEFAULTS.TTS_DAILY_MAX, errors),
+    ttsUpstreamTimeoutMs: readInt(env, "TTS_UPSTREAM_TIMEOUT_MS", DEFAULTS.TTS_UPSTREAM_TIMEOUT_MS, errors),
   };
 
   // 零容量的限额是配置错误，不是"关掉限流"。显式挡住，否则限额形同不存在。

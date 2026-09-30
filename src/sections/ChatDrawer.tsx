@@ -1,13 +1,16 @@
 /**
  * chat-001 —— 网页端 SoulPod 对话抽屉。
  *
- * **本文件（连同 `chat-personas.ts` / `chat-core.ts`）是一个懒加载 chunk**：
+ * **本文件（连同 `chat-personas.ts` / `chat-core.ts` / `chat-tts*.ts`）是一个懒加载 chunk**：
  * 由 `src/components/ChatLaunchButton.tsx` 动态 import，只有用户第一次点「聊聊」时才拉取。
  * 主包当时只剩约 13 kB 余量（486.76 / 500 kB），这一层绝不能破。
  *
  * 视觉上是"字幕式"，刻意不用聊天气泡 —— 见 `harness/docs/design-web-chat.md` §4。
  * 整个抽屉只有发送键使用金色（DESIGN.md: warm gold as the only strong accent）。
  * 上游不可用时**不报红色错误**，改用预设台词 + 一行灰字说明（与素材库面板的既有约定一致）。
+ *
+ * chat-003 加了「听语音」：只有**走过一次真实上游调用**的助手回复才显示按钮
+ * （判据见 `src/lib/chat-tts.ts` 的 `shouldShowSpeakButton`）。
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -17,6 +20,7 @@ import { useTranslation } from "react-i18next";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { SoulPodDownload } from "@/components/SoulPodDownload";
+import ChatSpeakButton from "@/sections/ChatSpeakButton";
 import { CHAT_LABELS, CHAT_NOTICE, CHAT_TERMS, toChatCopyLang, type ChatLabels } from "@/lib/chat-copy";
 import {
   buildChatRequest,
@@ -31,6 +35,8 @@ import {
 } from "@/lib/chat-core";
 import { getChatPersona } from "@/lib/chat-personas";
 import type { ChatCharKey } from "@/lib/chat-keys";
+import { shouldShowSpeakButton, type SpeakMessageSource } from "@/lib/chat-tts";
+import { disposeSpeech, stopSpeech } from "@/lib/chat-tts-audio";
 import { cn } from "@/lib/utils";
 
 const NOTICE_STORAGE_KEY = "ms.chat.notice.v1";
@@ -46,6 +52,15 @@ const goldAlpha = (alpha: number) => `oklch(0.78 0.12 75 / ${alpha})`;
 interface UiMessage extends ChatMessage {
   /** 非 null 表示这条回复来自预设台词库，界面必须标出来。 */
   degraded?: ChatDegradeReason | null;
+  /**
+   * 这条消息的来源。`model` = 走过一次真实上游调用；`script` = 站点自带的固定台词
+   * （开场白 / 降级台词库）。
+   *
+   * 为什么需要它、而不直接用 `degraded === null`：**开场白的 `degraded` 也是 `null`**。
+   * 它是打包进站点的固定文案，没有对应音频可播；而且它在 GitHub Pages 上同样存在 ——
+   * 用 `degraded === null` 当判据会让 GH 站**第一条消息就长出一个永远点不通的播放按钮**。
+   */
+  source?: SpeakMessageSource;
 }
 
 interface ChatDrawerProps {
@@ -128,6 +143,8 @@ function MessageBubble({
   animate,
   onRevealDone,
   onRetry,
+  charKey,
+  reducedMotion,
 }: {
   message: UiMessage;
   /** 文案表由父层传入 —— 每条消息各订阅一次 i18n 是白花的开销。 */
@@ -135,6 +152,9 @@ function MessageBubble({
   animate: boolean;
   onRevealDone: () => void;
   onRetry: () => void;
+  /** 语音合成要用的角色 key（服务端据此决定音色）。 */
+  charKey: ChatCharKey;
+  reducedMotion: boolean;
 }) {
   const { shown, revealing } = useRevealedText(message.content, animate);
 
@@ -174,6 +194,17 @@ function MessageBubble({
             </button>
           )}
         </p>
+      )}
+      {!revealing && shouldShowSpeakButton(message, charKey) && (
+        <div className="mt-1.5">
+          <ChatSpeakButton
+            messageId={message.id}
+            charKey={charKey}
+            text={message.content}
+            labels={labels}
+            reducedMotion={reducedMotion}
+          />
+        </div>
       )}
     </div>
   );
@@ -224,7 +255,8 @@ export default function ChatDrawer({
     setMessages((prev) => {
       if (prev.length > 0) return prev;
       const opener = persona?.openers[0] ?? "";
-      return opener ? [{ id: nextId(), role: "assistant", content: opener, degraded: null }] : [];
+      // 开场白是**站点自带**的固定文案 → source: "script"（所以不显示播放按钮）。
+      return opener ? [{ id: nextId(), role: "assistant", content: opener, degraded: null, source: "script" }] : [];
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, persona]);
@@ -235,10 +267,19 @@ export default function ChatDrawer({
     abortRef.current?.abort();
     abortRef.current = null;
     setSending(false);
+    // 语音同理：关了抽屉不该还有声音在响。
+    stopSpeech();
   }, [open]);
 
-  // 卸载时同样中断 —— 抽屉被懒加载卸载后不该继续跑请求。
-  useEffect(() => () => abortRef.current?.abort(), []);
+  // 卸载时同样中断 —— 抽屉被懒加载卸载后不该继续跑请求；语音缓存也要释放，
+  // 否则那些 objectURL 会一直占着 blob 内存。
+  useEffect(
+    () => () => {
+      abortRef.current?.abort();
+      disposeSpeech();
+    },
+    [],
+  );
 
   // 依赖里必须带 `open`：抽屉关闭时 Radix 会把内容卸载，重新打开时 `messages` 没变、
   // 这个 effect 就不会跑，列表会停在最上面 —— 看起来像"这次的对话丢了"。
@@ -334,7 +375,8 @@ export default function ChatDrawer({
       const replyId = nextId();
       setMessages((prev) => [
         ...prev,
-        { id: replyId, role: "assistant", content: reply, degraded },
+        // `source` 是语音按钮唯一的判据：只有真实上游回复才谈得上"有对应音频"。
+        { id: replyId, role: "assistant", content: reply, degraded, source: degraded ? "script" : "model" },
       ]);
       // 必须在同一次提交里就把 revealingId 定下来：如果放到 effect 里再派生，
       // 新消息会先以"整段"渲染一帧、然后才塌回去重新逐字显现（肉眼可见的闪一下）。
@@ -357,10 +399,13 @@ export default function ChatDrawer({
     setSending(false);
     setDraft("");
     setRevealingId(null);
+    // 「清空重来」会把音频缓存留在内存里（按 message.id 索引，新会话用不到旧的），
+    // 这里顺手停掉正在播的那条，避免"清空了声音还在响"。
+    stopSpeech();
     const next = (openerIndex + 1) % Math.max(persona?.openers.length ?? 1, 1);
     setOpenerIndex(next);
     const opener = persona?.openers[next] ?? "";
-    setMessages(opener ? [{ id: nextId(), role: "assistant", content: opener, degraded: null }] : []);
+    setMessages(opener ? [{ id: nextId(), role: "assistant", content: opener, degraded: null, source: "script" }] : []);
     const el = composerRef.current;
     if (el) el.style.height = "auto";
   }, [nextId, openerIndex, persona]);
@@ -509,6 +554,8 @@ export default function ChatDrawer({
                     animate={message.id === revealingId}
                     onRevealDone={handleRevealDone}
                     onRetry={handleRetry}
+                    charKey={charKey}
+                    reducedMotion={reducedMotion}
                   />
                 ))}
 

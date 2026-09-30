@@ -163,3 +163,51 @@ export function clientIp(forwardedFor, socketAddress) {
   }
   return socketAddress || "unknown";
 }
+
+/**
+ * chat-003 —— TTS 的**全局日熔断**判定。
+ *
+ * 与 `checkGlobalLimit` 是**同名不同账**的两本账：对话记"会话数"，这里记"合成次数"
+ * 外加一本字符账。单开一份而不是给旧函数加前缀参数，是因为记录结构本身就不同，
+ * 硬合并会让两边都变得难读。
+ *
+ * 形态与对话侧保持一致：**只读判定**，递增由 `recordTtsSuccess` 单独做 ——
+ * 因为"一次合成"的定义是**上游成功**，不能在收到请求时就先记一笔。
+ *
+ * @param {import("./state.mjs").TtsPersistedState} record
+ * @param {number} nowMs
+ * @param {number} max
+ * @returns {{ allowed: boolean, requests: number }}
+ */
+export function checkGlobalTtsLimit(record, nowMs, max) {
+  const day = dayKey(nowMs);
+  const requests = record && record.day === day ? record.requests : 0;
+  return { allowed: requests < max, requests };
+}
+
+/**
+ * 上游成功后记一次合成。跨天时**次数与字符账本一起归零** ——
+ * 账本是"当日计费字符数"，跨天必须从 0 起，否则对账数字会一路累加、
+ * 越到后面越没法用（而它正是用来核对账单的）。
+ *
+ * `usageCharacters` 只做**累加展示**，不参与任何拒绝判定 ——
+ * 一旦它参与判定，上游偶尔返回的异常值（负数、极大值）就会变成一次误封。
+ *
+ * @param {import("./state.mjs").TtsPersistedState} record
+ * @param {number} nowMs
+ * @param {number} usageCharacters 上游 `extra_info.usage_characters`
+ * @returns {import("./state.mjs").TtsPersistedState}
+ */
+export function recordTtsSuccess(record, nowMs, usageCharacters) {
+  const day = dayKey(nowMs);
+  const prev = record && record.day === day ? record : null;
+  const billed =
+    typeof usageCharacters === "number" && Number.isFinite(usageCharacters) && usageCharacters > 0
+      ? Math.floor(usageCharacters)
+      : 0;
+  return {
+    day,
+    requests: (prev?.requests ?? 0) + 1,
+    characters: (prev?.characters ?? 0) + billed,
+  };
+}

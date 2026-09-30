@@ -70,3 +70,80 @@ export function savePersistedState(dir, state) {
     return { ok: false, error: err instanceof Error ? err.message : String(err) };
   }
 }
+
+/**
+ * chat-003 —— TTS 的日计数（**单独一个文件** `tts-state.json`）。
+ *
+ * 为什么不与对话共用一个 `state.json`：两个计数器服务两条**互相独立**的链路
+ * （一个管 token，一个管字符）。写在一起，TTS 侧的写入就有机会影响对话侧熔断的
+ * 读取 —— 而 `chat-002` 的熔断行为已经被验收过，不该为一条新链路承担一次改数据的
+ * 风险。挂载点不变（还是 `/app/state` 那个卷），运维视角仍然是"一个目录"。
+ *
+ * @typedef {object} TtsPersistedState
+ * @property {string} day
+ * @property {number} requests    当日成功合成的**次数**（全局熔断判定用）
+ * @property {number} characters  当日计费**字符数**累计（仅用于对账，**不参与拒绝判定**）
+ */
+
+/**
+ * 非负整数归一化。除了 `Number.isFinite` 还挡掉负值与小数 ——
+ * 计数被写成 `-1` 或 `3.7` 时宁可归零，也不要让熔断算出一个奇怪的阈值。
+ *
+ * @param {unknown} value
+ * @returns {number}
+ */
+function toCount(value) {
+  return typeof value === "number" && Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+}
+
+/** @returns {TtsPersistedState} */
+export function emptyTtsState() {
+  return { day: "", requests: 0, characters: 0 };
+}
+
+/**
+ * 读。与 `loadPersistedState` 同策略：磁盘坏了、文件被截断、目录还没建，
+ * 一律退化成"全新开始"而不是抛错，调用方负责记一行告警。
+ *
+ * @param {string} dir
+ * @returns {TtsPersistedState}
+ */
+export function loadTtsState(dir) {
+  try {
+    const parsed = JSON.parse(readFileSync(join(dir, "tts-state.json"), "utf8"));
+    if (parsed && typeof parsed === "object" && typeof parsed.day === "string") {
+      return { day: parsed.day, requests: toCount(parsed.requests), characters: toCount(parsed.characters) };
+    }
+    return emptyTtsState();
+  } catch {
+    return emptyTtsState();
+  }
+}
+
+/**
+ * 原子写：先落 `tts-state.json.tmp`，再 `rename`。
+ *
+ * 显式逐字段重建对象（而不是 `JSON.stringify(state)`）—— 这份文件是"只含计数"的
+ * 承诺，多一个键都该在写之前被看见；将来若有人往内存对象上挂了个字段，
+ * 这里不会顺手把它落盘。
+ *
+ * @param {string} dir
+ * @param {TtsPersistedState} state
+ * @returns {{ ok: true } | { ok: false, error: string }}
+ */
+export function saveTtsState(dir, state) {
+  try {
+    mkdirSync(dir, { recursive: true });
+    const tmp = join(dir, "tts-state.json.tmp");
+    writeFileSync(
+      tmp,
+      JSON.stringify({ day: state.day, requests: state.requests, characters: state.characters }),
+      "utf8",
+    );
+    renameSync(tmp, join(dir, "tts-state.json"));
+    return { ok: true };
+  } catch (err) {
+    // 与对话侧同口径：写不进去退化为"内存计数"（重启才归零），总比整个服务挂掉强。
+    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+  }
+}

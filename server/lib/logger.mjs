@@ -52,6 +52,31 @@ export function createLogger(write = (line) => process.stdout.write(line + "\n")
       });
     },
     /**
+     * chat-003 —— TTS 每请求一行。字段集合**另定**（不是对话那套的变体）：
+     * TTS 没有 `turns`，多一个 `chars`。
+     *
+     * ⚠️ **恰好这 8 个**（含 `ts` / `kind`），测试按集合相等断言，多一个就失败。
+     * 之所以要这么硬：每加一个字段都得先回答"它会不会泄露内容"。这里已经踩过
+     * 一次 —— 原规格曾打算记 `trace_id` 的哈希后 8 位，那会要求第 9 个字段；
+     * 最终选择**整体不记**，因为"字段集合固定"这条纪律比那点多出来的对账便利更值钱。
+     *
+     * `chars` 记的是**长度**（`text.length`），不是内容。`usage_characters` 只进
+     * `tts-state.json` 的字符账本，不进日志。
+     *
+     * @param {{ ipHash: string, charKey: string | null, chars: number, status: number, degradedReason?: string | null, durationMs: number }} entry
+     */
+    tts(entry) {
+      emit({
+        kind: "tts",
+        ipHash: entry.ipHash,
+        charKey: entry.charKey ?? null,
+        chars: entry.chars,
+        status: entry.status,
+        degradedReason: entry.degradedReason ?? null,
+        durationMs: entry.durationMs,
+      });
+    },
+    /**
      * 运维告警。**只允许写固定的、与内容无关的文本** —— 这个函数没有接收自由文本
      * 的入口是有意的：一旦允许传字符串，早晚会有人把上游报错塞进来。
      * @param {string} code
